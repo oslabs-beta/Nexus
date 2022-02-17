@@ -24,19 +24,14 @@
 			]
 		},
 		"views": {
-			"package-explorer": [ 
-	
-						{
-							"id": "package-dependencies",   
-							"name": "Dependencies",
-							"type": "tree"
-						}
-					
-					]
-
+			"package-explorer": [ 	
+				{
+					"id": "package-dependencies",   
+					"name": "Dependencies",
+					"type": "tree"
+				}
+			]
 		},
-		
-	
 		"commands": [
 			{
 				"command": "nexus.helloWorld",

@@ -14,6 +14,29 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "package-explorer",
+					"title": "Package Explorer",
+					"icon": "media/heart.svg"
+				}
+			]
+		},
+		"views": {
+			"package-explorer": [ 
+	
+						{
+							"id": "package-dependencies",   
+							"name": "Dependencies",
+							"type": "tree"
+						}
+					
+					]
+
+		},
+		
+	
 		"commands": [
 			{
 				"command": "nexus.helloWorld",

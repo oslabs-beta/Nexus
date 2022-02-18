@@ -115,7 +115,7 @@ function getProps(node:Node){
   const propObj = {};
   for(let prop of node.openingElement.attributes){
     const name = prop.name.name;
-    propObj[name] = getPropValue(prop.value);
+    propObj[name] = getPropValue(prop.value); 
     // console.log('propObj', propObj);
   }
   // console.log(propArr);

@@ -15,44 +15,89 @@ var ComponentNode = /** @class */ (function () {
     }
     return ComponentNode;
 }());
-var PropsNode = /** @class */ (function () {
-    function PropsNode(name, value) {
-        this.name = name;
-        this.value = value;
-    }
-    return PropsNode;
-}());
 // Parser
-var source = fs.readFileSync(path.resolve(__dirname, './App.jsx'));
-var parsed = JSXPARSER.parse(source, { sourceType: "module" });
-var programBody = parsed.body; // get body of Program Node(i.e. source code entry)
-// const variables that hold different nodes depending on type 
-var importNodes = programBody.filter(function (node) { return node.type === 'ImportDeclaration'; });
-var otherNodes = programBody.filter(function (node) { return node.type !== 'ImportDeclaration'; });
-var variableNodes = programBody.filter(function (node) { return node.type === 'VariableDeclaration'; });
-// find export default declaration to get entire component
-var exportDefaultNode = otherNodes.filter(function (node) {
-    node.type === 'ExportDefaultDeclaration';
-})[0];
-var returnChildren = variableNodes[variableNodes.length - 1].declarations[0].init.body.body[1].argument.children;
-var jsxNodes = returnChildren.filter(function (node) { return node.type === JSXELEMENT; });
-var components = [];
-for (var _i = 0, jsxNodes_1 = jsxNodes; _i < jsxNodes_1.length; _i++) {
-    var node = jsxNodes_1[_i];
-    var firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
-    if (firstChar === firstChar.toUpperCase()) {
-        var componentNode = new ComponentNode(node.openingElement.name.name, node.children);
-        // newNode.name = node.openingElement.name.name;
-        // newNode.props = findProps(node);
-        // newNode.children = node.children;
-        var props = getNodeProps(node);
-        componentNode.props = props;
-        components.push(componentNode);
-        // get name of component, props, children<boolean>
-        // console.log(node);
+function getTree(filePath) {
+    var source = fs.readFileSync(path.resolve(__dirname, filePath));
+    var parsed = JSXPARSER.parse(source, { sourceType: "module" });
+    var programBody = parsed.body; // get body of Program Node(i.e. source code entry)
+    return programBody;
+}
+function getImportNodes(programBody) {
+    var importNodes = programBody.filter(function (node) { return node.type === 'ImportDeclaration'; });
+    return importNodes;
+}
+function getVariableNodes(programBody) {
+    // const variables that hold different nodes depending on type 
+    var variableNodes = programBody.filter(function (node) { return node.type === 'VariableDeclaration'; });
+    return variableNodes;
+}
+function getOtherNodes(programBody) {
+    var otherNodes = programBody.filter(function (node) { return node.type !== 'ImportDeclaration'; });
+    return otherNodes;
+}
+function getExportDefaultNodes(otherNodes) {
+    var exportDefaultNode = otherNodes.filter(function (node) {
+        node.type === 'ExportDefaultDeclaration';
+    })[0];
+    return exportDefaultNode;
+}
+function getChildrenNodes(variableNodes) {
+    var childrenNodes = variableNodes[variableNodes.length - 1].declarations[0].init.body.body[1].argument.children;
+    return childrenNodes;
+}
+function getJsxNodes(childrenNodes) {
+    var jsxNodes = childrenNodes.filter(function (node) { return node.type === JSXELEMENT; });
+    return jsxNodes;
+}
+function getChildrenComponents(jsxNodes) {
+    var components = [];
+    for (var _i = 0, jsxNodes_1 = jsxNodes; _i < jsxNodes_1.length; _i++) {
+        var node = jsxNodes_1[_i];
+        var firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
+        var componentName = node.openingElement.name.name;
+        if (firstChar === firstChar.toUpperCase()) {
+            var props = getProps(node);
+            // check componentName against importNodes
+            // if name matches import node name, take filepath
+            // recursively invoke parsing algo on file
+            // const children = main(filePath)
+            // const componentNode = new ComponentNode(componentName, props, children);
+            var componentNode = new ComponentNode(componentName, props, node.children);
+            components.push(componentNode);
+        }
+    }
+    return components;
+}
+function getPropValue(node) {
+    if (Object.keys(node).includes('expression')) {
+        return node.expression.value; // look into the value (node) and find the expression 
+    }
+    else {
+        return node.value; // return the value 
     }
 }
-console.log(components);
+function getProps(node) {
+    var propObj = {};
+    for (var _i = 0, _a = node.openingElement.attributes; _i < _a.length; _i++) {
+        var prop = _a[_i];
+        var name_1 = prop.name.name;
+        propObj[name_1] = getPropValue(prop.value);
+        // console.log('propObj', propObj);
+    }
+    // console.log(propArr);
+    return propObj;
+}
+function main(filePath) {
+    var tree = getTree(filePath);
+    var importNodes = getImportNodes(tree);
+    var variableNodes = getVariableNodes(tree);
+    var childrenNodes = getChildrenNodes(variableNodes);
+    var jsxNodes = getJsxNodes(childrenNodes);
+    var result = getChildrenComponents(jsxNodes);
+    console.log(result);
+    return result;
+}
+main('./App.jsx');
 // Node {
 //   type: 'JSXElement',
 //   start: 815,
@@ -89,55 +134,3 @@ console.log(components);
 //   end: 784,
 //   expression: [Node]
 // }
-function getPropValue(node) {
-    if (Object.keys(node).includes('expression')) {
-        return node.expression.value; // look into the value (node) and find the expression 
-    }
-    else {
-        return node.value; // return the value 
-    }
-}
-function getNodeProps(node) {
-    var propArr = [];
-    for (var _i = 0, _a = node.openingElement.attributes; _i < _a.length; _i++) {
-        var prop = _a[_i];
-        var newProps = new PropsNode(prop.name.name, getPropValue(prop.value));
-        propArr.push(newProps);
-    }
-    // console.log(propArr);
-    return propArr;
-}
-function findReturnedComponents(arr) {
-    // loop through all
-    // look inside each node to see if it returns jsxcomponents
-    // look inside declarations property of node
-    // get id property <Node>
-    // get init property <Node>
-    // get body.body of init
-    // get node with type === 'ReturnStatement'
-    // with return statement node
-    // argument.children
-    // -> array<Node> of different JSX types
-    // with helper function, loop through to find actual jsx components
-    // findProps()
-    // if it does, do something 
-}
-// findPropsChild(arr: Array<any>){
-// }
-// console.log(exportDefaultNode.declaration.properties);
-// iterate through other nodes to find children components
-// othernodes -> find type: VariableDeclaration where there is return statement
-// console.log(parsed.body[5].declarations[0].init.body.body[1].argument.children[1].openingElement.attributes[0].value);
-// console.log(parsed.body.filter(node => node.type !== 'ImportDeclaration'));
-// function nodeFinder(array: Array<Node>) {
-//   for (let i = 0; i < array.length; i++) {
-//     console.log(array[i]);
-//     // if node is returning components
-//     // check component against importNodes and recursively call with component file
-//     // and render visualizer
-//   }
-// }
-// nodeFinder(allNodes);
-// console.log(importNodes);
-// console.log(allNodes[allNodes.length-2].declarations[0].init.body.body[1].argument.children[5].openingElement.attributes[1].value);
-// console.log(allNodes[allNodes.length-2].declarations[0].init.body.body[1].argument);

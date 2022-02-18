@@ -34,66 +34,107 @@ interface Node {
 interface ComponentNode {
   name: string,
   children: Array<any>,
-  props: Array<PropsNode>
+  props: Object
 }
 
 class ComponentNode {
-  constructor(name: string, props: Array<PropsNode>, children: Array<any>) {
+  constructor(name: string, props: Object, children: Array<any>) {
     this.name = name;
     this.children = children;
     this.props = props;
   }
 }
 
-interface PropsNode {
-  props: Node,
-  name: String,
-  value: any,
-}
-
-class PropsNode {
-  constructor(name:String,value:any){
-    this.name = name;
-    this.value = value;
-  }
-}
 // Parser
-const source = fs.readFileSync(path.resolve(__dirname, './App.jsx'));
-const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
-const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
+function getTree(filePath: string){
+  const source = fs.readFileSync(path.resolve(__dirname, filePath));
+  const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
+  const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
+  return programBody;
+}
 
-// const variables that hold different nodes depending on type 
-const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
-const otherNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
-const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
-
-
-// find export default declaration to get entire component
-const exportDefaultNode: Node = otherNodes.filter((node: Node) => {
+function getImportNodes(programBody: Array<Node>) {
+  const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
+  return importNodes;
+}
+function getVariableNodes(programBody: Array<Node>) {
+  // const variables that hold different nodes depending on type 
+  const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
+  return variableNodes;
+}
+function getOtherNodes(programBody: Array<any>) {
+  const otherNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
+  return otherNodes;
+}
+function getExportDefaultNodes(otherNodes: Array<any>) {
+  const exportDefaultNode: Node = otherNodes.filter((node: Node) => {
   node.type === 'ExportDefaultDeclaration';
-})[0];
+  })[0];
+  return exportDefaultNode;
+}
 
-const returnChildren = variableNodes[variableNodes.length-1].declarations[0].init.body.body[1].argument.children;
-const jsxNodes: Array<Node> = returnChildren.filter((node: Node) => node.type === JSXELEMENT);
+function getChildrenNodes(variableNodes: Array<Node>) {
+  const childrenNodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body[1].argument.children;
+  return childrenNodes;
+}
 
+function getJsxNodes(childrenNodes: Array<Node>) {
+  const jsxNodes: Array<Node> = childrenNodes.filter((node: Node) => node.type === JSXELEMENT);
+  return jsxNodes;
+}
 
-const components = [];
-for (let node of jsxNodes) {
-  const firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
-  if (firstChar === firstChar.toUpperCase()) {
-    const componentNode = new ComponentNode(node.openingElement.name.name, node.children);
-    // newNode.name = node.openingElement.name.name;
-    // newNode.props = findProps(node);
-    // newNode.children = node.children;
-    const props = getNodeProps(node);
-    componentNode.props = props;
-    components.push(componentNode);
-    // get name of component, props, children<boolean>
-    // console.log(node);
-    
+function getChildrenComponents(jsxNodes: Array<Node>) {
+  const components = [];
+  for (let node of jsxNodes) {
+    const firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
+    const componentName = node.openingElement.name.name;
+    if (firstChar === firstChar.toUpperCase()) {
+      const props = getProps(node); 
+      // check componentName against importNodes
+      // if name matches import node name, take filepath
+      // recursively invoke parsing algo on file
+      // const children = main(filePath)
+      
+      // const componentNode = new ComponentNode(componentName, props, children);
+      const componentNode = new ComponentNode(componentName, props, node.children);
+      components.push(componentNode);      
+    }
+  }
+  return components;
+}
+
+function getPropValue(node: Node) {
+  if (Object.keys(node).includes('expression')) {
+    return node.expression.value; // look into the value (node) and find the expression 
+  } else {
+    return node.value; // return the value 
   }
 }
-console.log(components);
+
+function getProps(node:Node){
+  const propObj = {};
+  for(let prop of node.openingElement.attributes){
+    const name = prop.name.name;
+    propObj[name] = getPropValue(prop.value);
+    // console.log('propObj', propObj);
+  }
+  // console.log(propArr);
+  return propObj;
+}
+
+function main(filePath: string) {
+  const tree = getTree(filePath);
+  const importNodes = getImportNodes(tree);
+  const variableNodes = getVariableNodes(tree);
+  const childrenNodes = getChildrenNodes(variableNodes);
+  const jsxNodes = getJsxNodes(childrenNodes);
+  const result = getChildrenComponents(jsxNodes);
+  console.log(result);
+  return result;
+}
+
+main('./App.jsx');
+
 // Node {
 //   type: 'JSXElement',
 //   start: 815,
@@ -132,67 +173,3 @@ console.log(components);
 //   end: 784,
 //   expression: [Node]
 // }
-
-function getPropValue(node: Node) {
-  if (Object.keys(node).includes('expression')) {
-    return node.expression.value; // look into the value (node) and find the expression 
-  } else {
-    return node.value; // return the value 
-  }
-}
-
-function getNodeProps(node:Node){
-  const propArr: Array<any> = [];
-  for(let prop of node.openingElement.attributes){
-    const newProps = new PropsNode(prop.name.name, getPropValue(prop.value));
-    propArr.push(newProps);
-  }
-  // console.log(propArr);
-  return propArr;
-}
-function findReturnedComponents(arr: Array<Node>) {
-  // loop through all
-  // look inside each node to see if it returns jsxcomponents
-    // look inside declarations property of node
-    // get id property <Node>
-    // get init property <Node>
-    // get body.body of init
-    // get node with type === 'ReturnStatement'
-    // with return statement node
-    // argument.children
-      // -> array<Node> of different JSX types
-      // with helper function, loop through to find actual jsx components
-    // findProps()
-  // if it does, do something 
-}
-
-
-
-// findPropsChild(arr: Array<any>){
-    
-// }
-
-
-// console.log(exportDefaultNode.declaration.properties);
-
-// iterate through other nodes to find children components
-// othernodes -> find type: VariableDeclaration where there is return statement
-
-
-// console.log(parsed.body[5].declarations[0].init.body.body[1].argument.children[1].openingElement.attributes[0].value);
-// console.log(parsed.body.filter(node => node.type !== 'ImportDeclaration'));
-
-// function nodeFinder(array: Array<Node>) {
-//   for (let i = 0; i < array.length; i++) {
-//     console.log(array[i]);
-//     // if node is returning components
-//     // check component against importNodes and recursively call with component file
-//     // and render visualizer
-//   }
-// }
-
-
-// nodeFinder(allNodes);
-// console.log(importNodes);
-// console.log(allNodes[allNodes.length-2].declarations[0].init.body.body[1].argument.children[5].openingElement.attributes[1].value);
-// console.log(allNodes[allNodes.length-2].declarations[0].init.body.body[1].argument);

@@ -4,7 +4,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Chatrooms from './components/Chatrooms.jsx';
 import Chatroom from './components/Chatroom.jsx';
-import styles from './styles.css'
+import styles from './styles.css';
+import Children from "./Children.jex";
 
 const URL = "http://google.com";
 const NUMBER = 10;
@@ -29,10 +30,16 @@ const App = (props) => {
 
     return (
         <div>
-            <Link href="/dogs"><a>click me for dogs</a></Link>
             {/* <button onClick={useRouter}></button> */}
-            <Chatroom name={'Brian'} otherProp={500}/>
-            <Chatrooms name={'Mike'} otherProp={600}/>
+            {/* <Chatroom name={'Brian'} otherProp={500}/> */}
+            {/* <Chatrooms name={'Mike'} otherProp={600}/> */}
+            <Link href="/dogs"><a>click me for dogs</a></Link>
+            <Children name={'Brian'} otherProp={500}/>
+            <Children name={'David'} otherProp={300}/>
+            <Children name={'Nico'} otherProp={100}/>
+            <Children name={'Alex'} otherProp={400}/>
+            <Children name={'Mike'} otherProp={600}/>
+            <Comp />
             <button>HTML Button</button>
         </div>
     )

@@ -17,26 +17,33 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "package-explorer",
-					"title": "Package Explorer",
+					"id": "Nexus",
+					"title": "Nexus",
 					"icon": "media/heart.svg"
 				}
 			]
 		},
 		"views": {
-			"package-explorer": [ 	
-				{
-					"id": "package-dependencies",   
-					"name": "Dependencies",
-					"type": "tree"
-				}
-			]
+			"Nexus": [ 
+	
+						{
+							"id": "calicoColors.colorsView",   
+							"name": "Nexus",
+							"type": "webview"
+						}
+					
+					]
+
 		},
 		"commands": [
 			{
 				"command": "nexus.helloWorld",
-				"title": "Hello World"
-			}
+				"title": "Nexus"
+			},
+			{
+				"command": "exampleApp.openWebview",
+				"title": "Big Chungus"
+			  }
 		]
 	},
 	"scripts": {

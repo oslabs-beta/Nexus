@@ -63,33 +63,30 @@ class ColorsViewProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-			<h1 id="counter">0</h1>
-			<div class="items">
-			<ul>
-			<li><a href="#" class="pages">pages</a>
-				<ul>
-					<li><a href="#">_app.js</a></li>  
-					<li><a href="#">index.js</a>
-						<ul>
-							<li><a href="#">nav.js</a></li>
-							<li><a href="#">jumbotron.js</a></li>
-			   			</ul>
-					</li>
-					<li><a href="#">cats</a>
-						<ul>
-							<li><a href="#">index.js</a>
-								<ul>
-									<li><a href="#">nav.js</a></li>
-									<li><a href="#">card.js</a></li>
-			   					</ul>
-							</li>
-							<li><a href="#">[id].js</a></li>
-			   			</ul>
-					</li>
-				</ul>
-			</li>
-			</ul>
-		  </div>
+<ul class="root-tree">
+  <li><span class="tree">pages</span>
+    <ul class="subtree">
+      <li>_app.js</li>
+      <li><span class="tree">index.js</span>
+		  <ul class="subtree">
+		  <li>nav.js</li>
+		  <li>jumbotron.js</li>
+		  </ul>
+	  </li>
+	  <li><span class="tree">cats</span>
+	  	<ul class="subtree">
+	  	<li><span class="tree">index.js</span>
+		  <ul class="subtree">
+		  <li>nav.js</li>
+		  <li>card.js</li>
+		  </ul>
+		</li>
+		<li>[id].js</li>
+		</ul>
+      </li>  
+    </ul>
+  </li>
+</ul>
 		  <script src="${scriptUri}"></script>
 			</body>
 			</html>`;

@@ -1,184 +1,24 @@
-* {
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-  color: black;
-  font-family: tahoma;
-}
-
-.items ul {
-  padding-top: 20px;
+.subtree{
+  list-style-type:square}
+  .tree {
+    cursor: pointer;
+  }
+  .plus,.minus{
+  display: flow-root;
   position: relative;
-}
-
-
-/* Make all children "inline" */
-
-.items li {
-  float: left;
-  text-align: center;
-  list-style-type: none;
-  position: relative;
-  padding: 20px 5px 0 5px;
-}
-
-
-/* Add horizontal connector. Note: they are 2 pseudo-elements */
-
-.items li::before,
-.items li::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 50%;
-  width: 50%;
-  height: 45px;
-  z-index: -1;
-  border-top: 1px solid red;
-}
-
-.items li::after {
-  border-left: 1px solid green;
-  left: 50%;
-  right: auto;
-}
-
-
-/* Remove left and right connector from a single child */
-
-.items li:only-child::after,
-.items li:only-child::before {
-  display: none;
-}
-
-.items li:only-child {
-  padding-top: 0;
-}
-
-
-/* Remove "outer" connector */
-
-.items li:first-child::before,
-.items li:last-child::after {
-  border: 0 none;
-}
-
-
-/* Add back the down connector for last node */
-
-.items li:last-child::before {
-  border-right: 1px solid blue;
-  border-radius: 0 5px 0 0;
-}
-
-
-/* Add curve line to the first child's connector */
-
-.items li:first-child::after {
-  border-radius: 5px 0 0 0;
-}
-
-
-/* Add down connector from parent */
-
-.items ul ul::before {
-  content: '';
-  border-left: 1px solid magenta;
-  z-index: -1;
-  height: 20px;
-  position: absolute;
-  top: 2px; /* Changed */
-  left: 50%;
-  width: 0;
-}
-
-
-/* Add cosmetic for each item */
-
-.items li a {
-  font-size: 12px;
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 4px;
-}
-
-.items li a:hover {
-  background-color: #EEE;
-}
-
-
-/* Experimental for multiple parents */
-
-
-/* Add margin for the parents */
-
-.items li a+a {
-  position: relative;
-  margin-bottom: 12px;
-}
-
-
-/* Implement also for the first parent */
-
-.items li a:first-child {
-  position: relative;
-  margin-bottom: 12px;
-}
-
-
-/* 
-- Add "down" connector (vertical line) from each parent 
-- Currently it will also select the single parent
-*/
-
-.items li>a:not(:only-child)::after {
-  content: '';
-  position: absolute;
-  border-right: 1px solid pink;
-  top: 20px;
-  height: 20px;
-  width: 0;
-  left: 50%;
-  z-index: -1;
-}
-
-
-/* Starting to fvcked up from here */
-
-
-/* Making the horizontal connector line after each multiple parent */
-
-.items li>a:not(:only-of-type):not(:last-of-type)::before {
-  content: '';
-  position: absolute;
-  top: 40px;
-  left: auto;
-  width: 110%; /* Changed */
-  border-top: 1px solid indigo;
-}
-
-.items li>a:last-of-type:not(:first-child)::before {
-  content: '';
-  position: absolute;
-  top: 40px;
-  right: auto;
-  width: 42%; /* Changed */
-  border-top: 1px solid indigo;
-}
-
-
-/* ADDED STYLES */
-.items li>a:first-of-type:first-child::before {
-  left: 50%;
-}
-
-.items li>a:last-of-type:last-child::before {
-  left: 50%;
-}
-
-#counter{
- color: white; 
-}
+  right: 10px;}
+  .subtree {
+    display: none;
+  }
+  .active {
+    display: block;}
+  .plus::before {
+    content: "+";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;}
+  .minus::before {
+    content: "-";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;}

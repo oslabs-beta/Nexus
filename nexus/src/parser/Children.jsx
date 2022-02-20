@@ -4,7 +4,7 @@ import Nested from './Nested.jsx';
 const Children = (props) => {
   return (
       <div>
-        <Nested />
+        <Nested propName='testing'/>
       </div>
   )
 };

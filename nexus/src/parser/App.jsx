@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Chatrooms from './components/Chatrooms.jsx';
 import Chatroom from './components/Chatroom.jsx';
 import styles from './styles.css';
-import Children from "./Children.jex";
+import Children from "./Children.jsx";
 
 const URL = "http://google.com";
 const NUMBER = 10;

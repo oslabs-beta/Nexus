@@ -1,3 +1,5 @@
+import { strictEqual } from "assert";
+
 const PARSER = require('acorn').Parser;
 const jsx = require('acorn-jsx');
 const JSXPARSER = PARSER.extend(jsx());
@@ -29,6 +31,7 @@ interface Node {
   attributes: Array<Node>,
   props: Node,
   expression: Node,
+  source: Node,
 }
 
 interface ComponentNode {
@@ -58,13 +61,36 @@ function getImportNodes(programBody: Array<Node>) {
   return importNodes;
 }
 function getVariableNodes(programBody: Array<Node>) {
-  // const variables that hold different nodes depending on type 
+  // CHECK if functional or class component
+//   const checkFunctionalOrClass = (programBody: Array<Node>)=>{
+//     // return 'functional' if functional, 'class' if class component
+//     for(let i=0;i<programBody.length;i++){
+//       if(programBody[i].type === 'VariableDeclaration'){
+//         return 'functional';
+//       }else if(programBody[i].type === 'ClassDeclaration'){
+//         return 'class';
+//       }
+//     }
+//   };
+
+//   if (checkFunctionalOrClass(programBody) === 'functional') {
+//     const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
+//     return variableNodes;
+//   } else {
+//     // class logic
+//     const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ClassDeclaration');
+//     return variableNodes;
+//   }
+// }
+
+  // return variableNodes;
+  // return getVariableNodes;
   const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
   return variableNodes;
 }
-function getOtherNodes(programBody: Array<any>) {
-  const otherNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
-  return otherNodes;
+function getNonImportNodes(programBody: Array<any>) {
+  const nonImportNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
+  return nonImportNodes;
 }
 function getExportDefaultNodes(otherNodes: Array<any>) {
   const exportDefaultNode: Node = otherNodes.filter((node: Node) => {
@@ -74,7 +100,10 @@ function getExportDefaultNodes(otherNodes: Array<any>) {
 }
 
 function getChildrenNodes(variableNodes: Array<Node>) {
-  const childrenNodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body[1].argument.children;
+  // RETURN STATEMENT in functional component
+  const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
+  const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
+  const childrenNodes = returnNode.argument.children;
   return childrenNodes;
 }
 
@@ -83,8 +112,21 @@ function getJsxNodes(childrenNodes: Array<Node>) {
   return jsxNodes;
 }
 
-function getChildrenComponents(jsxNodes: Array<Node>) {
+function getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>) {
   const components = [];
+  const regex = /[a-zA-Z]+(.jsx|.js)/;  
+  const importValues = importNodes.map((node) => node.source.value);
+  const componentPaths = importValues.filter((str) => regex.test(str) === true); 
+  const cache = {};
+  for (let str of componentPaths) {
+    const splitName = str.split('/');
+    const componentPath = splitName[splitName.length-1];
+    const name = componentPath.split('.')[0];
+    cache[name] = str;
+  }
+  console.log('Cache', cache);
+  
+  // importValues = ['./Children.jsx', 'react', 'react-router-dom']
   for (let node of jsxNodes) {
     const firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
     const componentName = node.openingElement.name.name;
@@ -93,10 +135,12 @@ function getChildrenComponents(jsxNodes: Array<Node>) {
       // check componentName against importNodes
       // if name matches import node name, take filepath
       // recursively invoke parsing algo on file
-      // const children = main(filePath)
+      let children: Array<ComponentNode> = [];
+      if (cache[`${componentName}`]) {
+        children = main(cache[`${componentName}`]);
+      }
       
-      // const componentNode = new ComponentNode(componentName, props, children);
-      const componentNode = new ComponentNode(componentName, props, node.children);
+      const componentNode = new ComponentNode(componentName, props, children);
       components.push(componentNode);      
     }
   }
@@ -111,7 +155,7 @@ function getPropValue(node: Node) {
   }
 }
 
-function getProps(node:Node){
+function getProps(node: Node){
   const propObj = {};
   for(let prop of node.openingElement.attributes){
     const name = prop.name.name;
@@ -123,17 +167,20 @@ function getProps(node:Node){
 }
 
 function main(filePath: string) {
+  // console.log(filePath);
   const tree = getTree(filePath);
+  // console.log(tree);
   const importNodes = getImportNodes(tree);
   const variableNodes = getVariableNodes(tree);
   const childrenNodes = getChildrenNodes(variableNodes);
   const jsxNodes = getJsxNodes(childrenNodes);
-  const result = getChildrenComponents(jsxNodes);
+  const result = getChildrenComponents(jsxNodes, importNodes);
   console.log(result);
   return result;
 }
 
 main('./App.jsx');
+// main('./newApp.jsx');
 
 // Node {
 //   type: 'JSXElement',

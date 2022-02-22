@@ -1,3 +1,5 @@
+"use strict";
+exports.__esModule = true;
 var PARSER = require('acorn').Parser;
 var jsx = require('acorn-jsx');
 var JSXPARSER = PARSER.extend(jsx());
@@ -27,13 +29,34 @@ function getImportNodes(programBody) {
     return importNodes;
 }
 function getVariableNodes(programBody) {
-    // const variables that hold different nodes depending on type 
+    // CHECK if functional or class component
+    //   const checkFunctionalOrClass = (programBody: Array<Node>)=>{
+    //     // return 'functional' if functional, 'class' if class component
+    //     for(let i=0;i<programBody.length;i++){
+    //       if(programBody[i].type === 'VariableDeclaration'){
+    //         return 'functional';
+    //       }else if(programBody[i].type === 'ClassDeclaration'){
+    //         return 'class';
+    //       }
+    //     }
+    //   };
+    //   if (checkFunctionalOrClass(programBody) === 'functional') {
+    //     const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
+    //     return variableNodes;
+    //   } else {
+    //     // class logic
+    //     const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ClassDeclaration');
+    //     return variableNodes;
+    //   }
+    // }
+    // return variableNodes;
+    // return getVariableNodes;
     var variableNodes = programBody.filter(function (node) { return node.type === 'VariableDeclaration'; });
     return variableNodes;
 }
-function getOtherNodes(programBody) {
-    var otherNodes = programBody.filter(function (node) { return node.type !== 'ImportDeclaration'; });
-    return otherNodes;
+function getNonImportNodes(programBody) {
+    var nonImportNodes = programBody.filter(function (node) { return node.type !== 'ImportDeclaration'; });
+    return nonImportNodes;
 }
 function getExportDefaultNodes(otherNodes) {
     var exportDefaultNode = otherNodes.filter(function (node) {
@@ -42,17 +65,33 @@ function getExportDefaultNodes(otherNodes) {
     return exportDefaultNode;
 }
 function getChildrenNodes(variableNodes) {
-    var childrenNodes = variableNodes[variableNodes.length - 1].declarations[0].init.body.body[1].argument.children;
+    // RETURN STATEMENT in functional component
+    var nodes = variableNodes[variableNodes.length - 1].declarations[0].init.body.body;
+    var returnNode = nodes.filter(function (node) { return node.type === 'ReturnStatement'; })[0];
+    var childrenNodes = returnNode.argument.children;
     return childrenNodes;
 }
 function getJsxNodes(childrenNodes) {
     var jsxNodes = childrenNodes.filter(function (node) { return node.type === JSXELEMENT; });
     return jsxNodes;
 }
-function getChildrenComponents(jsxNodes) {
+function getChildrenComponents(jsxNodes, importNodes) {
     var components = [];
-    for (var _i = 0, jsxNodes_1 = jsxNodes; _i < jsxNodes_1.length; _i++) {
-        var node = jsxNodes_1[_i];
+    var regex = /[a-zA-Z]+(.jsx|.js)/;
+    var importValues = importNodes.map(function (node) { return node.source.value; });
+    var componentPaths = importValues.filter(function (str) { return regex.test(str) === true; });
+    var cache = {};
+    for (var _i = 0, componentPaths_1 = componentPaths; _i < componentPaths_1.length; _i++) {
+        var str = componentPaths_1[_i];
+        var splitName = str.split('/');
+        var componentPath = splitName[splitName.length - 1];
+        var name_1 = componentPath.split('.')[0];
+        cache[name_1] = str;
+    }
+    console.log('Cache', cache);
+    // importValues = ['./Children.jsx', 'react', 'react-router-dom']
+    for (var _a = 0, jsxNodes_1 = jsxNodes; _a < jsxNodes_1.length; _a++) {
+        var node = jsxNodes_1[_a];
         var firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
         var componentName = node.openingElement.name.name;
         if (firstChar === firstChar.toUpperCase()) {
@@ -60,9 +99,11 @@ function getChildrenComponents(jsxNodes) {
             // check componentName against importNodes
             // if name matches import node name, take filepath
             // recursively invoke parsing algo on file
-            // const children = main(filePath)
-            // const componentNode = new ComponentNode(componentName, props, children);
-            var componentNode = new ComponentNode(componentName, props, node.children);
+            var children = [];
+            if (cache["".concat(componentName)]) {
+                children = main(cache["".concat(componentName)]);
+            }
+            var componentNode = new ComponentNode(componentName, props, children);
             components.push(componentNode);
         }
     }
@@ -80,24 +121,27 @@ function getProps(node) {
     var propObj = {};
     for (var _i = 0, _a = node.openingElement.attributes; _i < _a.length; _i++) {
         var prop = _a[_i];
-        var name_1 = prop.name.name;
-        propObj[name_1] = getPropValue(prop.value);
+        var name_2 = prop.name.name;
+        propObj[name_2] = getPropValue(prop.value);
         // console.log('propObj', propObj);
     }
     // console.log(propArr);
     return propObj;
 }
 function main(filePath) {
+    // console.log(filePath);
     var tree = getTree(filePath);
+    // console.log(tree);
     var importNodes = getImportNodes(tree);
     var variableNodes = getVariableNodes(tree);
     var childrenNodes = getChildrenNodes(variableNodes);
     var jsxNodes = getJsxNodes(childrenNodes);
-    var result = getChildrenComponents(jsxNodes);
+    var result = getChildrenComponents(jsxNodes, importNodes);
     console.log(result);
     return result;
 }
 main('./App.jsx');
+// main('./newApp.jsx');
 // Node {
 //   type: 'JSXElement',
 //   start: 815,

@@ -1,8 +1,23 @@
 import React, { Component, render } from 'react';
 import parser from '../src/parser/parser.js';
+// import Node from 'Nodes.jsx'
+
+// interface ComponentNode {
+//   name: string,
+//   children: Array<any>,
+//   props: Object
+// }
 
 class MainSideBarTest extends Component() {
   // pass array down as props to all children
+  constructor() {
+    super();
+    this.dummyParserData = {
+      name: 'App',
+      children: [{ name: 'Child', children: [], props: { price: '5000' } }],
+      props: { example: 'test' },
+    };
+  }
 
   componentDidMount() {
     const res = parser('../src/parser/App.jsx');
@@ -12,7 +27,9 @@ class MainSideBarTest extends Component() {
   }
 
   render() {
-    const testStr = 'I am a string initialized in componentDidMount';
+    // res.map(// factory make Node components from data)
+
+    const testStr = 'I am a string initialized in the render method';
     console.log('hello');
     return (
       <div>

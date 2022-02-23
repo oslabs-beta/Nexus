@@ -9,7 +9,7 @@ function activate(context) {
     // webview
     let openWebview = vscode.commands.registerCommand('exampleApp.openWebview', () => {
         const panel = vscode.window.createWebviewPanel('Big Chungus', 'Big Chungus', vscode.ViewColumn.One, {
-            enableScripts: true
+            enableScripts: true,
         });
         panel.webview.html = getWebviewContent();
     });
@@ -45,12 +45,13 @@ class ColorsViewProvider {
     resolveWebviewView(webviewView) {
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [this._extensionUri]
+            localResourceRoots: [this._extensionUri],
         };
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     }
     _getHtmlForWebview(webview) {
-        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
+        // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
+        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
         const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
         return `<!DOCTYPE html>
 			<html lang="en">
@@ -63,30 +64,9 @@ class ColorsViewProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-<ul class="root-tree">
-  <li><span class="tree">pages</span>
-    <ul class="subtree">
-      <li>_app.js</li>
-      <li><span class="tree">index.js</span>
-		  <ul class="subtree">
-		  <li>nav.js</li>
-		  <li>jumbotron.js</li>
-		  </ul>
-	  </li>
-	  <li><span class="tree">cats</span>
-	  	<ul class="subtree">
-	  	<li><span class="tree">index.js</span>
-		  <ul class="subtree">
-		  <li>nav.js</li>
-		  <li>card.js</li>
-		  </ul>
-		</li>
-		<li>[id].js</li>
-		</ul>
-      </li>  
-    </ul>
-  </li>
-</ul>
+			<h1>I am the html from the provider</h1>
+			<div id="root"></div>
+
 		  <script src="${scriptUri}"></script>
 			</body>
 			</html>`;
@@ -95,4 +75,30 @@ class ColorsViewProvider {
 ColorsViewProvider.viewType = 'calicoColors.colorsView';
 function deactivate() { }
 exports.deactivate = deactivate;
+/*
+<ul class="root-tree">
+  <li><span class="tree">pages</span>
+    <ul class="subtree">
+      <li>_app.js</li>
+      <li><span class="tree">index.js</span>
+          <ul class="subtree">
+          <li>nav.js</li>
+          <li>jumbotron.js</li>
+          </ul>
+      </li>
+      <li><span class="tree">cats</span>
+        <ul class="subtree">
+        <li><span class="tree">index.js</span>
+          <ul class="subtree">
+          <li>nav.js</li>
+          <li>card.js</li>
+          </ul>
+        </li>
+        <li>[id].js</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+*/
 //# sourceMappingURL=extension.js.map

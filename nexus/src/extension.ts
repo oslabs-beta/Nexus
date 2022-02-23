@@ -1,41 +1,40 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	
-	// webviewView
-	const provider = new ColorsViewProvider(context.extensionUri);
-	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider));
+  // webviewView
+  const provider = new ColorsViewProvider(context.extensionUri);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider)
+  );
 
-	// webview
-	let openWebview = vscode.commands.registerCommand('exampleApp.openWebview', () => {
-		const panel = vscode.window.createWebviewPanel(
-		'Big Chungus',
-		'Big Chungus',
-		vscode.ViewColumn.One,
-		{
-			enableScripts: true
-		}
-		);
-		panel.webview.html = getWebviewContent();
-	  });
-	  context.subscriptions.push(openWebview);
+  // webview
+  let openWebview = vscode.commands.registerCommand('exampleApp.openWebview', () => {
+    const panel = vscode.window.createWebviewPanel(
+      'Big Chungus',
+      'Big Chungus',
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true,
+      }
+    );
+    panel.webview.html = getWebviewContent();
+  });
+  context.subscriptions.push(openWebview);
 
-	// debugger terminal - success notification
-	console.log('Congratulations, your extension "nexus" is now active!');
+  // debugger terminal - success notification
+  console.log('Congratulations, your extension "nexus" is now active!');
 
-	// vscode window.alert
-	let disposable = vscode.commands.registerCommand('nexus.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World from Nexus!');
-	});
+  // vscode window.alert
+  let disposable = vscode.commands.registerCommand('nexus.helloWorld', () => {
+    vscode.window.showInformationMessage('Hello World from Nexus!');
+  });
 
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
-
 
 // html for webview content
 function getWebviewContent() {
-	return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
   <html lang="en">
   <head>
 	  <meta charset="UTF-8">
@@ -46,35 +45,32 @@ function getWebviewContent() {
 	 <img src = "https://static.wikia.nocookie.net/supermarioglitchy4/images/f/f3/Big_chungus.png/revision/latest?cb=20200511041102" />
   </body>
   </html>`;
-  }
+}
 
 // class object for webviewView content
-  class ColorsViewProvider implements vscode.WebviewViewProvider {
+class ColorsViewProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = 'calicoColors.colorsView';
 
-	public static readonly viewType = 'calicoColors.colorsView';
+  constructor(private readonly _extensionUri: vscode.Uri) {}
 
-	constructor(
-		private readonly _extensionUri: vscode.Uri,
-	) { } 
+  public resolveWebviewView(webviewView: vscode.WebviewView) {
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [this._extensionUri],
+    };
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+  }
 
-	public resolveWebviewView(
-		webviewView: vscode.WebviewView,
-	) 
-	{
-		
-		webviewView.webview.options = {
-			enableScripts: true,
-			localResourceRoots: [this._extensionUri]
-		};
-		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-	}
+  _getHtmlForWebview(webview: vscode.Webview) {
+    // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
+    );
+    const styles = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
+    );
 
-	_getHtmlForWebview(webview: vscode.Webview) {
-
-		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
-		const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
-		
-		return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
@@ -85,6 +81,18 @@ function getWebviewContent() {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
+			<h1>I am the html from the provider</h1>
+			<div id="root"></div>
+
+		  <script src="${scriptUri}"></script>
+			</body>
+			</html>`;
+  }
+}
+
+export function deactivate() {}
+
+/*
 <ul class="root-tree">
   <li><span class="tree">pages</span>
     <ul class="subtree">
@@ -109,10 +117,4 @@ function getWebviewContent() {
     </ul>
   </li>
 </ul>
-		  <script src="${scriptUri}"></script>
-			</body>
-			</html>`;
-	}
-}
-
-export function deactivate() {}
+*/

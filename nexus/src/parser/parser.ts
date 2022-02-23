@@ -1,10 +1,15 @@
-import { strictEqual } from "assert";
+// const PARSER = require('acorn').Parser;
 
-const PARSER = require('acorn').Parser;
-const jsx = require('acorn-jsx');
+import * as parserModule from 'acorn';
+const PARSER = parserModule.Parser;
+// const jsx = require('acorn-jsx');
+import * as jsx from 'acorn-jsx';
 const JSXPARSER = PARSER.extend(jsx());
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+
+// const fs = require("fs");
+// const path = require("path");
 
 // CONSTANTS 
 const JSXTEXT: string = 'JSXText';
@@ -179,7 +184,8 @@ function main(filePath: string) {
   return result;
 }
 
-main('./App.jsx');
+module.exports = main;
+// main('./App.jsx');
 // main('./newApp.jsx');
 
 // Node {

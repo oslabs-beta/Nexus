@@ -3,6 +3,12 @@ const path = require('path');
 module.exports = {
   entry: path.resolve(__dirname, './media/renderToDom.js'),
   mode: 'production',
+  target:'node',
+  externals: {
+    // vscode: 'commonjs vscode',
+    path: "require('path')",
+    fs: "require('fs')",
+  },
   module: {
     rules: [
       // {

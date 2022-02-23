@@ -1,5 +1,6 @@
 import React, { Component, render } from 'react';
-import parser from '../src/parser/parser.js';
+import main from '../src/parser/parser.js';
+import test from './test.js';
 // import Node from 'Nodes.jsx'
 
 // interface ComponentNode {
@@ -8,7 +9,7 @@ import parser from '../src/parser/parser.js';
 //   props: Object
 // }
 
-class MainSideBarTest extends Component() {
+class MainSideBarTest extends Component {
   // pass array down as props to all children
   constructor() {
     super();
@@ -20,8 +21,11 @@ class MainSideBarTest extends Component() {
   }
 
   componentDidMount() {
-    const res = parser('../src/parser/App.jsx');
-    console.log(res);
+    // const res = parser('../src/parser/App.jsx');
+    // console.log(res);
+    // console.log(main);
+    // console.log(test);
+    console.log(main);
     console.log('test string');
     const testStr = 'I am a string initialized in componentDidMount';
   }
@@ -33,7 +37,7 @@ class MainSideBarTest extends Component() {
     console.log('hello');
     return (
       <div>
-        <h1>I'm the main sidebar parent</h1>
+        <h1>I'm the main sidebar parent HELLO</h1>
         <div>{testStr}</div>
       </div>
     );

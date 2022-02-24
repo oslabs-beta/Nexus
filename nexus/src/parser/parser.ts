@@ -171,7 +171,7 @@ function getProps(node: Node){
   return propObj;
 }
 
-function main(filePath: string) {
+export default function main(filePath: string) {
   // console.log(filePath);
   const tree = getTree(filePath);
   // console.log(tree);
@@ -184,7 +184,6 @@ function main(filePath: string) {
   return result;
 }
 
-module.exports = main;
 // main('./App.jsx');
 // main('./newApp.jsx');
 

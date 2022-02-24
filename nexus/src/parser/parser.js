@@ -145,7 +145,7 @@ function main(filePath) {
     console.log(result);
     return result;
 }
-module.exports = main;
+exports["default"] = main;
 // main('./App.jsx');
 // main('./newApp.jsx');
 // Node {

@@ -1,11 +1,15 @@
+"use strict";
 // const PARSER = require('acorn').Parser;
-// import * as parserModule from 'acorn';
-// const PARSER = parserModule.Parser;
-// // const jsx = require('acorn-jsx');
-// import * as jsx from 'acorn-jsx';
-// const JSXPARSER = PARSER.extend(jsx());
-// import * as fs from 'fs';
-// import * as path from 'path';
+Object.defineProperty(exports, "__esModule", { value: true });
+const parserModule = require("acorn");
+const PARSER = parserModule.Parser;
+// const jsx = require('acorn-jsx');
+const jsx = require("acorn-jsx");
+const JSXPARSER = PARSER.extend(jsx());
+const fs = require("fs");
+const path = require("path");
+// const fs = require("fs");
+// const path = require("path");
 // CONSTANTS 
 const JSXTEXT = 'JSXText';
 const JSXELEMENT = 'JSXElement';
@@ -137,7 +141,7 @@ function main(filePath) {
     console.log(result);
     return result;
 }
-module.exports = main;
+exports.default = main;
 // main('./App.jsx');
 // main('./newApp.jsx');
 // Node {

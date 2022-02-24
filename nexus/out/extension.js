@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
+const parser_js_1 = require("./parser/parser.js");
+const obj = (0, parser_js_1.default)('./App.jsx');
 function activate(context) {
     // webviewView
     const provider = new ColorsViewProvider(context.extensionUri);
@@ -16,6 +18,7 @@ function activate(context) {
     context.subscriptions.push(openWebview);
     // debugger terminal - success notification
     console.log('Congratulations, your extension "nexus" is now active!');
+    // console.log(obj);
     // vscode window.alert
     let disposable = vscode.commands.registerCommand('nexus.helloWorld', () => {
         vscode.window.showInformationMessage('Hello World from Nexus!');
@@ -51,8 +54,37 @@ class ColorsViewProvider {
     }
     _getHtmlForWebview(webview) {
         // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
-        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
+        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
+        // console.log('pls work! ', obj);
+        const bodyEnd = `</ul>
+  </li>
+</ul>`;
+        let body = `
+<ul class="root-tree">
+<li><span class="tree">app.jsx</span>
+  <ul class="subtree">
+`;
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i]["children"].length > 0) {
+                body += `<li><span class="tree">${obj[i]["name"]}</span>`;
+            }
+            else {
+                body += `<li>${obj[i]["name"]}`;
+            }
+            if (obj[i]["children"].length > 0) {
+                body += `<ul class="subtree">`;
+                for (let j = 0; j < obj[i]["children"].length; j++) {
+                    body += `<li>${obj[i]["children"][j]["name"]}</li>`;
+                }
+                body += `</ul></li>`;
+            }
+            else {
+                body += `</li>`;
+            }
+        }
+        body += bodyEnd;
+        console.log(body);
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -64,9 +96,7 @@ class ColorsViewProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-			<h1>I am the html from the provider</h1>
-			<div id="root"></div>
-
+      "${body}"
 		  <script src="${scriptUri}"></script>
 			</body>
 			</html>`;

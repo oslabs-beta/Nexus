@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import parser from './parser/parser.js';
+
+const obj = parser('./App.jsx');
 
 export function activate(context: vscode.ExtensionContext) {
   // webviewView
@@ -6,6 +9,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider)
   );
+
+  
 
   // webview
   let openWebview = vscode.commands.registerCommand('exampleApp.openWebview', () => {
@@ -23,6 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // debugger terminal - success notification
   console.log('Congratulations, your extension "nexus" is now active!');
+  // console.log(obj);
 
   // vscode window.alert
   let disposable = vscode.commands.registerCommand('nexus.helloWorld', () => {
@@ -64,12 +70,41 @@ class ColorsViewProvider implements vscode.WebviewViewProvider {
   _getHtmlForWebview(webview: vscode.Webview) {
     // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js')
     );
     const styles = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
     );
 
+    // console.log('pls work! ', obj);
+    const bodyEnd = 
+    `</ul>
+  </li>
+</ul>`;
+let body = `
+<ul class="root-tree">
+<li><span class="tree">app.jsx</span>
+  <ul class="subtree">
+`;
+for (let i = 0; i < obj.length; i++) {
+  if (obj[i]["children"].length > 0) {
+    body += `<li><span class="tree">${obj[i]["name"]}</span>`;
+  }
+  else {body += `<li>${obj[i]["name"]}`;}
+  if (obj[i]["children"].length > 0) {
+    body += `<ul class="subtree">`;
+    for (let j = 0; j < obj[i]["children"].length; j++) {
+      body += `<li>${obj[i]["children"][j]["name"]}</li>`;
+    }
+    body += `</ul></li>`;
+  }
+  else {
+    body += `</li>`;
+  }
+  
+}
+body += bodyEnd;
+console.log(body);
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -81,9 +116,7 @@ class ColorsViewProvider implements vscode.WebviewViewProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-			<h1>I am the html from the provider</h1>
-			<div id="root"></div>
-
+      "${body}"
 		  <script src="${scriptUri}"></script>
 			</body>
 			</html>`;

@@ -1,30 +1,15 @@
 import * as vscode from 'vscode';
 import parser from './parser/parser.js';
 
+// const obj = parser('./parser/App.jsx');
 const obj = parser('./App.jsx');
 
 export function activate(context: vscode.ExtensionContext) {
   // webviewView
-  const provider = new ColorsViewProvider(context.extensionUri);
+  const provider = new NexusProvider(context.extensionUri);
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider)
+    vscode.window.registerWebviewViewProvider(NexusProvider.viewType, provider)
   );
-
-  
-
-  // webview
-  let openWebview = vscode.commands.registerCommand('exampleApp.openWebview', () => {
-    const panel = vscode.window.createWebviewPanel(
-      'Big Chungus',
-      'Big Chungus',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-      }
-    );
-    panel.webview.html = getWebviewContent();
-  });
-  context.subscriptions.push(openWebview);
 
   // debugger terminal - success notification
   console.log('Congratulations, your extension "nexus" is now active!');
@@ -38,32 +23,20 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 }
 
-// html for webview content
-function getWebviewContent() {
-  return `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-	  <meta charset="UTF-8">
-	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	  <title>Example Webview</title>
-  </head>
-  <body>
-	 <img src = "https://static.wikia.nocookie.net/supermarioglitchy4/images/f/f3/Big_chungus.png/revision/latest?cb=20200511041102" />
-  </body>
-  </html>`;
-}
-
 // class object for webviewView content
-class ColorsViewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'calicoColors.colorsView';
-
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+class NexusProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = 'nexus.componentTreeView';
+  // componentTree: any;
+  constructor(private readonly _extensionUri: vscode.Uri) {
+    // obj = undefined;
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
+    // obj = parser('./parser/App.jsx');
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
   }
 
@@ -77,34 +50,41 @@ class ColorsViewProvider implements vscode.WebviewViewProvider {
     );
 
     // console.log('pls work! ', obj);
-    const bodyEnd = 
-    `</ul>
+    const bodyEnd = `</ul>
   </li>
 </ul>`;
-let body = `
+    let body = `
 <ul class="root-tree">
-<li><span class="tree">app.jsx</span>
+<li><span class="tree" id="main-app-root">App</span>
   <ul class="subtree">
 `;
-for (let i = 0; i < obj.length; i++) {
-  if (obj[i]["children"].length > 0) {
-    body += `<li><span class="tree">${obj[i]["name"]}</span>`;
-  }
-  else {body += `<li>${obj[i]["name"]}`;}
-  if (obj[i]["children"].length > 0) {
-    body += `<ul class="subtree">`;
-    for (let j = 0; j < obj[i]["children"].length; j++) {
-      body += `<li>${obj[i]["children"][j]["name"]}</li>`;
+    for (let i = 0; i < obj.length; i++) {
+      if (obj[i]['children'].length > 0) {
+        body += `<li><span class="tree">${obj[i]['name']}</span>`;
+      } else {
+        body += `<li class="top-level-tree">${obj[i]['name']}`;
+      }
+      if (obj[i]['children'].length > 0) {
+        body += `<ul class="subtree" id='subtree'>`;
+        for (let j = 0; j < obj[i]['children'].length; j++) {
+          body += `<li class="third-level">${obj[i]['children'][j]['name']}</li>`;
+        }
+        body += `</ul></li>`;
+      } else {
+        body += `</li>`;
+      }
     }
-    body += `</ul></li>`;
-  }
-  else {
-    body += `</li>`;
-  }
-  
-}
-body += bodyEnd;
-console.log(body);
+    body += bodyEnd;
+
+    // props
+    // iterate through the array of nodes that is returned from the parser
+    // if the length of the value of the props property inside each object is greater than zero
+    // list out the propsin a list
+    for (let i = 0; i < obj.length; i++) {
+      if (obj[i]['props'].length > 0) {
+      }
+    }
+    console.log(body);
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -116,8 +96,10 @@ console.log(body);
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-      "${body}"
+      <div class="main-container">
+      ${body}
 		  <script src="${scriptUri}"></script>
+      </div>
 			</body>
 			</html>`;
   }

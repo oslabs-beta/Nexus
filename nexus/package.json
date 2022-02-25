@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:nexus.helloWorld"
+    "onCommand:nexus.helloWorld",
+    "onView:nexus.componentTreeView"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -26,7 +27,7 @@
     "views": {
       "Nexus": [
         {
-          "id": "calicoColors.colorsView",
+          "id": "nexus.componentTreeView",
           "name": "Nexus",
           "type": "webview"
         }
@@ -36,10 +37,6 @@
       {
         "command": "nexus.helloWorld",
         "title": "Nexus"
-      },
-      {
-        "command": "exampleApp.openWebview",
-        "title": "Big Chungus"
       }
     ]
   },

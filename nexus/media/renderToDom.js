@@ -6,5 +6,3 @@ import MainSideBarTest from './MainSidebarTest.jsx';
 console.log('renderingtodom');
 
 ReactDOM.render(<MainSideBarTest />, document.getElementById('root'));
-           
-

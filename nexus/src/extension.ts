@@ -41,50 +41,58 @@ class NexusProvider implements vscode.WebviewViewProvider {
   }
 
   _getHtmlForWebview(webview: vscode.Webview) {
+    console.log('running gethtmlforwebview');
     // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js')
+      vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
     );
     const styles = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
     );
 
+    console.log(scriptUri);
+    console.log(styles);
+
+    console.log(5);
+
+
+
     // console.log('pls work! ', obj);
-    const bodyEnd = `</ul>
-  </li>
-</ul>`;
-    let body = `
-<ul class="root-tree">
-<li><span class="tree" id="main-app-root">App</span>
-  <ul class="subtree">
-`;
-    for (let i = 0; i < obj.length; i++) {
-      if (obj[i]['children'].length > 0) {
-        body += `<li><span class="tree">${obj[i]['name']}</span>`;
-      } else {
-        body += `<li class="top-level-tree">${obj[i]['name']}`;
-      }
-      if (obj[i]['children'].length > 0) {
-        body += `<ul class="subtree" id='subtree'>`;
-        for (let j = 0; j < obj[i]['children'].length; j++) {
-          body += `<li class="third-level">${obj[i]['children'][j]['name']}</li>`;
-        }
-        body += `</ul></li>`;
-      } else {
-        body += `</li>`;
-      }
-    }
-    body += bodyEnd;
+//     const bodyEnd = `</ul>
+//   </li>
+// </ul>`;
+//     let body = `
+// <ul class="root-tree">
+// <li><span class="tree" id="main-app-root">App</span>
+//   <ul class="subtree">
+// `;
+    // for (let i = 0; i < obj.length; i++) {
+    //   if (obj[i]['children'].length > 0) {
+    //     body += `<li><span class="tree">${obj[i]['name']}</span>`;
+    //   } else {
+    //     body += `<li class="top-level-tree">${obj[i]['name']}`;
+    //   }
+    //   if (obj[i]['children'].length > 0) {
+    //     body += `<ul class="subtree" id='subtree'>`;
+    //     for (let j = 0; j < obj[i]['children'].length; j++) {
+    //       body += `<li class="third-level">${obj[i]['children'][j]['name']}</li>`;
+    //     }
+    //     body += `</ul></li>`;
+    //   } else {
+    //     body += `</li>`;
+    //   }
+    // }
+    // body += bodyEnd;
 
     // props
     // iterate through the array of nodes that is returned from the parser
     // if the length of the value of the props property inside each object is greater than zero
     // list out the propsin a list
-    for (let i = 0; i < obj.length; i++) {
-      if (obj[i]['props'].length > 0) {
-      }
-    }
-    console.log(body);
+    // for (let i = 0; i < obj.length; i++) {
+    //   if (obj[i]['props'].length > 0) {
+    //   }
+    // }
+    // console.log(body);
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -96,10 +104,9 @@ class NexusProvider implements vscode.WebviewViewProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-      <div class="main-container">
-      ${body}
-		  <script src="${scriptUri}"></script>
-      </div>
+      <h1>I am a senior citizen regular HTML</h1>
+      <div id = "root"></div>
+      <script src="${scriptUri}"></script>
 			</body>
 			</html>`;
   }

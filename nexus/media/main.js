@@ -1,4 +1,5 @@
 function main() {
+  console.log('in main');
   const vscode = acquireVsCodeApi();            
             // append functionality to resulting html elements
             var tree= document.querySelectorAll(".tree");

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
-const parser_js_1 = require("./parser/parser.js");
+// import parser from './parser/parser.js';
 // const obj = parser('./parser/App.jsx');
-const obj = (0, parser_js_1.default)('./App.jsx');
+// const obj = parser('./App.jsx');
 function activate(context) {
     // webviewView
     const provider = new NexusProvider(context.extensionUri);

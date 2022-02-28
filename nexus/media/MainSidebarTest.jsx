@@ -1,5 +1,5 @@
 import React, { Component, render } from 'react';
-import main from '../src/parser/parser.js';
+// import main from '../src/parser/parser.js';
 import test from './test.js';
 // import Node from 'Nodes.jsx'
 
@@ -25,7 +25,7 @@ class MainSideBarTest extends Component {
     // console.log(res);
     // console.log(main);
     // console.log(test);
-    console.log(main);
+    // console.log(main);
     console.log('test string');
     const testStr = 'I am a string initialized in componentDidMount';
   }
@@ -38,7 +38,7 @@ class MainSideBarTest extends Component {
     return (
       <div>
         <h1>I'm the main sidebar parent HELLO</h1>
-        <div>{testStr}</div>
+        {/* <div>{testStr}</div> */}
       </div>
     );
   }

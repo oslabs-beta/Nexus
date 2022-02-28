@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import parser from './parser/parser.js';
+// import parser from './parser/parser.js';
 
 // const obj = parser('./parser/App.jsx');
-const obj = parser('./App.jsx');
+// const obj = parser('./App.jsx');
 
 export function activate(context: vscode.ExtensionContext) {
   // webviewView
@@ -55,17 +55,15 @@ class NexusProvider implements vscode.WebviewViewProvider {
 
     console.log(5);
 
-
-
     // console.log('pls work! ', obj);
-//     const bodyEnd = `</ul>
-//   </li>
-// </ul>`;
-//     let body = `
-// <ul class="root-tree">
-// <li><span class="tree" id="main-app-root">App</span>
-//   <ul class="subtree">
-// `;
+    //     const bodyEnd = `</ul>
+    //   </li>
+    // </ul>`;
+    //     let body = `
+    // <ul class="root-tree">
+    // <li><span class="tree" id="main-app-root">App</span>
+    //   <ul class="subtree">
+    // `;
     // for (let i = 0; i < obj.length; i++) {
     //   if (obj[i]['children'].length > 0) {
     //     body += `<li><span class="tree">${obj[i]['name']}</span>`;

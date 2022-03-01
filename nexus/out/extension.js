@@ -17,21 +17,43 @@ function activate(context) {
         vscode.window.showInformationMessage('Hello World from Nexus!');
     });
     context.subscriptions.push(disposable);
+    // register parse command
+    let parsePush = vscode.commands.registerCommand('nexus.parseCode', (webviewView) => {
+        // console.log(webviewView);
+        console.log('within parsePush command');
+        provider.parseCodeBaseAndSendMessage();
+    });
+    context.subscriptions.push(parsePush);
 }
 exports.activate = activate;
 // class object for webviewView content
 class NexusProvider {
     // componentTree: any;
     constructor(_extensionUri) {
-        this._extensionUri = _extensionUri;
         // obj = undefined;
+        this._extensionUri = _extensionUri;
+    }
+    // function
+    // run parser
+    // grab data
+    // send message to webviewAPI with data using webview.postMessage(data)
+    parseCodeBaseAndSendMessage() {
+        console.log('in parse and send message');
+        const dummyData = {
+            name: 'App',
+            children: [{ name: 'Gross Poopy Diaper David', children: [''], props: { price: '5000' } }, { name: 'Senior Citizen with Dentures Alex', children: ['Brian'], props: { price: '2' } }],
+            props: { example: 'test' },
+        };
+        this._view.webview.postMessage(dummyData);
     }
     resolveWebviewView(webviewView) {
+        this._view = webviewView;
         webviewView.webview.options = {
             enableScripts: true,
             localResourceRoots: [this._extensionUri],
         };
         // obj = parser('./parser/App.jsx');
+        // this.parseCodeBaseAndSendMessage(this._view);
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     }
     _getHtmlForWebview(webview) {
@@ -39,44 +61,8 @@ class NexusProvider {
         // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
         const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
-        console.log(scriptUri);
-        console.log(styles);
-        console.log(5);
-        // console.log('pls work! ', obj);
-        //     const bodyEnd = `</ul>
-        //   </li>
-        // </ul>`;
-        //     let body = `
-        // <ul class="root-tree">
-        // <li><span class="tree" id="main-app-root">App</span>
-        //   <ul class="subtree">
-        // `;
-        // for (let i = 0; i < obj.length; i++) {
-        //   if (obj[i]['children'].length > 0) {
-        //     body += `<li><span class="tree">${obj[i]['name']}</span>`;
-        //   } else {
-        //     body += `<li class="top-level-tree">${obj[i]['name']}`;
-        //   }
-        //   if (obj[i]['children'].length > 0) {
-        //     body += `<ul class="subtree" id='subtree'>`;
-        //     for (let j = 0; j < obj[i]['children'].length; j++) {
-        //       body += `<li class="third-level">${obj[i]['children'][j]['name']}</li>`;
-        //     }
-        //     body += `</ul></li>`;
-        //   } else {
-        //     body += `</li>`;
-        //   }
-        // }
-        // body += bodyEnd;
-        // props
-        // iterate through the array of nodes that is returned from the parser
-        // if the length of the value of the props property inside each object is greater than zero
-        // list out the propsin a list
-        // for (let i = 0; i < obj.length; i++) {
-        //   if (obj[i]['props'].length > 0) {
-        //   }
-        // }
-        // console.log(body);
+        // console.log(scriptUri);
+        // console.log(styles);
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -88,7 +74,6 @@ class NexusProvider {
 				<link href="${styles}" rel="stylesheet">
 			</head>
 			<body>
-      <h1>I am a senior citizen regular HTML</h1>
       <div id = "root"></div>
       <script src="${scriptUri}"></script>
 			</body>
@@ -98,6 +83,42 @@ class NexusProvider {
 NexusProvider.viewType = 'nexus.componentTreeView';
 function deactivate() { }
 exports.deactivate = deactivate;
+//______________________NICOOOOO_______________
+// console.log('pls work! ', obj);
+//     const bodyEnd = `</ul>
+//   </li>
+// </ul>`;
+//     let body = `
+// <ul class="root-tree">
+// <li><span class="tree" id="main-app-root">App</span>
+//   <ul class="subtree">
+// `;
+// for (let i = 0; i < obj.length; i++) {
+//   if (obj[i]['children'].length > 0) {
+//     body += `<li><span class="tree">${obj[i]['name']}</span>`;
+//   } else {
+//     body += `<li class="top-level-tree">${obj[i]['name']}`;
+//   }
+//   if (obj[i]['children'].length > 0) {
+//     body += `<ul class="subtree" id='subtree'>`;
+//     for (let j = 0; j < obj[i]['children'].length; j++) {
+//       body += `<li class="third-level">${obj[i]['children'][j]['name']}</li>`;
+//     }
+//     body += `</ul></li>`;
+//   } else {
+//     body += `</li>`;
+//   }
+// }
+// body += bodyEnd;
+// props
+// iterate through the array of nodes that is returned from the parser
+// if the length of the value of the props property inside each object is greater than zero
+// list out the propsin a list
+// for (let i = 0; i < obj.length; i++) {
+//   if (obj[i]['props'].length > 0) {
+//   }
+// }
+// console.log(body);
 /*
 <ul class="root-tree">
   <li><span class="tree">pages</span>

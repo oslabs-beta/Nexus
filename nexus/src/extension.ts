@@ -21,22 +21,55 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(disposable);
+
+  // register parse command
+  let parsePush = vscode.commands.registerCommand('nexus.parseCode', (webviewView: vscode.WebviewView) => {
+      // console.log(webviewView);
+      console.log('within parsePush command');
+      provider.parseCodeBaseAndSendMessage();
+
+  });
+
+  context.subscriptions.push(parsePush);
+
 }
 
 // class object for webviewView content
 class NexusProvider implements vscode.WebviewViewProvider {
+  _view?: vscode.WebviewView;
   public static readonly viewType = 'nexus.componentTreeView';
   // componentTree: any;
   constructor(private readonly _extensionUri: vscode.Uri) {
     // obj = undefined;
+   
+  }
+
+  // function
+    // run parser
+      // grab data
+        // send message to webviewAPI with data using webview.postMessage(data)
+  
+  public parseCodeBaseAndSendMessage() {
+    console.log('in parse and send message');
+      const dummyData = 
+      {
+        name: 'App',
+        children: [{ name: 'Gross Poopy Diaper David', children: [''], props: { price: '5000' } }, { name: 'Senior Citizen with Dentures Alex', children: ['Brian'], props: { price: '2' } }],
+        props: { example: 'test' },
+      };
+      this._view.webview.postMessage(dummyData);
   }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
+    this._view = webviewView;
+    
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
+
     // obj = parser('./parser/App.jsx');
+    // this.parseCodeBaseAndSendMessage(this._view);
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
   }
 
@@ -50,12 +83,36 @@ class NexusProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
     );
 
-    console.log(scriptUri);
-    console.log(styles);
+    // console.log(scriptUri);
+    // console.log(styles);
 
-    console.log(5);
 
-    // console.log('pls work! ', obj);
+    return `<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<!--
+					Use a content security policy to only allow loading images from https or from our extension directory,
+					and only allow scripts that have a specific nonce.
+				-->
+				<link href="${styles}" rel="stylesheet">
+			</head>
+			<body>
+      <div id = "root"></div>
+      <script src="${scriptUri}"></script>
+			</body>
+			</html>`;
+  }
+}
+
+export function deactivate() {}
+
+
+
+
+
+//______________________NICOOOOO_______________
+  // console.log('pls work! ', obj);
     //     const bodyEnd = `</ul>
     //   </li>
     // </ul>`;
@@ -91,27 +148,6 @@ class NexusProvider implements vscode.WebviewViewProvider {
     //   }
     // }
     // console.log(body);
-    return `<!DOCTYPE html>
-			<html lang="en">
-			<head>
-				<meta charset="UTF-8">
-				<!--
-					Use a content security policy to only allow loading images from https or from our extension directory,
-					and only allow scripts that have a specific nonce.
-				-->
-				<link href="${styles}" rel="stylesheet">
-			</head>
-			<body>
-      <h1>I am a senior citizen regular HTML</h1>
-      <div id = "root"></div>
-      <script src="${scriptUri}"></script>
-			</body>
-			</html>`;
-  }
-}
-
-export function deactivate() {}
-
 /*
 <ul class="root-tree">
   <li><span class="tree">pages</span>

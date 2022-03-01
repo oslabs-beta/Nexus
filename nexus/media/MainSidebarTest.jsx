@@ -1,6 +1,8 @@
-import React, { Component, render } from 'react';
+import React, { Component } from 'react';
+import Node from './Node.jsx';
+// import React, { useState, useEffect } from 'react';
 // import main from '../src/parser/parser.js';
-import test from './test.js';
+// import test from './test.js';
 // import Node from 'Nodes.jsx'
 
 // interface ComponentNode {
@@ -13,32 +15,81 @@ class MainSideBarTest extends Component {
   // pass array down as props to all children
   constructor() {
     super();
-    this.dummyParserData = {
-      name: 'App',
-      children: [{ name: 'Child', children: [], props: { price: '5000' } }],
-      props: { example: 'test' },
+    this.state = {
+      data: {}
     };
+    
   }
 
   componentDidMount() {
-    // const res = parser('../src/parser/App.jsx');
-    // console.log(res);
-    // console.log(main);
-    // console.log(test);
-    // console.log(main);
-    console.log('test string');
-    const testStr = 'I am a string initialized in componentDidMount';
+    console.log('in component did mount');
+    // add event listner listening for message
+    window.addEventListener('message', (event) => {
+      console.log(event);
+      this.setState((prevState) => ({
+          ...prevState,
+          data: event.data,
+          // name: this.state.data.children[0].name;
+        }));
+      // cb function --=>
+        // grab data and update state
+    
+  });
+};
+
+  display(){
+    // let children;
+    // this.state.data !== {} ? this.children = JSON.stringify(this.state.data.children) : children = 'No data in state';
+
+    // let mapped;
+    // if (children !== 'No data in state;') {
+    //   mapped = children.map((child, i) => {
+    //     return <Node data={child} id={i} />
+    //   });
+    // }
+    // else {return children};
+    //  return mapped;
+    
+    // console.log(this.state);
+    // let children = [];
+
+    //   if (this.state.data.data) {children = this.state.data.data.children.map((child, i) => {
+    //     return <Node data={child} id={i} />
+    //   });
+    // }
+
+    // console.log(children);  
+    //   return children;
+    
+  
+    
   }
+
 
   render() {
     // res.map(// factory make Node components from data)
+    // let testStr = 'No data in state';
+    // if (this.state.data !== {}) {testStr = JSON.stringify(this.state.data.children)};
 
-    const testStr = 'I am a string initialized in the render method';
-    console.log('hello');
+    console.log('state.data', this.state.data);
+
+    let children;
+
+    if (this.state.data.name) {
+      
+    console.log('state.data.children', this.state.data.children);
+      children = this.state.data.children.map((child) => {
+      return <Node data={child} />;
+    });
+  }
+
+  console.log('children array', children);  
+  
+
+    
     return (
       <div>
-        <h1>I'm the main sidebar parent HELLO</h1>
-        {/* <div>{testStr}</div> */}
+        {children || <p>No Data in State</p>}
       </div>
     );
   }

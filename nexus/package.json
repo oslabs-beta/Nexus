@@ -11,6 +11,7 @@
   ],
   "activationEvents": [
     "onCommand:nexus.helloWorld",
+    "onCommand:parseCode",
     "onView:nexus.componentTreeView"
   ],
   "main": "./out/extension.js",
@@ -37,6 +38,10 @@
       {
         "command": "nexus.helloWorld",
         "title": "Nexus"
+      },
+      {
+        "command": "nexus.parseCode",
+        "title": "Parse It Baby"
       }
     ]
   },

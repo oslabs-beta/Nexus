@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NodeWithChildren from './NodeWithChildren.jsx';
 import Leaf from './Leaf.jsx';
+
 // import React, { useState, useEffect } from 'react';
 // import main from '../src/parser/parser.js';
 // import test from './test.js';
@@ -38,11 +39,6 @@ class MainSideBarTest extends Component {
   });
 };
 
-  display(){
-   
-  
-    
-  }
 
 
   render() {
@@ -56,8 +52,12 @@ class MainSideBarTest extends Component {
     console.log('state.data.children', this.state.data.children);
 
       children = this.state.data.children.map((child) => {
-        if (child.children.length) return <NodeWithChildren data={child} />;
-        else return <Leaf data={child} />
+        if (child.children.length) {
+          console.log('making a nodewithchildren');
+          return <NodeWithChildren data={child} />;}
+        else {
+          console.log('making a leaf');
+          return <Leaf data={child} />;}
     });
   }
 

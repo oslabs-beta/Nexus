@@ -1,16 +1,22 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 
-const Leaf = (props) => {
+class Leaf extends Component {
+  constructor (props) {
+    super (props)
+  }
 
-  return (
 
+  
+  render () {
+
+    return(
     <div>
-      <h1>{props.data.name}</h1>
-      <p>{props.data.props.price}</p>
+      <h3>{this.props.data.name}</h3>
+      <p>{this.props.data.props.price}</p>
     </div>
-
-  );
+    );
+  };
 
 
 };

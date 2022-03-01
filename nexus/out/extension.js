@@ -40,8 +40,14 @@ class NexusProvider {
         console.log('in parse and send message');
         const dummyData = {
             name: 'App',
-            children: [{ name: 'Gross Poopy Diaper David', children: [''], props: { price: '5000' } }, { name: 'Senior Citizen with Dentures Alex', children: ['Brian'], props: { price: '2' } }],
             props: { example: 'test' },
+            children: [{ name: 'Thick Colonoscopy Bag Alex', props: { price: 'Alex Compoment Props' },
+                    children: [{ name: 'Power Tripping Simp Nico', props: { price: 'Simp Component Props' },
+                            children: [{ name: 'Kim Jong Un Hairpiece Brian', props: { price: 'Kim Jong Un Props' },
+                                    children: [{ name: 'Clearly Is A Furry Mike', props: { price: 'Furry Component Props' },
+                                            children: [] }] }] }] },
+                { name: 'Gross Poopy Diaper David', props: { price: 'David Component Props' }, children: [] }
+            ],
         };
         this._view.webview.postMessage(dummyData);
     }

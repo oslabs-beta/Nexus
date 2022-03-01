@@ -43,7 +43,6 @@ const App = props => {
       <Children name={'Alex'} otherProp={400} />
       <Children name={'Mike'} otherProp={600} />
       <Comp />
-      <ScuttleCrab />
       <button>HTML Button</button>
     </div>
   );

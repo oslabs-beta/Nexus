@@ -56,10 +56,16 @@ class NexusProvider implements vscode.WebviewViewProvider {
         name: 'App',
         props: { example: 'test' },
         children: [{ name: 'Thick Colonoscopy Bag Alex', props: { price: 'Alex Compoment Props' },
-          children: [{ name: 'Power Tripping Simp Nico', props: { price: 'Simp Component Props' },
-          children: [{ name: 'Kim Jong Un Hairpiece Brian', props: { price: 'Kim Jong Un Props' },
-            children: [{ name: 'Clearly Is A Furry Mike', props: { price: 'Furry Component Props' },
-              children: [] }] }] }] },
+          children: [
+            { name: 'Power Tripping Simp Nico - Sib to Brian', props: { price: 'Simp Component Props' },
+          children: [{ name: 'Closet Furry Mike - Child of Brian', props: { price: 'Furry Component Props' },
+          children: [] }]},
+            { name: 'Kim Jong Brian - Sib to Nico', props: { price: 'Kim Jong Brian Props' },
+             children: []
+             }
+            ]
+
+      },
           { name: 'Gross Poopy Diaper David', props: { price: 'David Component Props' },  children: [] }
         ],
       };

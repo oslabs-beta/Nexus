@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
-// import parser from './parser/parser.js';
 // const obj = parser('./parser/App.jsx');
 // const obj = parser('./App.jsx');
 function activate(context) {

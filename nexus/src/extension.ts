@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-// import parser from './parser/parser.js';
+import parser from './parser/parser.js';
 
 // const obj = parser('./parser/App.jsx');
 // const obj = parser('./App.jsx');

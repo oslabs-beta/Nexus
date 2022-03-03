@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Parser } from './parser/parser.js';
 const path = require("path");
 const fs = require("fs");
-
+import { NexusProvider } from './NexusProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -16,14 +16,15 @@ export function activate(context: vscode.ExtensionContext) {
     // console.log(webviewView);
     console.log('within parsePush command');
     provider.parseCodeBaseAndSendMessage();
-
+    
   });
-
+  
   context.subscriptions.push(parsePush);
-
+  
   // debugger terminal - success notification
   console.log('Congratulations, your extension "nexus" is now active!');
-
+  
+}
   // function readFile (){fs.readFileSync()}
 
   // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
@@ -50,79 +51,77 @@ export function activate(context: vscode.ExtensionContext) {
   // iterate through body.body, looking at all methodDefinitions
     // if .key.name === "render", use that class node
     // else continue 
-}
 
-// class object for webviewView content
-class NexusProvider implements vscode.WebviewViewProvider {
-  _view?: vscode.WebviewView;
-  public static readonly viewType = 'nexus.componentTreeView';
-  // componentTree: any;
-  constructor(private readonly _extensionUri: vscode.Uri) {
-    // obj = undefined;
-   
-  }
+// // class object for webviewView content
+// class NexusProvider implements vscode.WebviewViewProvider {
+//   _view?: vscode.WebviewView;
+//   public static readonly viewType = 'nexus.componentTreeView';
+//   // componentTree: any;
+//   constructor(private readonly _extensionUri: vscode.Uri) {
+//     // obj = undefined;
+//   }
 
-  // function
-    // run parser
-      // grab data
-        // send message to webviewAPI with data using webview.postMessage(data)
+//   // function
+//     // run parser
+//       // grab data
+//         // send message to webviewAPI with data using webview.postMessage(data)
   
-  public parseCodeBaseAndSendMessage() {
+//   public parseCodeBaseAndSendMessage() {
 
-    const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
-    const data = resultObj.main();
-    console.log(data);
+//     const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
+//     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
+//     const data = resultObj.main();
+//     console.log(data);
 
-    console.log('in parse and send message');
-    this._view.webview.postMessage(data);
-  }
+//     console.log('in parse and send message');
+//     this._view.webview.postMessage(data);
+//   }
   
-  public resolveWebviewView(webviewView: vscode.WebviewView) {
-    this._view = webviewView;
+//   public resolveWebviewView(webviewView: vscode.WebviewView) {
+//     this._view = webviewView;
     
-    webviewView.webview.options = {
-      enableScripts: true,
-      localResourceRoots: [this._extensionUri],
-    };
+//     webviewView.webview.options = {
+//       enableScripts: true,
+//       localResourceRoots: [this._extensionUri],
+//     };
     
-    // obj = parser('./parser/App.jsx');
-    // this.parseCodeBaseAndSendMessage(this._view);
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-  }
+//     // obj = parser('./parser/App.jsx');
+//     // this.parseCodeBaseAndSendMessage(this._view);
+//     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+//   }
 
-  _getHtmlForWebview(webview: vscode.Webview) {
-    console.log('running gethtmlforwebview');
-    // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
-      );
-      const styles = webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
-        );
+//   _getHtmlForWebview(webview: vscode.Webview) {
+//     console.log('running gethtmlforwebview');
+//     // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
+//     const scriptUri = webview.asWebviewUri(
+//       vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
+//       );
+//       const styles = webview.asWebviewUri(
+//         vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
+//         );
         
-        // console.log(scriptUri);
-        // console.log(styles);
+//         // console.log(scriptUri);
+//         // console.log(styles);
         
         
-        return `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-				<meta charset="UTF-8">
-				<!--
-					Use a content security policy to only allow loading images from https or from our extension directory,
-					and only allow scripts that have a specific nonce.
-				-->
-				<link href="${styles}" rel="stylesheet">
-        </head>
-        <body>
-        <div id = "root"></div>
-        <script src="${scriptUri}"></script>
-        </body>
-        </html>`;
-      }
-    }
-    export function deactivate() {}
+//         return `<!DOCTYPE html>
+//         <html lang="en">
+//         <head>
+// 				<meta charset="UTF-8">
+// 				<!--
+// 					Use a content security policy to only allow loading images from https or from our extension directory,
+// 					and only allow scripts that have a specific nonce.
+// 				-->
+// 				<link href="${styles}" rel="stylesheet">
+//         </head>
+//         <body>
+//         <div id = "root"></div>
+//         <script src="${scriptUri}"></script>
+//         </body>
+//         </html>`;
+//       }
+//     }
+//     export function deactivate() {}
     // const dummyData = 
     // {
     //   name: 'App',

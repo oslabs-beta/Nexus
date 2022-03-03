@@ -10,7 +10,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:nexus.helloWorld",
     "onCommand:parseCode",
     "onView:nexus.componentTreeView"
   ],
@@ -35,10 +34,6 @@
       ]
     },
     "commands": [
-      {
-        "command": "nexus.helloWorld",
-        "title": "Nexus"
-      },
       {
         "command": "nexus.parseCode",
         "title": "Parse It Baby"

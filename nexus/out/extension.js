@@ -2,20 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
-// const obj = parser('./parser/App.jsx');
-// const obj = parser('./App.jsx');
+const parser_js_1 = require("./parser/parser.js");
+const path = require("path");
+const fs = require("fs");
 function activate(context) {
-    // webviewView
     const provider = new NexusProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider(NexusProvider.viewType, provider));
-    // debugger terminal - success notification
-    console.log('Congratulations, your extension "nexus" is now active!');
-    // console.log(obj);
-    // vscode window.alert
-    let disposable = vscode.commands.registerCommand('nexus.helloWorld', () => {
-        vscode.window.showInformationMessage('Hello World from Nexus!');
-    });
-    context.subscriptions.push(disposable);
     // register parse command
     let parsePush = vscode.commands.registerCommand('nexus.parseCode', (webviewView) => {
         // console.log(webviewView);
@@ -23,6 +15,29 @@ function activate(context) {
         provider.parseCodeBaseAndSendMessage();
     });
     context.subscriptions.push(parsePush);
+    // debugger terminal - success notification
+    console.log('Congratulations, your extension "nexus" is now active!');
+    // function readFile (){fs.readFileSync()}
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
+    // console.log(resultObj.main());
+    // let classObj = resultObj.programBody.filter(node=>{
+    //   return node.type === 'ClassDeclaration';
+    // })
+    // console.log(classObj[0]);
+    // console.log(classObj[0].body.body[1].value.body.body[0].argument.openingElement.name.name);//.body[1].value.body.body[0].argument.openingElement.name.name);**
+    // filter all class declarations (like above)
+    // for each class declaration node, look at body.body (Array)
+    // for(let i=0;i<classObj.length;i++){
+    //   for(let j=0;j<classObj[i].body.body.length;j++){
+    //     console.log(classObj[i].body.body[j]);
+    //     if(classObj[i].body.body[j].key.name === 'render'){
+    //       console.log('it works!' , classObj[i].body.body[j].value.body.body[0].argument.openingElement.name.name);
+    //     }
+    //   }
+    // }
+    // iterate through body.body, looking at all methodDefinitions
+    // if .key.name === "render", use that class node
+    // else continue 
 }
 exports.activate = activate;
 // class object for webviewView content
@@ -37,24 +52,12 @@ class NexusProvider {
     // grab data
     // send message to webviewAPI with data using webview.postMessage(data)
     parseCodeBaseAndSendMessage() {
+        const resultObj = new parser_js_1.Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
+        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
+        const data = resultObj.main();
+        console.log(data);
         console.log('in parse and send message');
-        const dummyData = {
-            name: 'App',
-            props: { example: 'test' },
-            children: [{ name: 'Thick Colonoscopy Bag Alex', props: { price: 'Alex Compoment Props' },
-                    children: [
-                        { name: 'Power Tripping Simp Nico - Sib to Brian', props: { price: 'Simp Component Props' },
-                            children: [{ name: 'Closet Furry Mike - Child of Brian', props: { price: 'Furry Component Props' },
-                                    children: [] }] },
-                        { name: 'Kim Jong Brian - Sib to Nico', props: { price: 'Kim Jong Brian Props' },
-                            children: []
-                        }
-                    ]
-                },
-                { name: 'Gross Poopy Diaper David', props: { price: 'David Component Props' }, children: [] }
-            ],
-        };
-        this._view.webview.postMessage(dummyData);
+        this._view.webview.postMessage(data);
     }
     resolveWebviewView(webviewView) {
         this._view = webviewView;
@@ -74,25 +77,42 @@ class NexusProvider {
         // console.log(scriptUri);
         // console.log(styles);
         return `<!DOCTYPE html>
-			<html lang="en">
-			<head>
+        <html lang="en">
+        <head>
 				<meta charset="UTF-8">
 				<!--
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
 				-->
 				<link href="${styles}" rel="stylesheet">
-			</head>
-			<body>
-      <div id = "root"></div>
-      <script src="${scriptUri}"></script>
-			</body>
-			</html>`;
+        </head>
+        <body>
+        <div id = "root"></div>
+        <script src="${scriptUri}"></script>
+        </body>
+        </html>`;
     }
 }
 NexusProvider.viewType = 'nexus.componentTreeView';
 function deactivate() { }
 exports.deactivate = deactivate;
+// const dummyData = 
+// {
+//   name: 'App',
+//   props: { example: 'test' },
+//   children: [{ name: 'Thick Colonoscopy Bag Alex', props: { price: 'Alex Compoment Props' },
+//     children: [
+//       { name: 'Power Tripping Simp Nico - Sib to Brian', props: { price: 'Simp Component Props' },
+//     children: [{ name: 'Closet Furry Mike - Child of Brian', props: { price: 'Furry Component Props' },
+//     children: [] }]},
+//       { name: 'Kim Jong Brian - Sib to Nico', props: { price: 'Kim Jong Brian Props' },
+//         children: []
+//         }
+//       ]
+// },
+//     { name: 'Gross Poopy Diaper David', props: { price: 'David Component Props' },  children: [] }
+//   ],
+// };
 //______________________NICOOOOO_______________
 // console.log('pls work! ', obj);
 //     const bodyEnd = `</ul>

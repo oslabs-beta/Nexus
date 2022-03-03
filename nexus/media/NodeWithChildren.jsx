@@ -37,7 +37,8 @@ constructor (props) {
    
       <h3>{this.props.data.name}</h3>
       {/* {props.data.children} */}
-      <p>{this.props.data.props.price}</p>
+      {/* <p>{this.props.data.props.price}</p> */}
+      <p>{this.props.data.props.name}</p>
       <p>{this.children}</p>
     </div>
 

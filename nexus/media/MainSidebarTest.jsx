@@ -19,6 +19,7 @@ class MainSideBarTest extends Component {
     super();
     this.state = {
       data: {},
+      // data: [],
     };
   }
 
@@ -55,6 +56,27 @@ class MainSideBarTest extends Component {
         }
       });
     }
+
+    // ---- for array
+    // let children;
+    // console.log('in render: ', this.state.data);
+    // if (this.state.data.length) {
+    //   console.log('state.data.children', this.state.data);
+
+    //   children = this.state.data.map(child => {
+    //     if (child.children.length) {
+    //       console.log('making a nodewithchildren', child.name);
+    //       return <NodeWithChildren data={child} />;
+    //     } else {
+    //       console.log('making a leaf', child.name);
+    //       return <Leaf data={child} />;
+    //     }
+    //   });
+    // }
+    // ---- test 
+    // children = this.state.data.map(node => {
+      // return <Leaf data={node}/>
+    // });
 
     console.log('children array', children);
 

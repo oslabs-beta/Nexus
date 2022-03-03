@@ -16,7 +16,7 @@ const JSXTEXT: string = 'JSXText';
 const JSXELEMENT: string = 'JSXElement';
 const JSXEXPRESSIONCONTAINER: string = 'JSXExpressionContainer';
 
-// TS Interface
+// TS Interface 
 interface Node {
   type: string,
   start: number,
@@ -28,7 +28,7 @@ interface Node {
   properties: Array<Node>,
   method: boolean,
   init: Node,
-  body: Array<any>|object,
+  body: Array<any>|Node,
   children: Array<Node>,
   argument: Node,
   openingElement: Node,
@@ -53,11 +53,232 @@ class ComponentNode {
   }
 }
 
-// Parser
+// Class Parser
+// constructor(sourceCode: Buffer) 
+// Methods: all below methods
+
+export interface Parser {
+  program: any,
+  programBody: Array<Node>,
+  fs: any,
+  testFs: any,
+}
+
+export class Parser {
+  constructor(sourceCode: any) {
+    this.program = JSXPARSER.parse(sourceCode, {sourceType: "module"}); // Node Object -> take body property (Array)
+    this.programBody = this.program.body;
+    // this.fs = fs;
+    // console.log('FROM PARSER CLASS: ', fs);
+    this.testFs = JSXPARSER.parse(fs.readFileSync(path.resolve(__dirname, './Children.jsx')), {sourceType: "module"});
+
+  }
+
+  //methods
+  getImportNodes(programBody: Array<Node>) {
+    const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
+    return importNodes;
+  }
+
+   getVariableNodes(programBody: Array<Node>) {
+    const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
+    return variableNodes;
+  }
+
+  getNonImportNodes(programBody: Array<any>) {
+    const nonImportNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
+    return nonImportNodes;
+  }
+
+  getExportDefaultNodes(otherNodes: Array<any>) {
+    const exportDefaultNode: Node = otherNodes.filter((node: Node) => {
+    node.type === 'ExportDefaultDeclaration';
+    })[0];
+    return exportDefaultNode;
+  }
+
+   getChildrenNodes(variableNodes: Array<Node>) {
+    // RETURN STATEMENT in functional component
+    const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
+    const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
+    const childrenNodes = returnNode.argument.children;
+    return childrenNodes;
+  }
+
+
+  getJsxNodes(childrenNodes: Array<Node>) {
+    const jsxNodes: Array<Node> = childrenNodes.filter((node: Node) => node.type === JSXELEMENT);
+    return jsxNodes;
+  }
+
+  getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>) {
+    const components = [];
+    const regex = /[a-zA-Z]+(.jsx|.js)/;  
+    const importValues = importNodes.map((node) => node.source.value);
+    const componentPaths = importValues.filter((str) => regex.test(str) === true); 
+    const cache = {};
+    for (let str of componentPaths) {
+      const splitName = str.split('/');
+      const componentPath = splitName[splitName.length-1];
+      const name = componentPath.split('.')[0];
+      cache[name] = str;
+    }
+    // console.log('Cache', cache);
+    
+    // importValues = ['./Children.jsx', 'react', 'react-router-dom']
+    for (let node of jsxNodes) {
+      const firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
+      const componentName = node.openingElement.name.name;
+      if (firstChar === firstChar.toUpperCase()) {
+        const props = this.getProps(node); 
+        // check componentName against importNodes
+        // if name matches import node name, take filepath
+        // recursively invoke parsing algo on file
+        let children: Array<ComponentNode> = [];
+        if (cache[`${componentName}`]) {
+          // children = this.main(cache[`${componentName}`]);
+          children = this.recurse(cache[`${componentName}`]);
+        }
+        
+        // const componentNode = new ComponentNode(componentName, props, []);
+        const componentNode = new ComponentNode(componentName, props, children);
+        components.push(componentNode);      
+      }
+    }
+    return components;
+  }
+
+   getPropValue(node: Node) {
+    if (Object.keys(node).includes('expression')) {
+      return node.expression.value; // look into the value (node) and find the expression 
+    } else {
+      return node.value; // return the value 
+    }
+  }
+
+  getProps(node: Node){
+    const propObj = {};
+    for(let prop of node.openingElement.attributes){
+      const name = prop.name.name;
+      propObj[name] = this.getPropValue(prop.value); 
+      // console.log('propObj', propObj);
+    }
+    // console.log(propArr);
+    return propObj;
+  }
+
+  recurse(filePath: string) {
+    // console.log(filePath);
+    function getTree(filePath: string){
+      const source = fs.readFileSync(path.resolve(__dirname, filePath));
+      const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
+      const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
+      return programBody;
+    }
+    const tree = getTree(filePath);
+
+    const importNodes = this.getImportNodes(tree);
+    const variableNodes = this.getVariableNodes(tree);
+    const childrenNodes = this.getChildrenNodes(variableNodes);
+    const jsxNodes = this.getJsxNodes(childrenNodes);
+    const result = this.getChildrenComponents(jsxNodes, importNodes);
+   // console.log(result);
+    return result;
+  }
+
+  main() {
+    // console.log(filePath);
+    const importNodes = this.getImportNodes(this.programBody);
+    const variableNodes = this.getVariableNodes(this.programBody);
+    const childrenNodes = this.getChildrenNodes(variableNodes);
+    const jsxNodes = this.getJsxNodes(childrenNodes);
+    const result = this.getChildrenComponents(jsxNodes, importNodes);
+   // console.log(result);
+    // return result;
+    return {name: "App", children: result};
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 function getTree(filePath: string){
   const source = fs.readFileSync(path.resolve(__dirname, filePath));
   const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
+  console.log('parsed: ', parsed);
   const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
+  console.log('programBody: ', programBody);
   return programBody;
 }
 
@@ -129,7 +350,7 @@ function getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>) 
     const name = componentPath.split('.')[0];
     cache[name] = str;
   }
-  console.log('Cache', cache);
+  // console.log('Cache', cache);
   
   // importValues = ['./Children.jsx', 'react', 'react-router-dom']
   for (let node of jsxNodes) {
@@ -142,10 +363,11 @@ function getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>) 
       // recursively invoke parsing algo on file
       let children: Array<ComponentNode> = [];
       if (cache[`${componentName}`]) {
-        children = main(cache[`${componentName}`]);
+        // children = main(cache[`${componentName}`]);
       }
       
-      const componentNode = new ComponentNode(componentName, props, children);
+      const componentNode = new ComponentNode(componentName, props, []);
+      // const componentNode = new ComponentNode(componentName, props, children);
       components.push(componentNode);      
     }
   }
@@ -174,54 +396,16 @@ function getProps(node: Node){
 export default function main(filePath: string) {
   // console.log(filePath);
   const tree = getTree(filePath);
-  // console.log(tree);
   const importNodes = getImportNodes(tree);
   const variableNodes = getVariableNodes(tree);
   const childrenNodes = getChildrenNodes(variableNodes);
   const jsxNodes = getJsxNodes(childrenNodes);
   const result = getChildrenComponents(jsxNodes, importNodes);
-  console.log(result);
+  // console.log(result);
   return result;
 }
 
-// main('./App.jsx');
+main('./App.jsx');
 // main('./newApp.jsx');
 
-// Node {
-//   type: 'JSXElement',
-//   start: 815,
-//   end: 857,
-//   openingElement: Node {
-//     type: 'JSXOpeningElement',
-//     start: 815,
-//     end: 857,
-//     attributes: [ [Node], [Node] ],
-//     name: Node {
-//       type: 'JSXIdentifier',
-//       start: 816,
-//       end: 825,
-//       name: 'Chatrooms'
-//     },
-//     selfClosing: true
-//   },
-//   closingElement: null,
-//   children: []
-// }
-// some logic that will help filter out nodes that we actually need
-    // use a switch statement to avoid too many if conditional statements
-// <Chatroom name={'Brian'} otherProp={500}/>
-
-// value: Node {
-//   type: 'Literal',
-//   start: 650,
-//   end: 657,
-//   value: '/dogs',
-//   raw: '"/dogs"'
-// }
-
-// value: Node {
-//   type: 'JSXExpressionContainer',
-//   start: 775,
-//   end: 784,
-//   expression: [Node]
-// }
+*/

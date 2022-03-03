@@ -9,11 +9,11 @@ class Leaf extends Component {
 
   
   render () {
-
+    console.log('leaf: ', this.props);
     return(
     <div>
       <h3>{this.props.data.name}</h3>
-      <p>{this.props.data.props.price}</p>
+      {/* <p>{this.props.data.props.price}</p> */}
     </div>
     );
   };

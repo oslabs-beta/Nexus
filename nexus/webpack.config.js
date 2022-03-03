@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.resolve(__dirname, './media/renderToDom.js'),
+  entry: path.resolve(__dirname, './src/webview/renderToDom.js'),
   mode: 'production',
   target: 'node',
   externals: {

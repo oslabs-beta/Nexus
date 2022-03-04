@@ -24,8 +24,12 @@ class ComponentNode {
 }
 class Parser {
     constructor(sourceCode) {
+        console.log('Source Code: ', sourceCode);
+        console.log('dirname: ', __dirname);
         this.program = JSXPARSER.parse(sourceCode, { sourceType: "module" }); // Node Object -> take body property (Array)
+        console.log('program: ', this.program);
         this.programBody = this.program.body;
+        console.log('program body: ', this.programBody);
         // this.fs = fs;
         // console.log('FROM PARSER CLASS: ', fs);
         this.testFs = JSXPARSER.parse(fs.readFileSync(path.resolve(__dirname, './Children.jsx')), { sourceType: "module" });
@@ -50,8 +54,11 @@ class Parser {
         return exportDefaultNode;
     }
     getChildrenNodes(variableNodes) {
+        var _a;
         // RETURN STATEMENT in functional component
-        const nodes = variableNodes[variableNodes.length - 1].declarations[0].init.body.body;
+        console.log('variable Nodes', variableNodes);
+        const nodes = (_a = variableNodes[variableNodes.length - 1]) === null || _a === void 0 ? void 0 : _a.declarations[0].init.body.body;
+        console.log('issue in getChildrenNodes: ', nodes);
         const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
         const childrenNodes = returnNode.argument.children;
         return childrenNodes;
@@ -113,7 +120,8 @@ class Parser {
         return propObj;
     }
     recurse(filePath) {
-        // console.log(filePath);
+        console.log('filepath in recurse: ', filePath);
+        console.log('path.resolve in recurse: ', path.resolve(__dirname, filePath));
         function getTree(filePath) {
             const source = fs.readFileSync(path.resolve(__dirname, filePath));
             const parsed = JSXPARSER.parse(source, { sourceType: "module" });
@@ -123,6 +131,7 @@ class Parser {
         const tree = getTree(filePath);
         const importNodes = this.getImportNodes(tree);
         const variableNodes = this.getVariableNodes(tree);
+        console.log('variable Nodes', variableNodes);
         const childrenNodes = this.getChildrenNodes(variableNodes);
         const jsxNodes = this.getJsxNodes(childrenNodes);
         const result = this.getChildrenComponents(jsxNodes, importNodes);
@@ -131,6 +140,7 @@ class Parser {
     }
     main() {
         // console.log(filePath);
+        console.log('this is in main');
         const importNodes = this.getImportNodes(this.programBody);
         const variableNodes = this.getVariableNodes(this.programBody);
         const childrenNodes = this.getChildrenNodes(variableNodes);

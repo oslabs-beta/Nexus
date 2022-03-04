@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NodeWithChildren from './NodeWithChildren.jsx';
 import Leaf from './Leaf.jsx';
+import AddFile from './AddFile.jsx';
 
 // import React, { useState, useEffect } from 'react';
 // import main from '../src/parser/parser.js';
@@ -80,7 +81,7 @@ class MainSideBarTest extends Component {
 
     console.log('children array', children);
 
-    return <div>{children || <p>No Data in State</p>}</div>;
+    return <div>{children || <AddFile />}</div>;
   }
 }
 

@@ -14,4 +14,4 @@ const ScuttleCrab = () => {
   );
 };
 
-export default ScuttleCrab //;
+export default ScuttleCrab;

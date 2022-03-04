@@ -21,7 +21,7 @@ constructor (props) {
     
     // this.children = [<Leaf data={{name: 'test Leaf', children: [], props: {price: 'Test Leaf Props'}}} />];
 
-
+  
         this.children = this.props.data.children.map(child => {
           if (child.children.length) {
             return <NodeWithChildren data={child}/>;
@@ -32,7 +32,7 @@ constructor (props) {
 
     
     return (
-
+      // TODO: handle props, onhover or onclick
     <div>
    
       <h3>{this.props.data.name}</h3>

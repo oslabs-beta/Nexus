@@ -18,9 +18,12 @@ export class NexusProvider implements vscode.WebviewViewProvider {
         // send message to webviewAPI with data using webview.postMessage(data)
   
   public parseCodeBaseAndSendMessage(filePath: string) {
-
+    console.log('dirname: ', __dirname);
+    console.log('path.resolve: ', path.resolve(__dirname, filePath));
+    
     const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, filePath)));
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/App.jsx')));
     const data = resultObj.main();
     console.log(data);
 
@@ -36,6 +39,8 @@ export class NexusProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
+
+    console.log('right here dummy: ', process.platform);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       // OG File Path = './parser/newApp.jsx'

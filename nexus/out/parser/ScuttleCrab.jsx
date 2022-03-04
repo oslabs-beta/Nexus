@@ -1,7 +1,7 @@
 import React from 'react';
 import Children from './Children.jsx';
 
-export const ScuttleCrab = () => {
+const ScuttleCrab = () => {
   return (
     <div>
       <h1>I am the Scuttle Crab, Hear Me Roar</h1>
@@ -13,3 +13,5 @@ export const ScuttleCrab = () => {
     </div>
   );
 };
+
+export default ScuttleCrab //;

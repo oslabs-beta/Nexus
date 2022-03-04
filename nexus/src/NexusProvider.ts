@@ -25,10 +25,16 @@ export class NexusProvider implements vscode.WebviewViewProvider {
     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/App.jsx')));
     const data = resultObj.main();
-    console.log(data);
+    console.log('FUNCTIONAL NODES: ', data);
 
-    console.log('in parse and send message');
-    this._view.webview.postMessage(data);
+
+  // debugger terminal - success notification
+  console.log('Congratulations, your extension "nexus" is now active!');
+
+
+    // console.log('data from parseCodeBase..', data);
+    // console.log('in parse and send message');
+    this._view.webview.postMessage({name: 'App', children: data});
   }
 
   

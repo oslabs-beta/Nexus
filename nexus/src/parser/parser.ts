@@ -42,14 +42,16 @@ interface Node {
 interface ComponentNode {
   name: string,
   children: Array<any>,
-  props: Object
+  props: Object,
+  dataFetching: string, // 'SSG', 'SSR'
 }
 
 class ComponentNode {
-  constructor(name: string, props: Object, children: Array<any>) {
+  constructor(name: string, props: Object, children: Array<any>, dataFetching: string) {
     this.name = name;
     this.children = children;
     this.props = props;
+    this.dataFetching = dataFetching;
   }
 }
 
@@ -94,6 +96,11 @@ export class Parser {
     return nonImportNodes;
   }
 
+  getExportNamedNodes(programBody: Array<Node>) {
+    const exportNamedNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ExportNamedDeclaration');
+    return exportNamedNodes; 
+  }
+
   getExportDefaultNodes(otherNodes: Array<any>) {
     const exportDefaultNode: Node = otherNodes.filter((node: Node) => {
     node.type === 'ExportDefaultDeclaration';
@@ -103,9 +110,8 @@ export class Parser {
 
    getChildrenNodes(variableNodes: Array<Node>) {
     // RETURN STATEMENT in functional component
-    console.log('variable Nodes', variableNodes);
-    const nodes = variableNodes[variableNodes.length-1]?.declarations[0].init.body.body;
-    console.log('issue in getChildrenNodes: ', nodes)
+    // TODO: refactor to look at all nodes, not just last varDeclaration node
+    const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
     const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
     const childrenNodes = returnNode.argument.children;
     return childrenNodes;
@@ -129,7 +135,7 @@ export class Parser {
       const name = componentPath.split('.')[0];
       cache[name] = str;
     }
-    // console.log('Cache', cache);
+    console.log('Cache', cache);
     
     // importValues = ['./Children.jsx', 'react', 'react-router-dom']
     for (let node of jsxNodes) {
@@ -141,13 +147,17 @@ export class Parser {
         // if name matches import node name, take filepath
         // recursively invoke parsing algo on file
         let children: Array<ComponentNode> = [];
+        let dataFetching = 'ssg';
         if (cache[`${componentName}`]) {
-          // children = this.main(cache[`${componentName}`]);
           children = this.recurse(cache[`${componentName}`]);
+          console.log('DEBUG getChildrenComponents: ', children);
+
+          const tree = this.getTree(cache[`${componentName}`]);
+          dataFetching = this.detectFetchingMethod(tree); // -> FetchingMethod.ssr or FetchingMethod.ssg
         }
-        
+
         // const componentNode = new ComponentNode(componentName, props, []);
-        const componentNode = new ComponentNode(componentName, props, children);
+        const componentNode = new ComponentNode(componentName, props, children, dataFetching);
         components.push(componentNode);      
       }
     }
@@ -173,6 +183,43 @@ export class Parser {
     return propObj;
   }
 
+    
+  detectFetchingMethod(tree: Array<Node>) {
+    // filter all ExportNamedDeclaration types
+    // loop through all to find one with declation.id.name === 'getServerSideProps' 
+      // can refactor to getStaticProps
+    const exportNamedNodes = this.getExportNamedNodes(tree);
+    console.log('exported named nodes: ', exportNamedNodes);
+    let dataMethod: string = '';
+    
+    // if no exportNamedNodes, infer that it's ssg bc of next.js default
+    if (exportNamedNodes.length === 0) {
+      dataMethod = 'ssg';
+      return dataMethod;
+    }
+
+    for (const node of exportNamedNodes) {
+      console.log('looping');
+      if (exportNamedNodes.every((node) => node.declaration.id.name !== 'getServerSideProps')) {
+        console.log('should be ssg');
+        dataMethod = 'ssg';
+      }
+      if (node.declaration.id.name === 'getServerSideProps') {
+        console.log('should be ssg');
+        dataMethod = 'ssr';
+        break;
+      }
+    }
+    return dataMethod;
+  }
+
+  getTree(filePath: string){
+    const source = fs.readFileSync(path.resolve(__dirname, filePath));
+    const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
+    const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
+    return programBody;
+  }
+
   recurse(filePath: string) {
     console.log('filepath in recurse: ',filePath);
     console.log('path.resolve in recurse: ', path.resolve(__dirname, filePath));
@@ -185,28 +232,102 @@ export class Parser {
       return programBody;
     }
     const tree = getTree(filePath);
+    console.log(`IN RECURSE WITH ${filePath}`);
+    console.log(tree);
+ 
+    
+    let variableNodes;
+    if (this.funcOrClass() === 'JSXElement') {
+      const importNodes = this.getImportNodes(tree);
+      variableNodes = this.getVariableNodes(tree);
+      const childrenNodes = this.getChildrenNodes(variableNodes);
+      const jsxNodes = this.getJsxNodes(childrenNodes);
+      const result = this.getChildrenComponents(jsxNodes, importNodes);
+      return result;
+    } else {
+      return this.getClassNodes(tree);
+    }
 
-    const importNodes = this.getImportNodes(tree);
-    const variableNodes = this.getVariableNodes(tree);
-    console.log('variable Nodes', variableNodes)
-    const childrenNodes = this.getChildrenNodes(variableNodes);
-    const jsxNodes = this.getJsxNodes(childrenNodes);
-    const result = this.getChildrenComponents(jsxNodes, importNodes);
+    // const variableNodes = this.getVariableNodes(tree);
+    // const childrenNodes = this.getChildrenNodes(variableNodes);
+    // const jsxNodes = this.getJsxNodes(childrenNodes);
+    // const result = this.getChildrenComponents(jsxNodes, importNodes);
    // console.log(result);
-    return result;
+    // return result;
+  }
+
+  funcOrClass() {
+    // using this.programBody, check if file contains functional or class component
+    // look at all VariableDeclarations
+    // if the type of the object in the body array is a varDeclatation &&
+    const variableNodes = this.getVariableNodes(this.programBody);
+    // if functional, return "JSXELEMENT"
+    try {
+      const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
+      const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
+      const nodeType = returnNode.argument.type;
+      return nodeType;
+    } catch {
+    // if class object, return undefined
+      return;
+    }
+  }
+
+  getClassNodes(tree: Array<Node>) {
+    const resultObj = this.getVariableNodes(tree);
+  
+    let classObj = tree.filter(node=>{
+      return node.type === 'ClassDeclaration';
+    });
+    // [Node, Node]
+    // console.log('second array of objects ', classObj);
+    // console.log(classObj[1].body.body[1].value.body.body[0].argument.openingElement.name.name);//.body[1].value.body.body[0].argument.openingElement.name.name);**
+    // // filter all class declarations (like above)
+    // // for each class declaration node, look at body.body (Array)
+  
+    
+      for(let i=0;i<classObj.length;i++){
+        for(let j=0;j<classObj[i].body.body.length;j++){
+          // console.log(classObj[i].body.body[j]);
+          if(classObj[i].body.body[j].key.name === 'render'){
+            // console.log('it works!' , classObj[i].body.body[j].value.body.body[0].argument.openingElement.name.name);
+            // console.log('it works!' , classObj[i].body.body[j].value.body.body[0].argument.children);
+            const data = classObj[i].body.body[j].value.body.body[0].argument.children;
+            const jsx = this.getJsxNodes(data);
+            const importNodes = this.getImportNodes(tree);
+            const allNodes = this.getChildrenComponents(jsx, importNodes);
+            return allNodes;
+            // console.log(jsx);
+            // console.log('ALL NODES: ', allNodes);
+          }
+        }
+      }
   }
 
   main() {
     // console.log(filePath);
     console.log('this is in main');
     const importNodes = this.getImportNodes(this.programBody);
-    const variableNodes = this.getVariableNodes(this.programBody);
-    const childrenNodes = this.getChildrenNodes(variableNodes);
-    const jsxNodes = this.getJsxNodes(childrenNodes);
-    const result = this.getChildrenComponents(jsxNodes, importNodes);
-   // console.log(result);
-    // return result;
-    return {name: "App", children: result};
+
+    let variableNodes;
+    if (this.funcOrClass() === 'JSXElement') {
+      variableNodes = this.getVariableNodes(this.programBody);
+      const childrenNodes = this.getChildrenNodes(variableNodes);
+      const jsxNodes = this.getJsxNodes(childrenNodes);
+      const result = this.getChildrenComponents(jsxNodes, importNodes);
+      return result;
+    } else {
+      return this.getClassNodes(this.programBody);
+      
+    }
+    // functional
+    
+  //   const childrenNodes = this.getChildrenNodes(variableNodes);
+  //   const jsxNodes = this.getJsxNodes(childrenNodes);
+  //   const result = this.getChildrenComponents(jsxNodes, importNodes);
+  //  // console.log(result);
+  //   return result;
+    // return {name: "App", children: result};
   }
 }
 

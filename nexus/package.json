@@ -73,6 +73,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
+    "jest": "^27.5.1",
     "path": "^0.12.7",
     "stream": "^0.0.2"
   }

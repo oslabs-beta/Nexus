@@ -1,12 +1,19 @@
 import React from 'react';
+import Nested from './Nested.jsx';
 
-export class Milk extends React.Component {
+class Milk extends React.Component {
   constructor() {
     super();
   }
 
   render() {
-    return <div>I am GrandChild</div>;
+
+    return (
+      <div>
+        <Nested test={'yo'}/>
+        <div>I am GrandChild</div>
+      </div>
+    )
   }
 }
 

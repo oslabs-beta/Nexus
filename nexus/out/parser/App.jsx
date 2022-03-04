@@ -3,10 +3,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Chatrooms from './components/Chatrooms.jsx';
-import Chatroom from './components/Chatroom.jsx';
+import Chatroom from './components/Chatroom.jsx'; 
 import styles from './styles.css';
 import Children from './Children.jsx';
-import ScuttleCrab from './ScuttleCrab';
+import ScuttleCrab from './ScuttleCrab.jsx';
+import SSRComponent from './SSRComponent.jsx';
 
 const URL = 'http://google.com';
 const NUMBER = 10;
@@ -34,15 +35,17 @@ const App = props => {
       {/* <button onClick={useRouter}></button> */}
       {/* <Chatroom name={'Brian'} otherProp={500}/> */}
       {/* <Chatrooms name={'Mike'} otherProp={600}/> */}
-      <Link href="/dogs">
+      {/* <Link href="/dogs">
         <a>click me for dogs</a>
-      </Link>
+      </Link> */}
       <Children name={'Brian'} otherProp={500} />
       <Children name={'David'} otherProp={300} />
       <Children name={'Nico'} otherProp={100} />
       <Children name={'Alex'} otherProp={400} />
       <Children name={'Mike'} otherProp={600} />
-      <Comp />
+      <Comp name={'Test'} />
+      <ScuttleCrab name={'pls'} />
+      <SSRComponent />
       <button>HTML Button</button>
     </div>
   );

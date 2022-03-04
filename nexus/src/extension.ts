@@ -23,39 +23,16 @@ export function activate(context: vscode.ExtensionContext) {
     // console.log(webviewView);
     console.log('within parsePush command');
     provider.parseCodeBaseAndSendMessage();
-    
   });
 
 
   
   context.subscriptions.push(parsePush);
   
-  // debugger terminal - success notification
-  console.log('Congratulations, your extension "nexus" is now active!');
-  
 }
   // function readFile (){fs.readFileSync()}
 
-  // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx')));
-  // console.log(resultObj.main());
 
-  // let classObj = resultObj.programBody.filter(node=>{
-  //   return node.type === 'ClassDeclaration';
-  // })
-  // console.log(classObj[0]);
-  // console.log(classObj[0].body.body[1].value.body.body[0].argument.openingElement.name.name);//.body[1].value.body.body[0].argument.openingElement.name.name);**
-  // filter all class declarations (like above)
-  // for each class declaration node, look at body.body (Array)
-
-  
-    // for(let i=0;i<classObj.length;i++){
-    //   for(let j=0;j<classObj[i].body.body.length;j++){
-    //     console.log(classObj[i].body.body[j]);
-    //     if(classObj[i].body.body[j].key.name === 'render'){
-    //       console.log('it works!' , classObj[i].body.body[j].value.body.body[0].argument.openingElement.name.name);
-    //     }
-    //   }
-    // }
 
   // iterate through body.body, looking at all methodDefinitions
     // if .key.name === "render", use that class node

@@ -28,7 +28,7 @@ class MainSideBarTest extends Component {
     console.log('in component did mount');
     // add event listner listening for message
     window.addEventListener('message', event => {
-      console.log(event);
+      console.log('Event from message listener', event);
       this.setState(prevState => ({
         ...prevState,
         data: event.data,

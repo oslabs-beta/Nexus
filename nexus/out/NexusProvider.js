@@ -28,14 +28,14 @@ class NexusProvider {
     parseCodeBaseAndSendMessage(filePath) {
         console.log('dirname: ', __dirname);
         console.log('path.resolve: ', path.resolve(__dirname, filePath));
-        const resultObj = new parser_js_1.Parser(fs.readFileSync(path.resolve(__dirname, filePath)));
-        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
-        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/App.jsx')));
+        const resultObj = new parser_js_1.Parser(fs.readFileSync(path.resolve(__dirname, filePath))); // --> works
+        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx'))); // -> works
+        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
         console.log('FUNCTIONAL NODES: ', data);
         // debugger terminal - success notification
         console.log('Congratulations, your extension "nexus" is now active!');
-        // console.log('data from parseCodeBase..', data);
+        console.log('data from parseCodeBase..', data);
         // console.log('in parse and send message');
         this._view.webview.postMessage({ name: 'App', children: data });
     }

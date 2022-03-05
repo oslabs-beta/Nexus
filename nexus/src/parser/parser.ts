@@ -76,7 +76,7 @@ export class Parser {
     console.log('program body: ', this.programBody);
     // this.fs = fs;
     // console.log('FROM PARSER CLASS: ', fs);
-    this.testFs = JSXPARSER.parse(fs.readFileSync(path.resolve(__dirname, './Children.jsx')), {sourceType: "module"});
+    // this.testFs = JSXPARSER.parse(fs.readFileSync(path.resolve(__dirname, './Children.jsx')), {sourceType: "module"});
 
   }
 
@@ -233,11 +233,12 @@ export class Parser {
     }
     const tree = getTree(filePath);
     console.log(`IN RECURSE WITH ${filePath}`);
-    console.log(tree);
+    // console.log(tree);
  
     
     let variableNodes;
-    if (this.funcOrClass() === 'JSXElement') {
+    if (this.funcOrClass(tree) === 'JSXElement') {
+      console.log('RECURSE: JSXELEMENT');
       const importNodes = this.getImportNodes(tree);
       variableNodes = this.getVariableNodes(tree);
       const childrenNodes = this.getChildrenNodes(variableNodes);
@@ -245,6 +246,8 @@ export class Parser {
       const result = this.getChildrenComponents(jsxNodes, importNodes);
       return result;
     } else {
+      console.log('RECURSE: CLASS');
+      console.log(tree);
       return this.getClassNodes(tree);
     }
 
@@ -256,11 +259,12 @@ export class Parser {
     // return result;
   }
 
-  funcOrClass() {
+  funcOrClass(tree: Array<Node>) {
     // using this.programBody, check if file contains functional or class component
     // look at all VariableDeclarations
     // if the type of the object in the body array is a varDeclatation &&
-    const variableNodes = this.getVariableNodes(this.programBody);
+    // const variableNodes = this.getVariableNodes(this.programBody);
+    const variableNodes = this.getVariableNodes(tree);
     // if functional, return "JSXELEMENT"
     try {
       const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
@@ -310,7 +314,7 @@ export class Parser {
     const importNodes = this.getImportNodes(this.programBody);
 
     let variableNodes;
-    if (this.funcOrClass() === 'JSXElement') {
+    if (this.funcOrClass(this.programBody) === 'JSXElement') {
       variableNodes = this.getVariableNodes(this.programBody);
       const childrenNodes = this.getChildrenNodes(variableNodes);
       const jsxNodes = this.getJsxNodes(childrenNodes);

@@ -16,6 +16,10 @@ constructor (props) {
   // }
 
   render () {
+    console.log('in node with children');
+
+    console.log('this.props.data: ', this.props.data);
+    console.log('this.props.data.children: ', this.props.data.children);
 
         // let nodeChildren = [];
     
@@ -39,6 +43,7 @@ constructor (props) {
       {/* {props.data.children} */}
       {/* <p>{this.props.data.props.price}</p> */}
       <p>{this.props.data.props.name}</p>
+      <p>Data Fetching: {this.props.data.dataFetching}</p>
       <p>{this.children}</p>
     </div>
 

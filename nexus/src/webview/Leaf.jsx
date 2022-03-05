@@ -13,6 +13,7 @@ class Leaf extends Component {
     return(
     <div>
       <h3>{this.props.data.name}</h3>
+      <p>Data Fetching: {this.props.data.dataFetching}</p>
       {/* <p>{this.props.data.props.price}</p> */}
     </div>
     );

@@ -10,8 +10,10 @@ class App extends React.Component {
     }
 
     render(){
-        return(    
-        <Milk number={2}/>
+        return(   
+        <div> 
+            <Milk number={2}/>
+        </div>
         );
     }
 }

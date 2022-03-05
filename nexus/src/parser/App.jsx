@@ -32,11 +32,8 @@ const App = props => {
 
   return (
     <div>
-      {/* <button onClick={useRouter}></button> */}
-      {/* <Chatroom name={'Brian'} otherProp={500}/> */}
-      {/* <Chatrooms name={'Mike'} otherProp={600}/> */}
-      {/* <Link href="/dogs">
-        <a>click me for dogs</a>
+      {/* <Link href="/test">
+        <a>click me for test</a>
       </Link> */}
       <Children name={'Brian'} otherProp={500} />
       <Children name={'David'} otherProp={300} />

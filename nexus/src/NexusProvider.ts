@@ -21,8 +21,8 @@ export class NexusProvider implements vscode.WebviewViewProvider {
     console.log('dirname: ', __dirname);
     console.log('path.resolve: ', path.resolve(__dirname, filePath));
     
-    const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, filePath))); // --> works
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx'))); // -> works
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, filePath))); // --> works
+    const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx'))); // -> works
     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
     const data = resultObj.main();
     console.log('FUNCTIONAL NODES: ', data);
@@ -46,7 +46,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
-    console.log('right here dummy: ', process.platform);
+    console.log('process.platform test: ', process.platform);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       // OG File Path = './parser/newApp.jsx'

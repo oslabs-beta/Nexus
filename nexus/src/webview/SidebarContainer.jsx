@@ -43,6 +43,7 @@ class SidebarContainer extends Component {
       });
     }
 
+
     console.log('children array', children);
 
     return <div>{children || <AddFile />}</div>;

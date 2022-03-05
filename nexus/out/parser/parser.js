@@ -31,9 +31,6 @@ class Parser {
         console.log('program: ', this.program);
         this.programBody = this.program.body;
         console.log('program body: ', this.programBody);
-        // this.fs = fs;
-        // console.log('FROM PARSER CLASS: ', fs);
-        // this.testFs = JSXPARSER.parse(fs.readFileSync(path.resolve(__dirname, './Children.jsx')), {sourceType: "module"});
     }
     //methods
     getImportNodes(programBody) {

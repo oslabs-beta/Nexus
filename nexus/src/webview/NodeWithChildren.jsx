@@ -9,21 +9,12 @@ constructor (props) {
 }
 
 
-
-  // wrap this in function and call recursively when parent node is clicked
-  //  handleClick () {
-
-  // }
-
   render () {
     console.log('in node with children');
 
     console.log('this.props.data: ', this.props.data);
     console.log('this.props.data.children: ', this.props.data.children);
 
-        // let nodeChildren = [];
-    
-    // this.children = [<Leaf data={{name: 'test Leaf', children: [], props: {price: 'Test Leaf Props'}}} />];
 
   
         this.children = this.props.data.children.map(child => {

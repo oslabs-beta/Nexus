@@ -28,8 +28,8 @@ class NexusProvider {
     parseCodeBaseAndSendMessage(filePath) {
         console.log('dirname: ', __dirname);
         console.log('path.resolve: ', path.resolve(__dirname, filePath));
-        const resultObj = new parser_js_1.Parser(fs.readFileSync(path.resolve(__dirname, filePath))); // --> works
-        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx'))); // -> works
+        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, filePath))); // --> works
+        const resultObj = new parser_js_1.Parser(fs.readFileSync(path.resolve(__dirname, './parser/newApp.jsx'))); // -> works
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
         console.log('FUNCTIONAL NODES: ', data);
@@ -45,7 +45,7 @@ class NexusProvider {
             enableScripts: true,
             localResourceRoots: [this._extensionUri],
         };
-        console.log('right here dummy: ', process.platform);
+        console.log('process.platform test: ', process.platform);
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
             // OG File Path = './parser/newApp.jsx'
             switch (data.type) {

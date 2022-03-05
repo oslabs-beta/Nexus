@@ -1,9 +1,9 @@
 import React from 'react';
-import Milk from './Milk.jsx';
+import Silk from './Silk.jsx';
 const Nested = props => {
   return (
     <div>
-      <Milk />
+      <Silk />
     </div>
   );
 };

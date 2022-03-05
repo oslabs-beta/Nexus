@@ -2,7 +2,7 @@
   "name": "nexus",
   "displayName": "Nexus",
   "description": "VSCode Extension to visualize NextJS component tree hierarchy",
-  "version": "0.0.1",
+  "version": "0.5.1",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -36,7 +36,7 @@
     "commands": [
       {
         "command": "nexus.parseCode",
-        "title": "Parse It Baby"
+        "title": "Parse It"
       }
     ]
   },

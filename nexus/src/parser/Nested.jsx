@@ -1,11 +1,12 @@
 import React from 'react';
-import Milk from './Milk.jsx';
-const Nested = props => {
+
+const Nested = (props) => {
   return (
-    <div>
-      <Milk />
-    </div>
-  );
+      <div>
+        <h1></h1>
+        <p></p>
+      </div>
+  )
 };
 
 export default Nested;

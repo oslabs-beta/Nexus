@@ -1,0 +1,24 @@
+.subtree{
+  list-style-type:square}
+  .tree {
+    cursor: pointer;
+  }
+  .plus,.minus{
+  display: flow-root;
+  position: relative;
+  right: 10px;}
+  .subtree {
+    display: none;
+  }
+  .active {
+    display: block;}
+  .plus::before {
+    content: "+";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;}
+  .minus::before {
+    content: "-";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;}

@@ -3,17 +3,17 @@ import Milk from './Milk.jsx';
 
 const URL = 'http://google.com';
 
-
 class App extends React.Component {
     constructor (){
-        // super();
+        super();
     }
 
     render(){
-        return(   
-        <div> 
-            <Milk number={2}/>
-        </div>
+        return(
+        <>
+        <div>I love milkies</div>
+        <Milk number={2}/>
+        </>
         );
     }
 }

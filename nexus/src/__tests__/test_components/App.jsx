@@ -7,7 +7,6 @@ import Chatroom from './components/Chatroom.jsx';
 import styles from './styles.css';
 import Children from './Children.jsx';
 import ScuttleCrab from './ScuttleCrab.jsx';
-import SSRComponent from './SSRComponent.jsx';
 
 const URL = 'http://google.com';
 const NUMBER = 10;
@@ -45,7 +44,6 @@ const App = props => {
       <Children name={'Mike'} otherProp={600} />
       <Comp name={'Test'} />
       <ScuttleCrab name={'pls'} />
-      <SSRComp />
       <button>HTML Button</button>
     </div>
   );

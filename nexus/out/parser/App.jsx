@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Chatrooms from './components/Chatrooms.jsx';
-import Chatroom from './components/Chatroom.jsx';
+import Chatroom from './components/Chatroom.jsx'; 
 import styles from './styles.css';
 import Children from './Children.jsx';
 import ScuttleCrab from './ScuttleCrab.jsx';
@@ -45,7 +45,7 @@ const App = props => {
       <Children name={'Mike'} otherProp={600} />
       <Comp name={'Test'} />
       <ScuttleCrab name={'pls'} />
-      <SSRComp />
+      <SSRComponent />
       <button>HTML Button</button>
     </div>
   );

@@ -1,5 +1,6 @@
-(function(){
-    const vscode = acquireVsCodeApi();            
+function main() {
+  console.log('in main');
+  const vscode = acquireVsCodeApi();            
             // append functionality to resulting html elements
             var tree= document.querySelectorAll(".tree");
             for (var i = 0; i < tree.length; i++) {
@@ -11,4 +12,6 @@
                 
                 };
             }
-})();
+}
+
+main();

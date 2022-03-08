@@ -60,6 +60,7 @@ class ComponentNode {
 // Methods: all below methods
 
 export interface Parser {
+  string: any,
   program: any,
   programBody: Array<Node>,
   fs: any,
@@ -67,7 +68,8 @@ export interface Parser {
 }
 
 export class Parser {
-  constructor(sourceCode: any) {
+  constructor(sourceCode: any, str: any) {
+    this.string = str;
     console.log('Source Code: ', sourceCode);
     console.log('dirname: ', __dirname);
     this.program = JSXPARSER.parse(sourceCode, {sourceType: "module"}); // Node Object -> take body property (Array)
@@ -79,11 +81,14 @@ export class Parser {
   //methods
   getImportNodes(programBody: Array<Node>) {
     const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
+    // console.log(importNodes);
     return importNodes;
   }
 
    getVariableNodes(programBody: Array<Node>) {
-    const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
+     console.log('heres the programBody: ', programBody)
+    const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ExportDefaultDeclaration');
+    console.log(variableNodes);
     return variableNodes;
   }
 
@@ -105,11 +110,14 @@ export class Parser {
   }
 
    getChildrenNodes(variableNodes: Array<Node>) {
+     console.log('testing... ', variableNodes);
     // RETURN STATEMENT in functional component
     // TODO: refactor to look at all nodes, not just last varDeclaration node
-    const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
+    const nodes = variableNodes[variableNodes.length-1].declaration.body.body;
+    console.log('nodes: ', nodes);
     const returnNode = nodes.filter((node) => node.type === 'ReturnStatement')[0];
     const childrenNodes = returnNode.argument.children;
+    console.log(childrenNodes);
     return childrenNodes;
   }
 
@@ -119,13 +127,17 @@ export class Parser {
     return jsxNodes;
   }
 
+
+  
   getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>) {
+    console.log('more testing... ', jsxNodes, importNodes);
     const components = [];
-    const regex = /[a-zA-Z]+(.jsx|.js)/;  
+    const regex = '../components/';  
     const importValues = importNodes.map((node) => node.source.value);
-    const componentPaths = importValues.filter((str) => regex.test(str) === true); 
+    // const componentPaths = importValues.filter((str) => str.slice(0, 14) === regex); 
+    console.log('tesing Regex: ', importValues);
     const cache = {};
-    for (let str of componentPaths) {
+    for (let str of importValues) {
       const splitName = str.split('/');
       const componentPath = splitName[splitName.length-1];
       const name = componentPath.split('.')[0];
@@ -133,22 +145,36 @@ export class Parser {
     }
     console.log('Cache', cache);
     
+    // match cache key with last part of cache string value
+    // hard code excluding next
+    // two conditions: doesn't begin with 'next',
+                    // key matches last part of string
+    //Milk: '../comps/Milk/Milk
+    //Head: 'next/head'
+    //Nav: '../components/Nav/Nav'
+    //Jumbotron: '../components/Nav/Jumbotron/Jumbotron'
+    //styles: '../styles/Home.module.css'
+    
     // importValues = ['./Children.jsx', 'react', 'react-router-dom']
     for (let node of jsxNodes) {
       const firstChar = node.openingElement.name.name[0]; // actual name label (i.e. 'Chatroom', 'Component')
       const componentName = node.openingElement.name.name;
+      console.log('MOAR TESTING: ', firstChar, componentName);
       if (firstChar === firstChar.toUpperCase()) {
         const props = this.getProps(node); 
+        console.log('props: ', props);
         // check componentName against importNodes
         // if name matches import node name, take filepath
         // recursively invoke parsing algo on file
         let children: Array<ComponentNode> = [];
         let dataFetching = 'ssg';
+        let stringFP;
         if (cache[`${componentName}`]) {
           children = this.recurse(cache[`${componentName}`]);
           console.log('DEBUG getChildrenComponents: ', children);
-
-          const tree = this.getTree(cache[`${componentName}`]);
+          stringFP = this.string.split('/pages')[0] + cache[`${componentName}`].slice(2);
+          console.log(stringFP);
+          const tree = this.getTree(stringFP + '.js');
           dataFetching = this.detectFetchingMethod(tree); // -> FetchingMethod.ssr or FetchingMethod.ssg
         }
 
@@ -217,17 +243,21 @@ export class Parser {
   }
 
   recurse(filePath: string) {
+    console.log('THE TEST STR: ', this.string); // -> /home/nicoflo/cats-app/pages/index.js
     console.log('filepath in recurse: ',filePath);
-    console.log('path.resolve in recurse: ', path.resolve(__dirname, filePath));
+    console.log('path.resolve in recurse: ', path.resolve(filePath));
+    console.log('anotha test: ', this.string.split('/pages'));
+    let str = this.string.split('/pages')[0] + filePath.slice(2);
+    // console.log('modified string: ', str); // -> /home/nicoflo/cats-app/pages/index.js
     function getTree(filePath: string){
-     
-        
+     filePath += '.js';
+        console.log('here!!!: ', filePath);
       const source = fs.readFileSync(path.resolve(__dirname, filePath));
       const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
       const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
       return programBody;
     }
-    const tree = getTree(filePath);
+    const tree = getTree(str);
     console.log(`IN RECURSE WITH ${filePath}`);
     // console.log(tree);
  
@@ -261,6 +291,7 @@ export class Parser {
     // if the type of the object in the body array is a varDeclatation &&
     // const variableNodes = this.getVariableNodes(this.programBody);
     const variableNodes = this.getVariableNodes(tree);
+    console.log('variableNodes: ', variableNodes);
     // if functional, return "JSXELEMENT"
     try {
       const nodes = variableNodes[variableNodes.length-1].declarations[0].init.body.body;
@@ -308,18 +339,23 @@ export class Parser {
     // console.log(filePath);
     console.log('this is in main');
     const importNodes = this.getImportNodes(this.programBody);
-
+    console.log('what is this? ', this.funcOrClass(this.programBody));
     let variableNodes;
-    if (this.funcOrClass(this.programBody) === 'JSXElement') {
+    // if (this.funcOrClass(this.programBody) === 'JSXElement') {
       variableNodes = this.getVariableNodes(this.programBody);
+      console.log('varNodes: ', variableNodes);
       const childrenNodes = this.getChildrenNodes(variableNodes);
       const jsxNodes = this.getJsxNodes(childrenNodes);
       const result = this.getChildrenComponents(jsxNodes, importNodes);
+      console.log(result);
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].children === undefined) {result[i].children = [];}
+      }
       return result;
-    } else {
-      return this.getClassNodes(this.programBody);
+    // } else {
+    //   return this.getClassNodes(this.programBody);
       
-    }
+    // }
 
   }
 }

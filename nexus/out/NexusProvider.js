@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.NexusProvider = void 0;
-const parser_js_1 = require("./parser/parser.js");
+const parserv2_js_1 = require("./parser/parserv2.js");
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -26,9 +26,6 @@ class NexusProvider {
     // grab data
     // send message to webviewAPI with data using webview.postMessage(data)
     parseCodeBaseAndSendMessage(filePath) {
-        console.log('dirname: ', __dirname);
-        console.log('passed-in filepath: ', filePath);
-        console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
         // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:   
         //passed-in filepath:  C:\Users\Nico\Desktop\nexus-copy\out\parser\App.jsx
         let str = filePath;
@@ -37,7 +34,6 @@ class NexusProvider {
             if (/wsl\$/.test(filePath)) {
                 // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
                 str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
-                console.log(str);
                 /*
                         str = path.resolve(filePath.replace(/\\/g, '/'));
                         console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
@@ -57,19 +53,14 @@ class NexusProvider {
                 str = str.replace(/\\/g, '/');
             }
         }
-        console.log(str);
+        console.log('initial string: ', str);
         // \\wsl$\
-        console.log(path.win32.sep);
-        console.log(path.posix.sep);
-        const resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:   
+        const resultObj = new parserv2_js_1.Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works      
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
-        console.log('FUNCTIONAL NODES: ', data);
         // debugger terminal - success notification
-        console.log('Congratulations, your extension "nexus" is now active!');
-        console.log('data from parseCodeBase..', data);
         // console.log('in parse and send message');
         this._view.webview.postMessage({ name: 'App', children: data });
     }
@@ -84,7 +75,6 @@ class NexusProvider {
             // OG File Path = './parser/newApp.jsx'
             switch (data.type) {
                 case "addFile": {
-                    console.log(data.value);
                     this.parseCodeBaseAndSendMessage(data.value);
                 }
             }
@@ -94,7 +84,6 @@ class NexusProvider {
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     }
     _getHtmlForWebview(webview) {
-        console.log('running gethtmlforwebview');
         // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
         const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));

@@ -60,15 +60,20 @@ class SidebarContainer extends Component {
 
   // onclick, update state with children array from childrenStore
   handleClick() {
-    this.setState(prevState => ({
-      ...prevState,
+    this.setState(prevState => 
+      {
+        let newNode = {...prevState.node};
+        return {
       node: {
+        ...newNode,
         children: this.childrenStore,
       },
-    }));
+    };
+    });
   }
 
   render() {
+    console.log('sidebar container state: ',this.state);
     // initialize array into which we push children components when there are children nodes in state
     let childrenComp = [];
     // if there are children nodes in state
@@ -87,23 +92,26 @@ class SidebarContainer extends Component {
 
     return (
       <>
-      <div>
-      <AddFile />
-      </div>
-    <div className='containerIntro'>
-      <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
-      {(this.state.node.name) ? <h1 className='component-name' onClick={this.handleClick}>{this.state.node.name}</h1> : <div></div>}
-      { childrenComp.length ? childrenComp : <div></div>}
-      <div className="main-container">
+     
+      
+      <div className='containerIntro'>
+
+      {/* <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
+ */}
+
         {/* <img src="../../media/Nexus-logo-1.png" /> */}
         
         {/* alex */}
+        <div className="main-container">
         <AddFile />
         {/* if there is a name property in state, render it, otherwise render an empty div */}
         {this.state.node.name ? (
-          <h1 className="component-name" onClick={this.handleClick}>
+          <div>
+          <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
+            <h1 className="component-name" onClick={this.handleClick}>
             {this.state.node.name}
           </h1>
+          </div>
         ) : (
           <div></div>
         )}

@@ -1,16 +1,9 @@
-// const PARSER = require('acorn').Parser;
-
 import * as parserModule from 'acorn';
 const PARSER = parserModule.Parser;
-// const jsx = require('acorn-jsx');
 import * as jsx from 'acorn-jsx';
 const JSXPARSER = PARSER.extend(jsx());
 import * as fs from 'fs';
 import * as path from 'path';
-import { kill } from 'process';
-
-// const fs = require("fs");
-// const path = require("path");
 
 // CONSTANTS 
 const JSXTEXT: string = 'JSXText';
@@ -38,6 +31,7 @@ interface Node {
   props: Node,
   expression: Node,
   source: Node,
+  id: string
 }
 
 interface ComponentNode {
@@ -73,7 +67,7 @@ export class Parser {
     this.string = str;
     // console.log('Source Code: ', sourceCode);
     // console.log('dirname: ', __dirname);
-    this.program = JSXPARSER.parse(sourceCode, {sourceType: "module"}); // Node Object -> take body property (Array)
+    this.program = JSXPARSER.parse(sourceCode, {sourceType: "module", ecmaVersion: 6}); // Node Object -> take body property (Array)
     // console.log('program: ', this.program);
     this.programBody = this.program.body;
     // console.log('program body: ', this.programBody);
@@ -133,7 +127,6 @@ export class Parser {
       const name = componentPath.split('.')[0];
       map[name] = str;
     }
-    // console.log('Map: ', map);
     return map;
   }
 
@@ -147,8 +140,6 @@ export class Parser {
     return programBody;
   }
 
-  // input: array of nodes
-  // output: endpoints (array)
   getRouterEndpoints(tree: Array<Node>) {
     // console.log('entering getRouterEndpoint with: ', tree);
     // TODO: hardcoded for router variable, change to find label for useRouter() instead to match against
@@ -157,93 +148,64 @@ export class Parser {
     const returnStatement = exportObject.declaration.body.body[exportObject.declaration.body.body.length-1];
     const jsxElements = this.getJsxNodes(returnStatement.argument.children); //JSXElement
     const endpoints = [];
-    // console.log('returnStatement: ', returnStatement)
-    // console.log('jsxElements: ', jsxElements)
     // TODO: change from hardcoded 0th index
+    // for each jsxelement, look at children and filter jsxelements again
     // iterate through jsxelements, find node with router.push() callExpression
-      // for each jsxelement, look at children and filter jsxelements again
-      const nestedJsxElements = this.getJsxNodes(jsxElements[0].children);
-      // console.log('nestedJsxElements: ', nestedJsxElements);
-        // then, for each jsxelement, look at JSXOpeningElement attributes property (array)
-        for(let i = 0; i < nestedJsxElements.length; i++) {
-          const innerNest = nestedJsxElements[i].openingElement.attributes;
-          // console.log('attributes: ', innerNest);
-          // for each JSXAttribute, find JSXIdentifier with name === onClick
-          for (let j = 0; j < innerNest.length; j++) {
-            // console.log('innernest[j]: ', innerNest[j]);
-            // console.log('innernest[j]: ', innerNest[j].value);
-            // if name === onClick, match with value that is JSXExpressionContainer.expression.body.callee 
-            if (innerNest[j].value.expression !== undefined) {
-              // console.log('passed undefined conditional');
-              // console.log('HIT LINE 177 innernest');
-              if (innerNest[j].value.expression.body !== undefined) {
-
-                if (innerNest[j].value.expression.body.callee.object.name === "router") //"router"
-                // innerNest[j].value.expression.body.callee.property.name //"push"
-                {
-                  console.log('~~~~ENDPOINT~~~~~', innerNest[j].value.expression.body.arguments[0].value); //"/cats"
-                  endpoints.push(innerNest[j].value.expression.body.arguments[0].value); //"/cats"
-                  // return innerNest[j].value.expression.body.arguments[0].value; //"/cats"
-                }
-              }
+    const nestedJsxElements = this.getJsxNodes(jsxElements[0].children);
+    // console.log('nestedJsxElements: ', nestedJsxElements);
+    // then, for each jsxelement, look at JSXOpeningElement attributes property (array)
+    for(let i = 0; i < nestedJsxElements.length; i++) {
+      const nestedAttributes = nestedJsxElements[i].openingElement.attributes;
+      // console.log('attributes: ', innerNest);
+      // for each JSXAttribute, find JSXIdentifier with name === onClick
+      for (let j = 0; j < nestedAttributes.length; j++) {
+        // console.log('innernest[j]: ', innerNest[j]);
+        if (nestedAttributes[j].value.expression !== undefined && nestedAttributes[j].value.expression.body !== undefined) {
+          // console.log('passed undefined conditional');
+            if (nestedAttributes[j].value.expression.body.callee.object.name === "router") {
+              console.log('~~~~ENDPOINT~~~~~', nestedAttributes[j].value.expression.body.arguments[0].value); //"/cats"
+              endpoints.push(nestedAttributes[j].value.expression.body.arguments[0].value); 
             }
-          }
         }
-        return endpoints;
-          // two identifiers needed: one with name router, one with name push
-          // find CallExpression.arguments.value (i.e. '/cats')
+      }
+    }
+    return endpoints;
   }
 
-  getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>, nestedPath: string) {
+  getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>, nestedPath?: string) {
     // console.log('more testing... ', jsxNodes, importNodes);
     const cache = this.mapComponentToFilepath(jsxNodes, importNodes);
-    console.log('cache: ', JSON.stringify(cache));
+    console.log('cache: ', cache);
+    console.log(jsxNodes);
     const components = [];
     // TODO: handle cases where router variable is not named router 
     
-    // iterate through each key in cache
-    // check if value starts with 'next'
-
     const cacheKeys = Object.keys(cache);
     // console.log('before for loop');
     for (let i = 0; i < cacheKeys.length; i++) {
-      console.log('Looping over: V', cacheKeys[i]);
-      // splash component is at cacheKey[2];
+      console.log('Looping over: ', cacheKeys[i]);
       // console.log('Cache: ', cache);
       const filePath = cache[cacheKeys[i]];
-      // console.log(filePath.slice(0, 4) !== 'next' && filePath.slice(filePath.length - cacheKeys[i].length) === cacheKeys[i]);
       if (filePath.slice(0, 4) !== 'next' && filePath.slice(filePath.length - cacheKeys[i].length) === cacheKeys[i]) {
         //TODO: instead of hardcoding react, maybe pass in fileToRecurse into getChildrenComponents to catch more ed
         if (filePath !== 'react') {
-        // console.log('inside double conditional if');
-        // console.log('THE TEST STR: ', this.string);
+
         // -> /home/nicoflo/cats-app/pages/index.js
         let str = this.string.split('/pages')[0] + filePath.slice(2);
-        // console.log(this.string);
-        // console.log('string split: ', this.string.split('/pages')[0]);
-        // console.log('filePath: ', filePath);
         // console.log('resultantStr: ', str);
         // /home/nicoflo/cats-app + /components/Nav/Jumbotron/Jumbotron
         // get all file paths, match name without extension (.ts, .js, .jsx)
         const extensions = ['.ts', '.js', '.jsx', '.tsx'];
         for (let j = 0; j < extensions.length; j++) {
           let path = str + extensions[j];
-          console.log('in J loop: ', path);
-          // TAKE PATH, strip all ../ 
+          // Strip all occurrences of '../' from path 
           const arr = path.split('/'); // ['..', '..', 'components', 'Cards' 'CardItem.js']
-          // const newPath = arr.reduce((acc, str) => {
-            //   if (str !== '..') {
-              //     return acc += `/${str}`;
-              //   }
-              // }, '');
           const newPath = arr.filter((str) => str !== '..').join('/');
           console.log('NEW PATH', newPath);
 
-          // change 4 paths to newPaths
           if (fs.existsSync(newPath)) {
             console.log('in fsExistsSync: ', newPath);
             const tree = this.getTree(newPath);
-            // console.log('*********TREE: ', tree);
             
             // check if current component imports useRouter from next/router
             const importNodes = this.getImportNodes(tree);
@@ -255,11 +217,9 @@ export class Parser {
             }
             
             console.log(`in j loop BEFORE ROUTER CHECK: ${cacheKeys[i]}`, newPath);
-            console.log('usesRouter:', usesRouter);
+            // Check if component is importing from 'next/router'
             if (usesRouter) {
-              // if conditional to check router vs nonrouter using tree's import nodes
-              const endpoints = this.getRouterEndpoints(tree); // '/cats'      console.log('endpoint: ', endpoint);
-              // with endpoint, use this.string to find /pages/cats/index.js
+              const endpoints = this.getRouterEndpoints(tree); 
               // console.log('after endpoints: ', endpoints);
               // loop over endpoints 
               const endpointChildren = [];
@@ -270,21 +230,12 @@ export class Parser {
                 // console.log(this.getTree(fileToRecurse));
                 // console.log('fileToRecurse: ', fileToRecurse);
                 const children = [this.recurse(fileToRecurse)];
-                                                        // cacheKey[0] -> Home
-                                                        // cacheKey[1] -> Nav
-                                                        // splash component is at cacheKey[2];
                 const componentNode = new ComponentNode(endpoints[k], {}, children, 'ssg');
                 component.children.push(componentNode);
               }
               components.push(component);
               usesRouter = false;
               // TODO: get props
-              // recurse over new cats/index.js
-              // store as newChildren
-              // make new ComponentNode to store information for frontend
-              // cacheKeys[i] for name 
-              // e.g. {name: 'Jumbotron', props: {}, children: newChildren }
-              // newChildren: [{name: '/cats', props: {}, children: [ComponentNode(Nav), ComponentNode(Card)]}]
               } else { // if conditional usesRouter
                 console.log('usesRouter is falsy: line 255 else statement:-- ', cacheKeys[i]);
                 const componentNode = new ComponentNode(cacheKeys[i], {}, [], 'ssg');
@@ -312,10 +263,6 @@ export class Parser {
               components.push(componentNode);
             }
           } 
-          // else {
-          //   const componentNode = new ComponentNode(cacheKeys[i], {}, [], 'ssg');
-          //   components.push(componentNode);   
-          // }
           console.log('~!@~!@FINAL COMPONENTS~!@~@', components);
         }
       }
@@ -340,18 +287,7 @@ export class Parser {
     // console.log('IN RECURSE result: ', result);
     return result;
   }
-    // Nav (/components)
-    //  -> Link (href = "/cats")
-    //    -> /
-    //    -> /cats (/pages/cats/index.js)
-    //    -> Nav, Card (/components)
-    // Jumbotron (/components/Jumbotron)
-    //  -> /
-    //  -> /cats (/pages/cats/index.js)
-    //    -> Nav, Card (/components)
 
-
-  
   main () {
     const importNodes = this.getImportNodes(this.programBody);
     // TODO: consider other file structures
@@ -368,25 +304,9 @@ export class Parser {
     //    /jams/conserves
     //    /jams/marmalades
     //  /instruments ...
-    //  /eventss ...
+    //  /events ...
     // Look at each element in array
     // check if there is an associated file with that component name
     // e.g. next/head vs ../components/jumbotron
-
-    
-    // LINK case: look at href tag
-    // name: Link, children [Node(name: '/', children=[],props={})]
-      // case '/': 
-      // case '/{xyz}':
-
-    // Nav (/components)
-    //  -> Link (href = "/cats")
-    //    -> /
-    //    -> /cats (/pages/cats/index.js)
-    //    -> Nav, Card (/components)
-    // Jumbotron (/components/Jumbotron)
-    //  -> /
-    //  -> /cats (/pages/cats/index.js)
-    //    -> Nav, Card (/components)
   }
 }

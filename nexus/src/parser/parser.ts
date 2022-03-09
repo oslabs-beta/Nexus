@@ -28,7 +28,7 @@ interface Node {
   properties: Array<Node>,
   method: boolean,
   init: Node,
-  body: Array<any>|Node,
+  body: Array<any> | Node,
   children: Array<Node>,
   argument: Node,
   openingElement: Node,
@@ -37,6 +37,7 @@ interface Node {
   props: Node,
   expression: Node,
   source: Node,
+  id: string
 }
 
 interface ComponentNode {
@@ -72,7 +73,7 @@ export class Parser {
     this.string = str;
     console.log('Source Code: ', sourceCode);
     console.log('dirname: ', __dirname);
-    this.program = JSXPARSER.parse(sourceCode, {sourceType: "module"}); // Node Object -> take body property (Array)
+    this.program = JSXPARSER.parse(sourceCode, {sourceType: "module", ecmaVersion: 6}); // Node Object -> take body property (Array)
     console.log('program: ', this.program);
     this.programBody = this.program.body;
     console.log('program body: ', this.programBody);

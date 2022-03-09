@@ -4,22 +4,61 @@
   margin: 0;
 }
 
-.file-input {
-  height: 50px;
-  width: 100px;
-  background-color:  blue;
+.main-container {
+  background-color: #333;
+  height: 100%;
 }
+
+.add-file-container {
+  border: 2px solid #ddd;
+  padding: 5px;
+  margin-bottom: 8px;
+}
+
+.add-file-header {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.add-file-message {
+  font-size: 14px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.add-file-btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.file-input {
+  margin-top: 10px;
+  /* margin-left: 4px; */
+  /* padding: 8px 2px; */
+  /* text-align: center; */
+  /* height: 50px; */
+  width: 90px;
+  /* background-color: purple; */
+  border-radius: 3px;
+  /* z-index: 1; */
+}
+
+/* .btn-file-input {
+  height: 40px;
+  font-size: 16px;
+  background-color: orange;
+  z-index: -1;
+} */
 
 .root-tree {
   /* margin-left: 10px; */
-  font-size: 30px;
+  /* font-size: 30px; */
 }
 
 /* .compProps {
   display: none;
   
 } */
-
 
 /* .compWithChildren {
   color: white; 
@@ -45,6 +84,7 @@
 }
 
 
+/* 
 #main-app-root {
   margin-left: 0 !important;
   padding-left: 0 !important;
@@ -53,12 +93,12 @@
 }
 
 .subtree {
-   color: orange;
+  color: orange;
   list-style-type: square;
-  margin-left: 30px; 
+  margin-left: 30px;
   margin-top: 16px;
   border-left: 1px solid #c8a2c8;
-  }
+}
 
 .top-level-tree {
   list-style: none;
@@ -74,7 +114,7 @@
 }
 .tree {
   /* margin-top: 20px; */
-  padding-top: 16px;
+/* padding-top: 16px;
   padding-left: 5px;
   padding-bottom: 2px;
   margin-left: 40px;
@@ -119,14 +159,9 @@
   color: yellow;
   display: inline-block;
   margin-right: 6px;
-}
+} */
 
 /* 
 body {
   background-color: 'red';
 } */
-
-.main-container {
-  background-color: #333;
-  height: 100%;
-}

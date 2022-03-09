@@ -5,6 +5,7 @@ import AddFile from './AddFile.jsx';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+// this is the parent component of the react webview app
 
 /*
 
@@ -20,21 +21,9 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
  
 }
 
-node1 = {
-   name: 'name',
-   props: { prop1: num,
-             prop2: string,
-              etc.       },
-   children: [node1, node2, etc],
-   dataFetching: 'ssg' or 'ssr',
-   gsPaths: true/false,
-   fetchDependency: 'apiurl'
-}
-
 */
 
 class SidebarContainer extends Component {
-  // pass array down as props to all children
   constructor() {
     super();
     this.childrenStore = [];
@@ -52,57 +41,49 @@ class SidebarContainer extends Component {
   }
 
   componentDidMount() {
-    console.log('in component did mount');
-    // add event listner listening for message
+    // add event listner listening for message from NexusProvider, passing the data returned from the parser to the front end
     window.addEventListener('message', event => {
+      // store the children array as a property in order to update children property in state in handleClick
       this.childrenStore = event.data.children;
+
       console.log('Event from message listener', event);
+
+      // update state with data from the parser
       this.setState(prevState => ({
         ...prevState,
         node: {
-          name: event.data.name
-          // props,
-          // dataFetching,
-          // gsPaths,
-          // fetchDependecy
-        }
+          name: event.data.name,
+        },
       }));
-
     });
   }
 
-  handleClick(){
+  // onclick, update state with children array from childrenStore
+  handleClick() {
     this.setState(prevState => ({
       ...prevState,
-      node : {
+      node: {
         children: this.childrenStore,
-      }
+      },
     }));
-  };
+  }
 
   render() {
-
-    console.log(this.state);
-
-    // initialize an empty array 
+    // initialize array into which we push children components when there are children nodes in state
     let childrenComp = [];
-
+    // if there are children nodes in state
     if (this.state.node.children) {
-      console.log('state.data.children', this.state.node.children);
-
+      // generate components and map them to childrenComp
       childrenComp = this.state.node.children.map(child => {
-        if (child.children.length) {   
-          console.log('making a nodewithchildren', child.name);
-          return <NodeWithChildren node={child}  />;
+        // if the child node itself has children, render a NodeWithChildren component
+        if (child.children.length) {
+          return <NodeWithChildren node={child} />;
+          // if the child node itself has no children, render a Leaf component
         } else {
-          console.log('making a leaf', child.name);
           return <Leaf node={child} />;
         }
       });
     }
-
-
-    console.log('children Comp array', childrenComp);
 
     return (
       <>
@@ -113,6 +94,22 @@ class SidebarContainer extends Component {
       <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
       {(this.state.node.name) ? <h1 className='component-name' onClick={this.handleClick}>{this.state.node.name}</h1> : <div></div>}
       { childrenComp.length ? childrenComp : <div></div>}
+      <div className="main-container">
+        {/* <img src="../../media/Nexus-logo-1.png" /> */}
+        
+        {/* alex */}
+        <AddFile />
+        {/* if there is a name property in state, render it, otherwise render an empty div */}
+        {this.state.node.name ? (
+          <h1 className="component-name" onClick={this.handleClick}>
+            {this.state.node.name}
+          </h1>
+        ) : (
+          <div></div>
+        )}
+        {/* if the childrenComp array has any children, render the children, otherwise render an empty div */}
+        {childrenComp.length ? childrenComp : <div></div>}
+      </div>
       </div>
       </>
     );

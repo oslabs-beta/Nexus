@@ -126,7 +126,7 @@ class Parser {
         const components = [];
         // TODO: handle cases where router variable is not named router 
         // boolean to determine if component is using getStaticProps, getServerSideProps
-        // when getting props from export default 
+        // when getting props from export default  
         const cacheKeys = Object.keys(cache);
         // console.log('before for loop');
         for (let i = 0; i < cacheKeys.length; i++) {

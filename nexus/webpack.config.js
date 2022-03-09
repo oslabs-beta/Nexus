@@ -5,22 +5,11 @@ module.exports = {
   mode: 'production',
   target: 'node',
   externals: {
-    // vscode: 'commonjs vscode',
     path: "require('path')",
     fs: "require('fs')",
   },
   module: {
     rules: [
-      // {
-      //   test: /\.tsx?$/,
-      //   use: {
-      //     loader: 'ts-loader',
-      //     options: {
-      //       configFile: 'tsconfig.views.json',
-      //     },
-      //   },
-      //   exclude: /node_modules/,
-      // },
       {
         test: /\.jsx?$/,
         use: {

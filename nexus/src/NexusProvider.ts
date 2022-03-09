@@ -19,11 +19,53 @@ export class NexusProvider implements vscode.WebviewViewProvider {
   
   public parseCodeBaseAndSendMessage(filePath: string) {
     console.log('dirname: ', __dirname);
-    console.log('path.resolve: ', path.resolve(__dirname, filePath));
+    console.log('passed-in filepath: ', filePath);
+    console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
     
-    const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, filePath)));
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx')));
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/App.jsx')));
+    // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:   
+    //passed-in filepath:  C:\Users\Nico\Desktop\nexus-copy\out\parser\App.jsx
+
+    let str = filePath;
+    // let str;
+    
+    if (process.platform === 'linux') {
+      if (/wsl\$/.test(filePath)) {
+
+        // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
+
+        str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
+        console.log(str);
+/*
+        str = path.resolve(filePath.replace(/\\/g, '/')); 
+        console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+
+        
+
+        str = '/' + str.split('/').slice(3).join('/');
+        console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+*/
+        /*
+    
+      this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
+      */
+      }
+     else {
+    str = '/mnt/c/' + filePath.slice(3);
+
+    str = str.replace(/\\/g, '/');
+    }
+  }
+
+    console.log(str);
+
+    // \\wsl$\
+console.log(path.win32.sep);
+console.log(path.posix.sep);
+    const resultObj = new Parser(fs.readFileSync(str)); // --> works //path.resolve:   
+    // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
+
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works      
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
     const data = resultObj.main();
     console.log('FUNCTIONAL NODES: ', data);
 
@@ -32,7 +74,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
   console.log('Congratulations, your extension "nexus" is now active!');
 
 
-    // console.log('data from parseCodeBase..', data);
+    console.log('data from parseCodeBase..', data);
     // console.log('in parse and send message');
     this._view.webview.postMessage({name: 'App', children: data});
   }
@@ -46,7 +88,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
-    console.log('right here dummy: ', process.platform);
+    console.log('process.platform test: ', process.platform);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       // OG File Path = './parser/newApp.jsx'
@@ -70,9 +112,9 @@ export class NexusProvider implements vscode.WebviewViewProvider {
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
       );
-      const styles = webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
-        );
+    const styleVSCodeUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
+      );
         
         // console.log(scriptUri);
         // console.log(styles);
@@ -86,7 +128,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
 				-->
-				<link href="${styles}" rel="stylesheet">
+				<link href="${styleVSCodeUri}" rel="stylesheet">
         </head>
         <body>
         <div id = "root"></div>

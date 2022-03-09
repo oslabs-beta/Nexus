@@ -1,22 +1,17 @@
 "use strict";
-// const PARSER = require('acorn').Parser;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Parser = void 0;
-const parserModule = require("acorn");
-const PARSER = parserModule.Parser;
-// const jsx = require('acorn-jsx');
-const jsx = require("acorn-jsx");
+const PARSER = require('acorn').Parser;
+const jsx = require('acorn-jsx');
 const JSXPARSER = PARSER.extend(jsx());
-const fs = require("fs");
-const path = require("path");
-// const fs = require("fs");
-// const path = require("path");
+const fs = require('fs');
+const path = require('path');
 // CONSTANTS 
 const JSXTEXT = 'JSXText';
 const JSXELEMENT = 'JSXElement';
 const JSXEXPRESSIONCONTAINER = 'JSXExpressionContainer';
 class ComponentNode {
-    constructor(name, props, children, dataFetching) {
+    constructor(name, props, children) {
         this.name = name;
         this.children = children;
         this.props = props;
@@ -201,7 +196,7 @@ class Parser {
             const nodeType = returnNode.argument.type;
             return nodeType;
         }
-        catch (_a) {
+        catch {
             // if class object, return undefined
             return;
         }

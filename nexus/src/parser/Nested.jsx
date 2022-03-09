@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import Silk from './Silk.jsx';
 const Nested = props => {
   return (
@@ -6,6 +7,16 @@ const Nested = props => {
       <Silk />
     </div>
   );
+=======
+
+const Nested = (props) => {
+  return (
+      <div>
+        <h1></h1>
+        <p></p>
+      </div>
+  )
+>>>>>>> dev
 };
 
 export default Nested;

@@ -29,6 +29,7 @@ class NodeWithChildren extends Component {
 // handle click functionality that renders the children data (aka child components, data fetching methods, props) passed down as props
       // when the handle click function is invoked, update the state to render the children data 
 
+<<<<<<< HEAD
 handleClick () {
   console.log('clicking');
   this.setState(prevState => ({
@@ -45,6 +46,14 @@ handleClick () {
     console.log('state', this.state);
     console.log('props', this.props);
     // console.log('in node with children');
+=======
+  render () {
+    console.log('in node with children');
+
+    console.log('this.props.data: ', this.props.data);
+    console.log('this.props.data.children: ', this.props.data.children);
+
+>>>>>>> main-merge
 
   
     // const propKeys = Object.keys(this.props.node.props);
@@ -88,6 +97,7 @@ handleClick () {
     return (
       // inside the NodeWithChildren Components, render the Child Component, data fetching method, props...
     <div>
+<<<<<<< HEAD
       <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
       <h1 class='compWithChildren' onClick={this.handleClick}>{this.props.node.name}</h1>
       <Tippy content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
@@ -97,6 +107,15 @@ handleClick () {
       </Tippy>
         
         <p class='compChildren'>{childrenComp}</p>
+=======
+   
+      <h3>{this.props.data.name}</h3>
+      {/* {props.data.children} */}
+      {/* <p>{this.props.data.props.price}</p> */}
+      <p>{this.props.data.props.name}</p>
+      <p>Data Fetching: {this.props.data.dataFetching}</p>
+      <p>{this.children}</p>
+>>>>>>> main-merge
     </div>
 
 );

@@ -21,6 +21,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
     console.log('dirname: ', __dirname);
     console.log('passed-in filepath: ', filePath);
     console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
+<<<<<<< HEAD
 
     // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:
     //passed-in filepath:  C:\Users\Nico\Desktop\nexus-copy\out\parser\App.jsx
@@ -55,6 +56,55 @@ export class NexusProvider implements vscode.WebviewViewProvider {
     }
 
     console.log(str);
+=======
+    
+    // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:   
+    //passed-in filepath:  C:\Users\Nico\Desktop\nexus-copy\out\parser\App.jsx
+
+    let str = filePath;
+    // let str;
+    
+    if (process.platform === 'linux') {
+      if (/wsl\$/.test(filePath)) {
+
+        // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
+
+        str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
+        console.log(str);
+/*
+        str = path.resolve(filePath.replace(/\\/g, '/')); 
+        console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+
+        
+
+        str = '/' + str.split('/').slice(3).join('/');
+        console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+*/
+        /*
+    
+      this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
+      */
+      }
+     else {
+    str = '/mnt/c/' + filePath.slice(3);
+
+    str = str.replace(/\\/g, '/');
+    }
+  }
+
+    console.log(str);
+
+    // \\wsl$\
+console.log(path.win32.sep);
+console.log(path.posix.sep);
+    const resultObj = new Parser(fs.readFileSync(str)); // --> works //path.resolve:   
+    // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
+
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works      
+    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
+    const data = resultObj.main();
+    console.log('FUNCTIONAL NODES: ', data);
+>>>>>>> main-merge
 
     // \\wsl$\
     console.log(path.win32.sep);

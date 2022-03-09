@@ -20,6 +20,7 @@ class Leaf extends Component {
     }
     console.log('leaf: ', this.props);
     return(
+<<<<<<< HEAD
     <div class="children">
       <h3>{this.props.node.name}</h3>
       <Tippy content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
@@ -27,6 +28,12 @@ class Leaf extends Component {
         {propsArray} */}
         <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
       </Tippy>
+=======
+    <div>
+      <h3>{this.props.data.name}</h3>
+      <p>Data Fetching: {this.props.data.dataFetching}</p>
+      {/* <p>{this.props.data.props.price}</p> */}
+>>>>>>> main-merge
     </div>
     );
   };

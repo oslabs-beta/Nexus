@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
+=======
+import React, {Component} from 'react';
+
+>>>>>>> main-merge
 
 export default class AddFile extends Component {
   constructor() {

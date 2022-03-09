@@ -109,10 +109,7 @@ class Parser {
                 // console.log('innernest[j]: ', innerNest[j]);
                 if (nestedAttributes[j].value.expression !== undefined && nestedAttributes[j].value.expression.body !== undefined) {
                     // console.log('passed undefined conditional');
-                    if (nestedAttributes[j].value.expression.body.callee.object.name === "router") //"router"
-                     
-                    // innerNest[j].value.expression.body.callee.property.name //"push"
-                    {
+                    if (nestedAttributes[j].value.expression.body.callee.object.name === "router") {
                         console.log('~~~~ENDPOINT~~~~~', nestedAttributes[j].value.expression.body.arguments[0].value); //"/cats"
                         endpoints.push(nestedAttributes[j].value.expression.body.arguments[0].value);
                     }
@@ -128,6 +125,8 @@ class Parser {
         console.log(jsxNodes);
         const components = [];
         // TODO: handle cases where router variable is not named router 
+        // boolean to determine if component is using getStaticProps, getServerSideProps
+        // when getting props from export default 
         const cacheKeys = Object.keys(cache);
         // console.log('before for loop');
         for (let i = 0; i < cacheKeys.length; i++) {
@@ -148,9 +147,8 @@ class Parser {
                         // Strip all occurrences of '../' from path 
                         const arr = path.split('/'); // ['..', '..', 'components', 'Cards' 'CardItem.js']
                         const newPath = arr.filter((str) => str !== '..').join('/');
-                        console.log('NEW PATH', newPath);
                         if (fs.existsSync(newPath)) {
-                            console.log('in fsExistsSync: ', newPath);
+                            // console.log('in fsExistsSync: ', newPath);
                             const tree = this.getTree(newPath);
                             // check if current component imports useRouter from next/router
                             const importNodes = this.getImportNodes(tree);
@@ -160,7 +158,7 @@ class Parser {
                                     usesRouter = true;
                                 }
                             }
-                            console.log(`in j loop BEFORE ROUTER CHECK: ${cacheKeys[i]}`, newPath);
+                            // console.log(`in j loop BEFORE ROUTER CHECK: ${cacheKeys[i]}`, newPath);
                             // Check if component is importing from 'next/router'
                             if (usesRouter) {
                                 const endpoints = this.getRouterEndpoints(tree);
@@ -169,7 +167,7 @@ class Parser {
                                 const endpointChildren = [];
                                 const component = new ComponentNode(cacheKeys[i], {}, endpointChildren, 'ssg');
                                 for (let k = 0; k < endpoints.length; k++) {
-                                    console.log('in k loop at 250');
+                                    // console.log('in k loop at 250');
                                     let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[k]}/index.js`;
                                     // console.log(this.getTree(fileToRecurse));
                                     // console.log('fileToRecurse: ', fileToRecurse);
@@ -199,7 +197,7 @@ class Parser {
                     // console.log('super nested endpoints: ', endpoints);
                     if (endpoints.length) {
                         for (let i = 0; i < endpoints.length; i++) {
-                            console.log('in other loop at 287');
+                            console.log('in other loop at 255');
                             let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[i]}/index.js`;
                             // console.log(this.getTree(fileToRecurse));
                             // console.log('fileToRecurse: ', fileToRecurse);

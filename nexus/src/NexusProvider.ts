@@ -1,4 +1,4 @@
-import { Parser } from './parser/parser.js';
+import { Parser } from './parser/parserv2.js';
 import * as vscode from 'vscode';
 const path = require('path');
 const fs = require('fs');
@@ -18,6 +18,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
   // send message to webviewAPI with data using webview.postMessage(data)
 
   public parseCodeBaseAndSendMessage(filePath: string) {
+
     console.log('dirname: ', __dirname);
     console.log('passed-in filepath: ', filePath);
     console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
@@ -33,6 +34,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
         // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
 
         str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
+
         console.log(str);
         /*
         str = path.resolve(filePath.replace(/\\/g, '/')); 
@@ -54,23 +56,27 @@ export class NexusProvider implements vscode.WebviewViewProvider {
       }
     }
 
-    console.log(str);
+    console.log('initial string: ', str);
 
     // \\wsl$\
+    const resultObj = new Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
+    // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
     console.log(path.win32.sep);
     console.log(path.posix.sep);
-    const resultObj = new Parser(fs.readFileSync(str)); // --> works //path.resolve:
+
     // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:
 
     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works
     // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
     const data = resultObj.main();
-    console.log('FUNCTIONAL NODES: ', data);
+
+
+
+  // debugger terminal - success notification
 
     // debugger terminal - success notification
     console.log('Congratulations, your extension "nexus" is now active!');
 
-    console.log('data from parseCodeBase..', data);
     // console.log('in parse and send message');
     this._view.webview.postMessage({ name: 'App', children: data });
   }
@@ -101,7 +107,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
   }
 
   _getHtmlForWebview(webview: vscode.Webview) {
-    console.log('running gethtmlforwebview');
+
     // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')

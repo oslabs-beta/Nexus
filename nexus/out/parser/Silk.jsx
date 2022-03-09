@@ -1,7 +1,7 @@
 import React from 'react';
 import Nested from './Nested.jsx';
 
-class Milk extends React.Component {
+class Silk extends React.Component {
   constructor() {
     super();
   }
@@ -17,4 +17,4 @@ class Milk extends React.Component {
   }
 }
 
-export default Milk;
+export default Silk;

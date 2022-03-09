@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-// import vscode from 'vscode';
-// "AddFile": [
-//     {
-//       "id": "nexus.addFileButton",
-//       "name": "Files Here Bro",
-//       "type": "webview"
-//     }
-//   ],
+
 
 export default class AddFile extends Component {
 

@@ -7,13 +7,31 @@
 .file-input {
   height: 50px;
   width: 100px;
-  background-color: red;
+  background-color:  blue;
 }
 
 .root-tree {
   /* margin-left: 10px; */
-  font-size: 20px;
+  font-size: 30px;
 }
+
+/* .compProps {
+  display: none;
+  
+} */
+
+
+/* .compWithChildren {
+  color: white; 
+  cursor: pointer;
+  display: block
+}
+*/
+
+
+
+
+
 
 #main-app-root {
   margin-left: 0 !important;
@@ -23,12 +41,12 @@
 }
 
 .subtree {
-  /* color: orange; */
-  /* list-style-type: square; */
-  /* margin-left: 30px; */
-  /* margin-top: 16px; */
-  /* border-left: 1px solid #c8a2c8; */
-}
+   color: orange;
+  list-style-type: square;
+  margin-left: 30px; 
+  margin-top: 16px;
+  border-left: 1px solid #c8a2c8;
+  }
 
 .top-level-tree {
   list-style: none;

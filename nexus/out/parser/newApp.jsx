@@ -1,5 +1,5 @@
 import React from 'react';
-import Milk from './Milk.jsx';
+import Silk from './Silk.jsx';
 
 const URL = 'http://google.com';
 
@@ -18,7 +18,7 @@ class App extends React.Component {
         return(
             <div>
                 <h1>Hello</h1>
-                <Milk number={2}/>
+                <Silk number={2}/>
             </div>
         );
     }

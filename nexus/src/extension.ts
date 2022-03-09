@@ -31,6 +31,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 }
+<<<<<<< HEAD
+ 
+=======
 
 
 // html for webview content
@@ -116,3 +119,4 @@ function getWebviewContent() {
 }
 
 export function deactivate() {}
+>>>>>>> dev

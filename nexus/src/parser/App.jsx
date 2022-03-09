@@ -28,6 +28,24 @@ export async function getStaticProps() {
 const App = (props) => {
     const socket = io();
 
+<<<<<<< HEAD
+  return (
+    <div>
+      {/* <Link href="/test">
+        <a>click me for test</a>
+      </Link> */}
+      <Children name={'Brian'} class='children' otherProp={500} />
+      <Children name={'David'} class='children' otherProp={300} />
+      <Children name={'Nico'} class='children' otherProp={100} />
+      <Children name={'Alex'} class='children' otherProp={400} />
+      <Children name={'Mike'} class='children' otherProp={600} />
+      <Comp name={'Test'} />
+      <ScuttleCrab name={'pls'} />
+      <SSRComp />
+      <button>HTML Button</button>
+    </div>
+  );
+=======
     return (
         <div>
             {/* <button onClick={useRouter}></button> */}
@@ -43,6 +61,7 @@ const App = (props) => {
             <button>HTML Button</button>
         </div>
     )
+>>>>>>> dev
 };
 
 export default {App, URL};

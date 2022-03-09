@@ -12,8 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.NexusProvider = void 0;
 const parser_js_1 = require("./parser/parser.js");
 const vscode = require("vscode");
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 // class object for webviewView content
 class NexusProvider {
     // componentTree: any;
@@ -29,7 +29,11 @@ class NexusProvider {
         console.log('dirname: ', __dirname);
         console.log('passed-in filepath: ', filePath);
         console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
+<<<<<<< HEAD
+        // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:
+=======
         // const resultObj = new Parser(fs.readFileSync('mnt/c/C:\\Users\\Nico\\Desktop\\nexus-copy\\out\\parser\\App.jsx')); // --> works //path.resolve:   
+>>>>>>> main-merge
         //passed-in filepath:  C:\Users\Nico\Desktop\nexus-copy\out\parser\App.jsx
         let str = filePath;
         // let str;
@@ -39,6 +43,16 @@ class NexusProvider {
                 str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
                 console.log(str);
                 /*
+<<<<<<< HEAD
+                str = path.resolve(filePath.replace(/\\/g, '/'));
+                console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+        
+                
+        
+                str = '/' + str.split('/').slice(3).join('/');
+                console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
+        */
+=======
                         str = path.resolve(filePath.replace(/\\/g, '/'));
                         console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
                 
@@ -47,6 +61,7 @@ class NexusProvider {
                         str = '/' + str.split('/').slice(3).join('/');
                         console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
                 */
+>>>>>>> main-merge
                 /*
             
               this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
@@ -61,9 +76,15 @@ class NexusProvider {
         // \\wsl$\
         console.log(path.win32.sep);
         console.log(path.posix.sep);
+<<<<<<< HEAD
+        const resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:
+        // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:
+        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works
+=======
         const resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works      
+>>>>>>> main-merge
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
         console.log('FUNCTIONAL NODES: ', data);
@@ -83,7 +104,7 @@ class NexusProvider {
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
             // OG File Path = './parser/newApp.jsx'
             switch (data.type) {
-                case "addFile": {
+                case 'addFile': {
                     console.log(data.value);
                     this.parseCodeBaseAndSendMessage(data.value);
                 }
@@ -97,7 +118,7 @@ class NexusProvider {
         console.log('running gethtmlforwebview');
         // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
-        const styles = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
+        const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
         // console.log(scriptUri);
         // console.log(styles);
         return `<!DOCTYPE html>
@@ -108,7 +129,7 @@ class NexusProvider {
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
 				-->
-				<link href="${styles}" rel="stylesheet">
+				<link href="${styleVSCodeUri}" rel="stylesheet">
         </head>
         <body>
         <div id = "root"></div>

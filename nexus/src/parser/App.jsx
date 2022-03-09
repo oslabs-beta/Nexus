@@ -35,11 +35,11 @@ const App = props => {
       {/* <Link href="/test">
         <a>click me for test</a>
       </Link> */}
-      <Children name={'Brian'} otherProp={500} />
-      <Children name={'David'} otherProp={300} />
-      <Children name={'Nico'} otherProp={100} />
-      <Children name={'Alex'} otherProp={400} />
-      <Children name={'Mike'} otherProp={600} />
+      <Children name={'Brian'} class='children' otherProp={500} />
+      <Children name={'David'} class='children' otherProp={300} />
+      <Children name={'Nico'} class='children' otherProp={100} />
+      <Children name={'Alex'} class='children' otherProp={400} />
+      <Children name={'Mike'} class='children' otherProp={600} />
       <Comp name={'Test'} />
       <ScuttleCrab name={'pls'} />
       <SSRComp />

@@ -22,9 +22,8 @@ export default class AddFile extends Component {
   render () {
     return (
       <div className="addFileButton">
-        <p>This is the AddFile component</p>
         <input type="file" name="file" className="fileInput" onChange={this.handleAddFile}/>
-        <label htmlFor="file">Upload Your File</label>
+        {/* <label htmlFor="file">Upload Your File</label> */}
       </div>
     );
   }

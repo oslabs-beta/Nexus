@@ -3,6 +3,9 @@ import NodeWithChildren from './NodeWithChildren.jsx';
 import Leaf from './Leaf.jsx';
 import AddFile from './AddFile.jsx';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+
 /*
 
 { name: 'name',
@@ -102,11 +105,16 @@ class SidebarContainer extends Component {
     console.log('children Comp array', childrenComp);
 
     return (
-    <div>
+      <>
+      <div>
       <AddFile />
-      {(this.state.node.name) ? <h1 className='component-name' onClick={this.handleClick}>{this.state.node.name}</h1> : <div></div>}
-      { childrenComp.length ? childrenComp : <p>No Children</p>}
       </div>
+    <div className='containerIntro'>
+      <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
+      {(this.state.node.name) ? <h1 className='component-name' onClick={this.handleClick}>{this.state.node.name}</h1> : <div></div>}
+      { childrenComp.length ? childrenComp : <div></div>}
+      </div>
+      </>
     );
   }
 }

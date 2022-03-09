@@ -3,7 +3,6 @@ import NodeWithChildren from './NodeWithChildren.jsx';
 import Leaf from './Leaf.jsx';
 import AddFile from './AddFile.jsx';
 
-<<<<<<< HEAD
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 // this is the parent component of the react webview app
@@ -70,32 +69,10 @@ class SidebarContainer extends Component {
         children: this.childrenStore,
       },
     };
-=======
-class SidebarContainer extends Component {
-  // pass array down as props to all children
-  constructor() {
-    super();
-    this.state = {
-      data: {},
-    };
-  }
-
-  componentDidMount() {
-    console.log('in component did mount');
-    // add event listner listening for message
-    window.addEventListener('message', event => {
-      console.log('Event from message listener', event);
-      this.setState(prevState => ({
-        ...prevState,
-        data: event.data,
-      }));
-
->>>>>>> main-merge
     });
   }
 
   render() {
-<<<<<<< HEAD
     console.log('sidebar container state: ',this.state);
     // initialize array into which we push children components when there are children nodes in state
     let childrenComp = [];
@@ -109,26 +86,10 @@ class SidebarContainer extends Component {
           // if the child node itself has no children, render a Leaf component
         } else {
           return <Leaf node={child} />;
-=======
-
-    let children;
-
-    if (this.state.data.name) {
-      console.log('state.data.children', this.state.data.children);
-
-      children = this.state.data.children.map(child => {
-        if (child.children.length) {
-          console.log('making a nodewithchildren', child.name);
-          return <NodeWithChildren data={child} />;
-        } else {
-          console.log('making a leaf', child.name);
-          return <Leaf data={child} />;
->>>>>>> main-merge
         }
       });
     }
 
-<<<<<<< HEAD
     return (
       <>
      
@@ -160,12 +121,6 @@ class SidebarContainer extends Component {
       </div>
       </>
     );
-=======
-
-    console.log('children array', children);
-
-    return <div>{children || <AddFile />}</div>;
->>>>>>> main-merge
   }
 }
 

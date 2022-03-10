@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NextParser = void 0;
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;
 const jsx = require("acorn-jsx");
@@ -166,12 +165,18 @@ class NextParser {
                     // with endpoint, use this.string to find /pages/cats/index.js
                     // loop over endpoints 
                     if (endpoints.length) {
+                        let styleEndpoints = [];
                         for (let i = 0; i < endpoints.length; i++) {
+                            styleEndpoints.push(endpoints[i].slice(1));
+                            styleEndpoints = styleEndpoints.map(function (el) {
+                                el = el.substring(el.indexOf("/"));
+                                return el;
+                            });
                             let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[i]}/index.js`;
                             const children = [];
                             const props = {};
                             children.push(this.recurse(fileToRecurse));
-                            const componentNode = new ComponentNode(endpoints[i], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
+                            const componentNode = new ComponentNode(styleEndpoints[i], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
                             components.push(componentNode);
                         }
                     }

@@ -8,7 +8,6 @@ import { faCirclePlus, faCircleInfo, faCircleMinus } from '@fortawesome/free-sol
 import Tippy from '@tippyjs/react';
 
 class NodeWithChildren extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -80,31 +79,60 @@ class NodeWithChildren extends Component {
       <div className="comp-with-children-container">
         {this.state.expanded ? (
           <a className="node_icon" onClick={this.handleClick}>
-            <FontAwesomeIcon icon={faCircleMinus} className="fav_icon" />
+            <FontAwesomeIcon className="fav_icon" icon={faCircleMinus} />
           </a>
         ) : (
           <a className="node_icon" onClick={this.handleClick}>
-            <FontAwesomeIcon icon={faCirclePlus} className="fav_icon" />
+            <FontAwesomeIcon className="fav_icon" icon={faCirclePlus} />
           </a>
         )}
         <h1 class="comp-with-children-name" onClick={this.handleClick}>
           {this.props.node.name}
         </h1>
-        {!propsArray.length ? 
-        <Tippy placement='bottom' content={<div id='tips'> <div><p className='data-key'>data-fetching: </p>{this.props.node.dataFetching}</div> </div>} class='box'>
-          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
-        </Tippy>
-        :
-        <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>props:</p>{propsArray}</div> <div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
-        <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
-      </Tippy>
-      }
+        {!propsArray.length ? (
+          <Tippy
+            placement="bottom"
+            content={
+              <div id="tips">
+                {' '}
+                <div>
+                  <p className="data-key">data-fetching: </p>
+                  {this.props.node.dataFetching}
+                </div>{' '}
+              </div>
+            }
+            class="box"
+          >
+            <a class="fav_icon info_icon">
+              <FontAwesomeIcon className="info_icon-inner" icon={faCircleInfo} />
+            </a>
+          </Tippy>
+        ) : (
+          <Tippy
+            placement="bottom"
+            content={
+              <div id="tips">
+                <div>
+                  <p className="data-key">props:</p>
+                  {propsArray}
+                </div>{' '}
+                <div>
+                  <p className="data-key">data-fetching:</p> {this.props.node.dataFetching}
+                </div>{' '}
+              </div>
+            }
+            class="box"
+          >
+            <a class="fav_icon info_icon">
+              <FontAwesomeIcon className="info_icon-inner" icon={faCircleInfo} />
+            </a>
+          </Tippy>
+        )}
 
         {childrenComp}
       </div>
     );
   }
-
 }
 
 export default NodeWithChildren;

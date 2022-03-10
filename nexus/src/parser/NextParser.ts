@@ -54,7 +54,7 @@ class ComponentNode {
 // constructor(sourceCode: Buffer) 
 // Methods: all below methods
 
-export interface Parserv2 {
+export interface NextParser {
   string: any,
   program: any,
   programBody: Array<Node>,
@@ -62,7 +62,7 @@ export interface Parserv2 {
   testFs: any,
 }
 
-export class Parserv2 {
+export class NextParser {
   constructor(sourceCode: any, str: any) {
     this.string = str;
     this.program = JSXPARSER.parse(sourceCode, {sourceType: "module", ecmaVersion: 6}); // Node Object -> take body property (Array)

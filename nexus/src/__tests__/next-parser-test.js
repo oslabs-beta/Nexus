@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 // import { Parser } from '../../out/parser/parserv2.js';
-import { Parserv2 } from '../parser/parserv2.js';
+import { NextParser } from '../parser/NextParser.js';
 
 describe('NextJS Parser Unit Tests', () => {
   let parser;
@@ -15,7 +15,7 @@ describe('NextJS Parser Unit Tests', () => {
   //TODO: implement inner describe blocks to test different example files
 
   beforeAll(() => {
-    parser = new Parserv2(fs.readFileSync(path.resolve(__dirname, './test_components/jams-n-jams-app/pages/index.js')));
+    parser = new NextParser(fs.readFileSync(path.resolve(__dirname, './test_components/jams-n-jams-app/pages/index.js')));
     importNodes = parser.getImportNodes(parser.programBody);
     variableNodes = parser.getVariableNodes(parser.programBody);
     nonImportNodes = parser.getNonImportNodes(parser.programBody);

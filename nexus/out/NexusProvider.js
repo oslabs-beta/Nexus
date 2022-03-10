@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.NexusProvider = void 0;
-const parser_js_1 = require("./parser/parser.js");
-const parserv2_js_1 = require("./parser/parserv2.js");
+const ReactParser_js_1 = require("./parser/ReactParser.js");
+const NextParser_js_1 = require("./parser/NextParser.js");
 const vscode = require("vscode");
 const path = require('path');
 const fs = require('fs');
@@ -36,11 +36,11 @@ class NexusProvider {
         let resultObj;
         // if file is ending in '.js', send it into the Next.Js parser route
         if (str.slice(-3) === '.js') {
-            resultObj = new parserv2_js_1.Parserv2(fs.readFileSync(str), str);
+            resultObj = new NextParser_js_1.NextParser(fs.readFileSync(str), str);
         }
         // otherwise, send the file through the React parser route
         else {
-            resultObj = new parser_js_1.Parser(fs.readFileSync(str));
+            resultObj = new ReactParser_js_1.ReactParser(fs.readFileSync(str));
         }
         // pull the parsed object from the parser, to be sent to the front-end
         const data = resultObj.main();

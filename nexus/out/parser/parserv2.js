@@ -216,11 +216,14 @@ class Parser {
     // input: string
     // output: 
     recurse(filePath) {
-        // console.log('IN RECURSE: ', filePath);
         const obj = this.getTree(filePath);
         const importNodes = this.getImportNodes(obj);
         // TODO: consider other file structures
         const exportDefaultNodes = this.getExportDefaultNodes(obj);
+        // console.log('IN RECURSE: ', filePath);
+        // if (exportDefaultNodes[0].declaration.params) {
+        //   console.log('PARAM: ', exportDefaultNodes[0].declaration.params[0].properties[0].value.name);
+        // }
         const childrenNodes = this.getChildrenNodes(exportDefaultNodes);
         const jsxNodes = this.getJsxNodes(childrenNodes); //Head, Nav, Jumbotron
         // console.log('IN RECURSE JSXNodes: ', jsxNodes);
@@ -239,6 +242,7 @@ class Parser {
         // console.log('JSXNodes: ', jsxNodes);
         const result = this.getChildrenComponents(jsxNodes, importNodes);
         console.log('****MAIN RESULT*****', result);
+        return result;
         // Splash
         //  /jams
         //    /jams/classics

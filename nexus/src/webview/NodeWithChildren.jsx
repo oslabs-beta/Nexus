@@ -3,7 +3,7 @@ import Leaf from './Leaf.jsx';
 import Prop from "./Prop.jsx";
 // import for icons 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faCircleInfo, faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react";
 
 
@@ -21,6 +21,7 @@ class NodeWithChildren extends Component {
   super (props);
   this.state = {
     children: [],
+    expanded: false,
   };
   // bind the function so it can be passed down to children components as props
   this.handleClick = this.handleClick.bind(this);                                                   
@@ -30,11 +31,31 @@ class NodeWithChildren extends Component {
       // when the handle click function is invoked, update the state to render the children data 
 
 handleClick () {
-  console.log('clicking');
-  this.setState(prevState => ({
-    ...prevState,
-      children : this.props.node.children,
-    }));
+  if(!this.state.expanded){
+    this.setState(prevState => {
+      if (this.props.node.children.length === 0 || !Array.isArray(this.props.node.children[0])) {
+      return {
+      ...prevState,
+        children : this.props.node.children,
+        expanded : true
+      };
+    } else {
+      return {
+        ...prevState,
+        children: this.props.node.children[0],
+        expanded : true
+      };
+    }
+    });
+  } else {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        children : [],
+        expanded : false,
+      };
+    });
+  }
 };
 
 // recursively rendering the data to each component (children components, props, data fetching method used by the component)
@@ -64,11 +85,13 @@ handleClick () {
     // console.log('this.props.data.children: ', this.props.data.children);
     let childrenComp = [];
       if(this.state.children.length){
-        console.log('in this.state.children exists logic')
+        console.log('in this.state.children exists logic');
         childrenComp = this.state.children.map(child => {
           if (child.children.length) {
+            console.log('making a node with children',child);
             return <NodeWithChildren node={child}/>;
           } else {
+            console.log('making a leaf', child);
             return <Leaf node={child}/>;
           }
         });
@@ -84,11 +107,11 @@ handleClick () {
     //     <a><FontAwesomeIcon icon={faCircleInfo}/></a>
     //   </Tippy>
 
-    <><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>
+    // <><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>
     return (
       // inside the NodeWithChildren Components, render the Child Component, data fetching method, props...
     <div>
-      <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
+      {this.state.expanded ? <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCircleMinus} className='fav_icon'/></a> : <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>}
       <h1 class='compWithChildren' onClick={this.handleClick}>{this.props.node.name}</h1>
       <Tippy content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
         {/* <p>{this.props.node.dataFetching}</p>

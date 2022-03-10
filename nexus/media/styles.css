@@ -50,10 +50,10 @@
   z-index: -1;
 } */
 
-.root-tree {
+/* .root-tree { */
   /* margin-left: 10px; */
   /* font-size: 30px; */
-}
+/* } */
 
 /* .compProps {
   display: none;
@@ -76,11 +76,12 @@
 }
 
 .fav_icon:hover{
-  color: rgb(54, 54, 230);
+  color: #7e74fa;
 }
 
 .fav_icon{
   margin: 3px;
+  color : #191637
 }
 
 

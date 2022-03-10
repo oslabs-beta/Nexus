@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.NexusProvider = void 0;
+const parser_js_1 = require("./parser/parser.js");
 const parserv2_js_1 = require("./parser/parserv2.js");
 const vscode = require("vscode");
 const path = require('path');
@@ -38,34 +39,26 @@ class NexusProvider {
                 // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
                 str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
                 console.log(str);
-                /*
-                str = path.resolve(filePath.replace(/\\/g, '/'));
-                console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-        
-                
-        
-                str = '/' + str.split('/').slice(3).join('/');
-                console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-        */
-                /*
-            
-              this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
-              */
             }
             else {
                 str = '/mnt/c/' + filePath.slice(3);
                 str = str.replace(/\\/g, '/');
             }
         }
-        console.log('initial string: ', str);
+        let resultObj;
+        // if file is ending in '.js', send it into the Next.Js parser route
+        if (str.slice(-3) === '.js') {
+            console.log('here');
+            resultObj = new parserv2_js_1.Parserv2(fs.readFileSync(str), str);
+        }
+        // otherwise, send the file through the React parser route
+        else {
+            resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:   
+        }
         // \\wsl$\
-        const resultObj = new parserv2_js_1.Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
         console.log(path.win32.sep);
         console.log(path.posix.sep);
-        // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:
-        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works
-        // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
         // debugger terminal - success notification
         // debugger terminal - success notification
@@ -94,7 +87,6 @@ class NexusProvider {
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     }
     _getHtmlForWebview(webview) {
-        // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js'));
         const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
         // console.log(scriptUri);

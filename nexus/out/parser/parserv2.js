@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = void 0;
+exports.Parserv2 = void 0;
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;
 const jsx = require("acorn-jsx");
@@ -19,7 +19,7 @@ class ComponentNode {
         this.dataFetching = dataFetching;
     }
 }
-class Parser {
+class Parserv2 {
     constructor(sourceCode, str) {
         this.string = str;
         // console.log('Source Code: ', sourceCode);
@@ -271,5 +271,5 @@ class Parser {
         // e.g. next/head vs ../components/jumbotron
     }
 }
-exports.Parser = Parser;
+exports.Parserv2 = Parserv2;
 //# sourceMappingURL=parserv2.js.map

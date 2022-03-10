@@ -237,11 +237,9 @@ class Parser {
         // TODO: consider other file structures
         const exportDefaultNodes = this.getExportDefaultNodes(obj);
         // console.log('IN RECURSE: ', filePath);
-
         // if (exportDefaultNodes[0].declaration.params.length) {
         //   console.log('PARAM: ', exportDefaultNodes[0].declaration.params[0].properties[0].value.name);
         //   return exportDefaultNodes[0].declaration.params[0].properties[0].value.name;
-
         // }
         const childrenNodes = this.getChildrenNodes(exportDefaultNodes);
         const jsxNodes = this.getJsxNodes(childrenNodes); //Head, Nav, Jumbotron

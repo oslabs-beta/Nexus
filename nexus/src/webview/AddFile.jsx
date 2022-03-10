@@ -22,7 +22,7 @@ export default class AddFile extends Component {
       value: filePath,
     });
 
-    // update state to render a different message
+    // update state to render a different message after upload
     this.setState(prevState => ({
       ...prevState,
       uploaded: true,

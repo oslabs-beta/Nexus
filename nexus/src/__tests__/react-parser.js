@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 import { Parser } from '../parser/parser.js';
-import { ComponentNode } from '../parser/parser.js';
+
 describe('parser unit tests for functional component', () => {
   let parser;
   let importNodes;

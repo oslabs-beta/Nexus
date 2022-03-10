@@ -224,7 +224,8 @@ export class Parser {
               // console.log('after endpoints: ', endpoints);
               // loop over endpoints 
               const endpointChildren = [];
-              const component = new ComponentNode(cacheKeys[i], {}, endpointChildren, 'ssg');
+              const props = this.getPropParameters(newPath, 'static');
+              const component = new ComponentNode(cacheKeys[i], props, endpointChildren, 'ssg');
               for (let k = 0; k < endpoints.length; k++) {
                 // console.log('in k loop at 250');
                 let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[k]}/index.js`;
@@ -259,8 +260,9 @@ export class Parser {
               // console.log(this.getTree(fileToRecurse));
               // console.log('fileToRecurse: ', fileToRecurse);
               const children = [];
+              const props = {};
               children.push(this.recurse(fileToRecurse));
-              const componentNode = new ComponentNode(endpoints[i], {}, children, 'ssg');
+              const componentNode = new ComponentNode(endpoints[i], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
               components.push(componentNode);
             }
           } 
@@ -270,7 +272,26 @@ export class Parser {
     } // end i loop
     return components;
   } // end getChildrenComponents
-​
+
+
+
+  getPropParameters(filePath: string, placeholder: string) {
+    const obj = this.getTree(filePath);
+
+    const importNodes = this.getImportNodes(obj);
+    // TODO: consider other file structures
+    const exportDefaultNodes = this.getExportDefaultNodes(obj);
+    
+    console.log('IN RECURSE: ', filePath);
+    if (exportDefaultNodes[0].declaration.params.length) {
+      const props = {};
+      for (let i = 0; i < exportDefaultNodes[0].declaration.params[0].properties.length; i++) {
+        props[exportDefaultNodes[0].declaration.params[0].properties[i].value.name] = placeholder;
+      }
+      return props;
+    }
+  }
+
   // input: string
   // output: 
   recurse(filePath: string) {
@@ -281,16 +302,18 @@ export class Parser {
     const exportDefaultNodes = this.getExportDefaultNodes(obj);
     
     // console.log('IN RECURSE: ', filePath);
-    // if (exportDefaultNodes[0].declaration.params) {
+
+    // if (exportDefaultNodes[0].declaration.params.length) {
     //   console.log('PARAM: ', exportDefaultNodes[0].declaration.params[0].properties[0].value.name);
+    //   return exportDefaultNodes[0].declaration.params[0].properties[0].value.name;
     // }
-​
+
+
     const childrenNodes = this.getChildrenNodes(exportDefaultNodes);
     const jsxNodes = this.getJsxNodes(childrenNodes); //Head, Nav, Jumbotron
     // console.log('IN RECURSE JSXNodes: ', jsxNodes);
     // console.log('from recurse: ', filePath);
     const result = this.getChildrenComponents(jsxNodes, importNodes, filePath);
-    // console.log('IN RECURSE result: ', result);
     return result;
   }
 ​

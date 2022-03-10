@@ -117,13 +117,13 @@ Nexus supports OSX, Windows, and WSL
 ## Usage
 
 1. Click the node tree icon on your sidebar. An "Input File Here" button should appear on your side panel!
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif1.gif">
 
 2. Click the button and your file explorer window will open. Select a file and press "Ok".
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif2.gif">
 
 3. Your side panel should now render a component tree that displays SSG or SSR status! Clicking on components will render child components if they exist and hovering over components will display their props objects. Enjoy!
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif3.gif">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

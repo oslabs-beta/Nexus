@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deactivate = exports.NexusProvider = void 0;
 const ReactParser_js_1 = require("./parser/ReactParser.js");
 const NextParser_js_1 = require("./parser/NextParser.js");
 const vscode = require("vscode");

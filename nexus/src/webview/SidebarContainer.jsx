@@ -106,7 +106,7 @@ class SidebarContainer extends Component {
                   <FontAwesomeIcon icon={faCirclePlus} className="fav_icon" />
                 </a>
               )}
-              <h1 className="comp-with-children-name" onClick={this.handleClick}>
+              <h1 className="top-level-component" onClick={this.handleClick}>
                 {this.state.node.name}
               </h1>
             </div>

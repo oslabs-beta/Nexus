@@ -113,9 +113,7 @@ handleClick () {
     <div>
       {this.state.expanded ? <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCircleMinus} className='fav_icon'/></a> : <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>}
       <h1 class='compWithChildren' onClick={this.handleClick}>{this.props.node.name}</h1>
-      <Tippy content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
-        {/* <p>{this.props.node.dataFetching}</p>
-        {propsArray} */}
+      <Tippy placement='right' flip='true' content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
         <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
       </Tippy>
         

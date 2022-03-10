@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = void 0;
+exports.Parserv2 = void 0;
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;
 const jsx = require("acorn-jsx");
@@ -19,7 +19,7 @@ class ComponentNode {
         this.dataFetching = dataFetching;
     }
 }
-class Parser {
+class Parserv2 {
     constructor(sourceCode, str) {
         this.string = str;
         // console.log('Source Code: ', sourceCode);
@@ -237,11 +237,9 @@ class Parser {
         // TODO: consider other file structures
         const exportDefaultNodes = this.getExportDefaultNodes(obj);
         // console.log('IN RECURSE: ', filePath);
-
         // if (exportDefaultNodes[0].declaration.params.length) {
         //   console.log('PARAM: ', exportDefaultNodes[0].declaration.params[0].properties[0].value.name);
         //   return exportDefaultNodes[0].declaration.params[0].properties[0].value.name;
-
         // }
         const childrenNodes = this.getChildrenNodes(exportDefaultNodes);
         const jsxNodes = this.getJsxNodes(childrenNodes); //Head, Nav, Jumbotron
@@ -273,5 +271,5 @@ class Parser {
         // e.g. next/head vs ../components/jumbotron
     }
 }
-exports.Parser = Parser;
+exports.Parserv2 = Parserv2;
 //# sourceMappingURL=parserv2.js.map

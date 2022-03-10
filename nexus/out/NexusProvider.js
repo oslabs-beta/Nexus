@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.NexusProvider = void 0;
+const parser_js_1 = require("./parser/parser.js");
 const parserv2_js_1 = require("./parser/parserv2.js");
 const vscode = require("vscode");
 const path = require('path');
@@ -57,9 +58,17 @@ class NexusProvider {
                 str = str.replace(/\\/g, '/');
             }
         }
-        console.log('initial string: ', str);
+        let resultObj;
+        // if file is ending in '.js', send it into the Next.Js parser route
+        if (str.slice(-3) === '.js') {
+            console.log('here');
+            resultObj = new parserv2_js_1.Parserv2(fs.readFileSync(str), str);
+        }
+        // otherwise, send the file through the React parser route
+        else {
+            resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:   
+        }
         // \\wsl$\
-        const resultObj = new parserv2_js_1.Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
         // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
         console.log(path.win32.sep);
         console.log(path.posix.sep);

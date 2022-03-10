@@ -7,17 +7,18 @@ export default class AddFile extends Component {
       uploaded: false,
     };
     this.handleAddFile = this.handleAddFile.bind(this);
-    console.log(this);
+    // acquire the vscode API
+    this.vscodeApi = acquireVsCodeApi();
   }
 
   // handler function invoked when file is added
   handleAddFile(e) {
-    // acquire the vscode API
-    const vscodeApi = acquireVsCodeApi();
+    console.log('added new file');
+
     const filePath = e.target.files[0].path;
 
     // post a message to the webview window, which the backend is listening for, including the filepath of the file as the payload, which the parser class will be able to pass into its constructor upon instantiation
-    vscodeApi.postMessage({
+    this.vscodeApi.postMessage({
       type: 'addFile',
       value: filePath,
     });
@@ -48,7 +49,7 @@ export default class AddFile extends Component {
         ) : (
           <div>
             <p className="add-file-message">
-              Et voila! Feel free to upload another entry file at any time
+              Tree generated! Feel free to upload another entry file at any time
             </p>
           </div>
         )}

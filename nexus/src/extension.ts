@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { Parser } from './parser/parser.js';
 const path = require("path");
 const fs = require("fs");
 import { NexusProvider } from './NexusProvider';

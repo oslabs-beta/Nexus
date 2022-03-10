@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.Parserv2 = void 0;
+exports.NextParser = void 0;
 var parserModule = require("acorn");
 var PARSER = parserModule.Parser;
 var jsx = require("acorn-jsx");
@@ -20,44 +20,38 @@ var ComponentNode = /** @class */ (function () {
     }
     return ComponentNode;
 }());
-var Parserv2 = /** @class */ (function () {
-    function Parserv2(sourceCode, str) {
+var NextParser = /** @class */ (function () {
+    function NextParser(sourceCode, str) {
         this.string = str;
-        // console.log('Source Code: ', sourceCode);
-        // console.log('dirname: ', __dirname);
         this.program = JSXPARSER.parse(sourceCode, { sourceType: "module", ecmaVersion: 6 }); // Node Object -> take body property (Array)
-        // console.log('program: ', this.program);
         this.programBody = this.program.body;
-        // console.log('program body: ', this.programBody);
     }
     //methods
-    Parserv2.prototype.getImportNodes = function (programBody) {
+    NextParser.prototype.getImportNodes = function (programBody) {
         var importNodes = programBody.filter(function (node) { return node.type === 'ImportDeclaration'; });
-        // console.log(importNodes);
         return importNodes;
     };
-    Parserv2.prototype.getVariableNodes = function (programBody) {
+    NextParser.prototype.getVariableNodes = function (programBody) {
         var variableNodes = programBody.filter(function (node) { return node.type === 'VariableDeclaration'; });
         return variableNodes;
     };
-    Parserv2.prototype.getExportDefaultNodes = function (programBody) {
+    NextParser.prototype.getExportDefaultNodes = function (programBody) {
         var exportDefaultNodes = programBody.filter(function (node) { return node.type === 'ExportDefaultDeclaration'; });
         return exportDefaultNodes;
     };
-    Parserv2.prototype.getNonImportNodes = function (programBody) {
+    NextParser.prototype.getNonImportNodes = function (programBody) {
         var nonImportNodes = programBody.filter(function (node) { return node.type !== 'ImportDeclaration'; });
         return nonImportNodes;
     };
-    Parserv2.prototype.getExportNamedNodes = function (programBody) {
+    NextParser.prototype.getExportNamedNodes = function (programBody) {
         var exportNamedNodes = programBody.filter(function (node) { return node.type === 'ExportNamedDeclaration'; });
         return exportNamedNodes;
     };
-    Parserv2.prototype.getJsxNodes = function (childrenNodes) {
+    NextParser.prototype.getJsxNodes = function (childrenNodes) {
         var jsxNodes = childrenNodes.filter(function (node) { return node.type === JSXELEMENT; });
         return jsxNodes;
     };
-    Parserv2.prototype.getChildrenNodes = function (exportDefaultNodes) {
-        // console.log('testing... ', variableNodes);
+    NextParser.prototype.getChildrenNodes = function (exportDefaultNodes) {
         // RETURN STATEMENT in functional component
         // TODO: refactor to look at all nodes, not just last varDeclaration node
         var nodes = exportDefaultNodes[exportDefaultNodes.length - 1].declaration.body.body;
@@ -65,11 +59,10 @@ var Parserv2 = /** @class */ (function () {
         var childrenNodes = returnNode.argument.children;
         return childrenNodes;
     };
-    Parserv2.prototype.mapComponentToFilepath = function (jsxNodes, importNodes) {
+    NextParser.prototype.mapComponentToFilepath = function (jsxNodes, importNodes) {
         var map = {};
         var importValues = importNodes.map(function (node) { return node.source.value; });
         // const componentPaths = importValues.filter((str) => str.slice(0, 14) === regex); 
-        // console.log('tesing Regex: ', importValues);
         // const map = {};
         for (var _i = 0, importValues_1 = importValues; _i < importValues_1.length; _i++) {
             var str = importValues_1[_i];
@@ -80,16 +73,13 @@ var Parserv2 = /** @class */ (function () {
         }
         return map;
     };
-    Parserv2.prototype.getTree = function (filePath) {
-        // console.log('filePath: ', filePath);
-        // console.log('path.resolve:', path.resolve(__dirname, filePath));
-        // console.log('original string passed in', this.string);
+    NextParser.prototype.getTree = function (filePath) {
         var source = fs.readFileSync(path.resolve(filePath));
         var parsed = JSXPARSER.parse(source, { sourceType: "module" });
         var programBody = parsed.body; // get body of Program Node(i.e. source code entry)
         return programBody;
     };
-    Parserv2.prototype.getRouterEndpoints = function (tree) {
+    NextParser.prototype.getRouterEndpoints = function (tree) {
         // console.log('entering getRouterEndpoint with: ', tree);
         // TODO: hardcoded for router variable, change to find label for useRouter() instead to match against
         var exportObject = this.getExportDefaultNodes(tree)[0];
@@ -101,18 +91,13 @@ var Parserv2 = /** @class */ (function () {
         // for each jsxelement, look at children and filter jsxelements again
         // iterate through jsxelements, find node with router.push() callExpression
         var nestedJsxElements = this.getJsxNodes(jsxElements[0].children);
-        // console.log('nestedJsxElements: ', nestedJsxElements);
         // then, for each jsxelement, look at JSXOpeningElement attributes property (array)
         for (var i = 0; i < nestedJsxElements.length; i++) {
             var nestedAttributes = nestedJsxElements[i].openingElement.attributes;
-            // console.log('attributes: ', innerNest);
             // for each JSXAttribute, find JSXIdentifier with name === onClick
             for (var j = 0; j < nestedAttributes.length; j++) {
-                // console.log('innernest[j]: ', innerNest[j]);
                 if (nestedAttributes[j].value.expression !== undefined && nestedAttributes[j].value.expression.body !== undefined) {
-                    // console.log('passed undefined conditional');
                     if (nestedAttributes[j].value.expression.body.callee.object.name === "router") {
-                        console.log('~~~~ENDPOINT~~~~~', nestedAttributes[j].value.expression.body.arguments[0].value); //"/cats"
                         endpoints.push(nestedAttributes[j].value.expression.body.arguments[0].value);
                     }
                 }
@@ -120,28 +105,22 @@ var Parserv2 = /** @class */ (function () {
         }
         return endpoints;
     };
-    Parserv2.prototype.getChildrenComponents = function (jsxNodes, importNodes, nestedPath) {
-        // console.log('more testing... ', jsxNodes, importNodes);
+    NextParser.prototype.getChildrenComponents = function (jsxNodes, importNodes, nestedPath) {
         var cache = this.mapComponentToFilepath(jsxNodes, importNodes);
-        console.log('cache: ', cache);
-        console.log(jsxNodes);
+        // console.log('cache: ', cache);
         var components = [];
         // TODO: handle cases where router variable is not named router 
         // boolean to determine if component is using getStaticProps, getServerSideProps
         // when getting props from export default  
         var cacheKeys = Object.keys(cache);
-        // console.log('before for loop');
         for (var i = 0; i < cacheKeys.length; i++) {
             console.log('Looping over: ', cacheKeys[i]);
-            // console.log('Cache: ', cache);
             var filePath = cache[cacheKeys[i]];
             if (filePath.slice(0, 4) !== 'next' && filePath.slice(filePath.length - cacheKeys[i].length) === cacheKeys[i]) {
                 //TODO: instead of hardcoding react, maybe pass in fileToRecurse into getChildrenComponents to catch more ed
                 if (filePath !== 'react') {
                     // -> /home/nicoflo/cats-app/pages/index.js
                     var str = this.string.split('/pages')[0] + filePath.slice(2);
-                    // console.log('resultantStr: ', str);
-                    // /home/nicoflo/cats-app + /components/Nav/Jumbotron/Jumbotron
                     // get all file paths, match name without extension (.ts, .js, .jsx)
                     var extensions = ['.ts', '.js', '.jsx', '.tsx'];
                     for (var j = 0; j < extensions.length; j++) {
@@ -150,7 +129,6 @@ var Parserv2 = /** @class */ (function () {
                         var arr = path_1.split('/'); // ['..', '..', 'components', 'Cards' 'CardItem.js']
                         var newPath = arr.filter(function (str) { return str !== '..'; }).join('/');
                         if (fs.existsSync(newPath)) {
-                            // console.log('in fsExistsSync: ', newPath);
                             var tree = this.getTree(newPath);
                             // check if current component imports useRouter from next/router
                             var importNodes_1 = this.getImportNodes(tree);
@@ -160,20 +138,14 @@ var Parserv2 = /** @class */ (function () {
                                     usesRouter = true;
                                 }
                             }
-                            // console.log(`in j loop BEFORE ROUTER CHECK: ${cacheKeys[i]}`, newPath);
                             // Check if component is importing from 'next/router'
                             if (usesRouter) {
                                 var endpoints = this.getRouterEndpoints(tree);
-                                // console.log('after endpoints: ', endpoints);
-                                // loop over endpoints 
                                 var endpointChildren = [];
                                 var props = this.getPropParameters(newPath, 'static');
                                 var component = new ComponentNode(cacheKeys[i], props, endpointChildren, 'ssg');
                                 for (var k = 0; k < endpoints.length; k++) {
-                                    // console.log('in k loop at 250');
                                     var fileToRecurse = this.string.split('/pages')[0] + "/pages".concat(endpoints[k], "/index.js");
-                                    // console.log(this.getTree(fileToRecurse));
-                                    // console.log('fileToRecurse: ', fileToRecurse);
                                     var children = [this.recurse(fileToRecurse)];
                                     var componentNode = new ComponentNode(endpoints[k], {}, children, 'ssg');
                                     component.children.push(componentNode);
@@ -183,7 +155,7 @@ var Parserv2 = /** @class */ (function () {
                                 // TODO: get props
                             }
                             else { // if conditional usesRouter
-                                console.log('usesRouter is falsy: line 255 else statement:-- ', cacheKeys[i]);
+                                // console.log('usesRouter is falsy:', cacheKeys[i]);
                                 var componentNode = new ComponentNode(cacheKeys[i], {}, [], 'ssg');
                                 components.push(componentNode);
                             }
@@ -192,18 +164,12 @@ var Parserv2 = /** @class */ (function () {
                 }
                 else { // if react conditional
                     var tree = this.getTree(nestedPath);
-                    // console.log('parsing the super nested endpoints in pages/jams/index: ', tree);
-                    var endpoints = this.getRouterEndpoints(tree); // '/cats'      console.log('endpoint: ', endpoint);
+                    var endpoints = this.getRouterEndpoints(tree); // 
                     // with endpoint, use this.string to find /pages/cats/index.js
-                    // console.log('after endpoints: ', endpoints);
                     // loop over endpoints 
-                    // console.log('super nested endpoints: ', endpoints);
                     if (endpoints.length) {
                         for (var i_2 = 0; i_2 < endpoints.length; i_2++) {
-                            console.log('in other loop at 255');
                             var fileToRecurse = this.string.split('/pages')[0] + "/pages".concat(endpoints[i_2], "/index.js");
-                            // console.log(this.getTree(fileToRecurse));
-                            // console.log('fileToRecurse: ', fileToRecurse);
                             var children = [];
                             var props = {};
                             children.push(this.recurse(fileToRecurse));
@@ -211,13 +177,12 @@ var Parserv2 = /** @class */ (function () {
                             components.push(componentNode);
                         }
                     }
-                    console.log('~!@~!@FINAL COMPONENTS~!@~@', components);
                 }
             }
         } // end i loop
         return components;
     }; // end getChildrenComponents
-    Parserv2.prototype.getPropParameters = function (filePath, placeholder) {
+    NextParser.prototype.getPropParameters = function (filePath, placeholder) {
         var obj = this.getTree(filePath);
         var importNodes = this.getImportNodes(obj);
         // TODO: consider other file structures
@@ -233,7 +198,7 @@ var Parserv2 = /** @class */ (function () {
     };
     // input: string
     // output: 
-    Parserv2.prototype.recurse = function (filePath) {
+    NextParser.prototype.recurse = function (filePath) {
         var obj = this.getTree(filePath);
         var importNodes = this.getImportNodes(obj);
         // TODO: consider other file structures
@@ -250,7 +215,7 @@ var Parserv2 = /** @class */ (function () {
         var result = this.getChildrenComponents(jsxNodes, importNodes, filePath);
         return result;
     };
-    Parserv2.prototype.main = function () {
+    NextParser.prototype.main = function () {
         var importNodes = this.getImportNodes(this.programBody);
         // TODO: consider other file structures
         var exportDefaultNodes;
@@ -272,6 +237,6 @@ var Parserv2 = /** @class */ (function () {
         // check if there is an associated file with that component name
         // e.g. next/head vs ../components/jumbotron
     };
-    return Parserv2;
+    return NextParser;
 }());
-exports.Parserv2 = Parserv2;
+exports.NextParser = NextParser;

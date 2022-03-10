@@ -82,11 +82,11 @@ We at Team Nexus hope that you enjoy our extension, taking advantage of a time-t
 <!-- BUILT WITH -->
 ### Built With
 
-* <img style="height: 1em;" src="nexus/media/next-js.svg"> [Next.js](https://nextjs.org/)
-* <img style="height: 1em;" src="nexus/media/react-brands.svg"> [React.js](https://reactjs.org/)
-* <img style="height: 1em;" src="nexus/media/typescript.svg"> [Typescript](https://www.typescriptlang.org/)
-* <img style="height: 1em;" src="nexus/media/vscode.svg">  [VSCode Extension API](https://code.visualstudio.com/api)
-* <img style="height: 1em;" src="nexus/media/webpack.svg">  [Webpack](https://webpack.js.org/)
+* <img style="height: 1em;" src="nexus/media/next-js.png"> [Next.js](https://nextjs.org/)
+* <img style="height: 1em;" src="nexus/media/react-brands.png"> [React.js](https://reactjs.org/)
+* <img style="height: 1em;" src="nexus/media/typescript.png"> [Typescript](https://www.typescriptlang.org/)
+* <img style="height: 1em;" src="nexus/media/vscode.png">  [VSCode Extension API](https://code.visualstudio.com/api)
+* <img style="height: 1em;" src="nexus/media/webpack.png">  [Webpack](https://webpack.js.org/)
 * [Acorn Parser](https://www.npmjs.com/package/acorn)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -116,13 +116,13 @@ Nexus supports OSX, Windows, and WSL
 ## Usage
 
 1. Click the node tree icon on your sidebar. An "Input File Here" button should appear on your side panel!
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif1.gif">
 
 2. Click the button and your file explorer window will open. Select a file and press "Ok".
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif2.gif">
 
 3. Your side panel should now render a component tree that displays SSG or SSR status! Clicking on components will render child components if they exist and hovering over components will display their props objects. Enjoy!
-  <img src="nexus/media/filler.png">
+  <img src="nexus/media/gif3.gif">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

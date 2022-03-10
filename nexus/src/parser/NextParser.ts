@@ -54,7 +54,7 @@ class ComponentNode {
 // constructor(sourceCode: Buffer) 
 // Methods: all below methods
 
-export interface Parserv2 {
+export interface NextParser {
   string: any,
   program: any,
   programBody: Array<Node>,
@@ -62,7 +62,7 @@ export interface Parserv2 {
   testFs: any,
 }
 
-export class Parserv2 {
+export class NextParser {
   constructor(sourceCode: any, str: any) {
     this.string = str;
     this.program = JSXPARSER.parse(sourceCode, {sourceType: "module", ecmaVersion: 6}); // Node Object -> take body property (Array)
@@ -224,12 +224,18 @@ export class Parserv2 {
           // with endpoint, use this.string to find /pages/cats/index.js
           // loop over endpoints 
           if (endpoints.length) {
-            for (let i = 0; i < endpoints.length; i++) {
+            let styleEndpoints = []
+              for (let i = 0; i < endpoints.length; i++) {
+              styleEndpoints.push(endpoints[i].slice(1));
+              styleEndpoints = styleEndpoints.map(function (el) {
+                el = el.substring(el.indexOf("/"));
+                return el
+              })
               let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[i]}/index.js`;
               const children = [];
               const props = {};
               children.push(this.recurse(fileToRecurse));
-              const componentNode = new ComponentNode(endpoints[i], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
+              const componentNode = new ComponentNode(styleEndpoints[i], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
               components.push(componentNode);
             }
           } 

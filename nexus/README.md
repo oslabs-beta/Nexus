@@ -1,83 +1,199 @@
-# Nexus VSCode Extension
+<div id="top"></div>
 
-This is the README for your extension "nexus". After writing up a brief description, we recommend including the following sections.
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+<a href="https://github.com/github_username/repo_name">
+</a>
+-->
 
-## Features
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/oslabs-beta/Nexus">
+  	<img src="nexus/media/logo.png" alt="NexusLogo" width="100%">
+  </a>
+<!-- HEADING AREA -->
+<h1 align="center">Nexus</h1>
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+  <p align="center">
+    A component tree extension for NextJS
+    <br />
+    <br />
+    <a href="https://github.com/oslabs-beta/Nexus/issues">Report Bugs</a>
+    ·
+    <a href="https://github.com/oslabs-beta/Nexus/issues">Request Features</a>
+  </p>
+</div>
 
 
 
-					/*
-			"package-explorer": [
-				{
-					"id": "nodeDependencies",
-					"name": "Node Dependencies",
-					"icon": "media/heart.svg",
-					"contextualTitle": "Package Explorer"
-				}
-			]
-			*/
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li><a href="#installation">Installation</a></li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li>
+      <a href="#contributing">Steps to Contribute</a>
+      <ul>
+        <li><a href ="#making-changes">Making Changes</a></li>
+      </ul>
+    </li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#NexusTeam">The Nexus Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+Nexus is a VSCode Extension created for NextJS developers! As codebases scale in size and complexity, developers may feel overwhelmed as they keep track of tens of components and hundreds of props elements per file. Nexus aims to help developers overcome unnecessary mental strain through 3 main methods:
+
+1. Displaying file-specific component hierarchy in your VSCode sidebar
+2. Including component-specific state and props objects for parent and child components
+3. Differentiating between server-side rendered and static-site generated components
+
+We at Team Nexus hope that you enjoy our extension, taking advantage of a time-tested component tree model that integrates the unique features of NextJS!  
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- BUILT WITH -->
+### Built With
+
+* <img style="height: 1em;" src="nexus/media/next-js.svg"> [Next.js](https://nextjs.org/)
+* <img style="height: 1em;" src="nexus/media/react-brands.svg"> [React.js](https://reactjs.org/)
+* <img style="height: 1em;" src="nexus/media/typescript.svg"> [Typescript](https://www.typescriptlang.org/)
+* <img style="height: 1em;" src="nexus/media/vscode.svg">  [VSCode Extension API](https://code.visualstudio.com/api)
+* <img style="height: 1em;" src="nexus/media/webpack.svg">  [Webpack](https://webpack.js.org/)
+* [Acorn Parser](https://www.npmjs.com/package/acorn)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- INSTALLATION -->
+## Installation
+
+1. Install the Nexus extension in the VSCode Marketplace
+
+2. A node tree icon should appear on your sidebar. You've now installed Nexus! Woot Woot! Now on to the "Getting Started" section below.
+
+Note: If contributing, see the "Installation for Contributors" section below! 
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+Congrats on installing Nexus! Now let's get it started.
+
+
+### Prerequisites
+
+Nexus supports OSX, Windows, and WSL
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+1. Click the node tree icon on your sidebar. An "Input File Here" button should appear on your side panel!
+  <img src="nexus/media/filler.png">
+
+2. Click the button and your file explorer window will open. Select a file and press "Ok".
+  <img src="nexus/media/filler.png">
+
+3. Your side panel should now render a component tree that displays SSG or SSR status! Clicking on components will render child components if they exist and hovering over components will display their props objects. Enjoy!
+  <img src="nexus/media/filler.png">
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [ ] Creating a webview to look deeper into structure of individual components
+- [ ] Making the parser more dynamic and flexible
+- [ ] Handling Link Components
+- [ ] Error checking in the frontend to ensure that uploaded files are either NextJS or React
+- [ ] Add status bar item for Nexus
+- [ ] Store component tree memory in VSCode
+
+See the [open issues](https://github.com/oslabs-beta/Nexus/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- STEPS TO CONTRIBUTE -->
+## Steps to Contribute
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork & Clone Nexus
+2. Create your Feature Branch (`git checkout -b <github_username>/<YourAmazingFeature>`)
+3. Make your Changes (See **Making Changes** below)
+4. Commit your Changes (`git commit -m '<Your Commit Message>'`)
+5. Push to the Branch (`git push origin <github_username>/<YourAmazingFeature>`)
+6. Open a Pull Request
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- MAKING CHANGES -->
+### Making Changes
+
+1. Make your changes!
+2. Open /nexus/src/extension.ts and save any changes you made
+3. Re-compile and re-build your extension using the command line: `npm run compile` & `npm run build`
+4. Press F5. A new VSCode window should open. This is your debugging environment!
+5. Repeat step 3 and refresh your debugging environment to test further changes
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- THE NEXUS TEAM -->
+## The Nexus Team
+
+* Mike Hong [LinkedIn](https://www.linkedin.com/in/mykongee/) | [Github](https://github.com/mykongee)
+* Brian Chiang [LinkedIn](https://www.linkedin.com/in/brian-chiang-849a181a7/) | [Github](https://github.com/BChiang4)
+* David Lee [LinkedIn](https://www.linkedin.com/in/david-lee-39541411a/) | [Github](https://github.com/dplee123)
+* Nico Flores [LinkedIn](https://www.linkedin.com/in/nicolasaflores/) | [Github](https://github.com/nicoflrs)
+* Alex Hersler [LinkedIn](https://www.linkedin.com/in/alex-hersler/) | [Github](https://github.com/FoxEight)
+
+<!-- CONTACT US -->
+## Contact Us
+Email: nexusjsadm@gmail.com
+
+Twitter: [@teamnexus_js](https://twitter.com/teamnexus_js) 
+
+Website: [https://nexus-js.com/](https://nexus-js.com/)
+
+<p align="right">(<a href="#top">back to top</a>)</p>

@@ -1,17 +1,25 @@
 import React from 'react';
-import Milk from './Milk.jsx';
+import Child from './Child.jsx';
 
 const URL = 'http://google.com';
 
+class TestClass {
+    constructor(){
+        // super()
+    }
+}
 
 class App extends React.Component {
     constructor (){
-        // super();
+        super();
     }
 
     render(){
-        return(    
-        <Milk number={2}/>
+        return(
+            <div>
+                <h1>Hello</h1>
+                <Child number={2}/>
+            </div>
         );
     }
 }

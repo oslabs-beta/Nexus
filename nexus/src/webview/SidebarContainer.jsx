@@ -27,7 +27,7 @@ class SidebarContainer extends Component {
   }
 
   componentDidMount() {
-    // add event listner listening for message from NexusProvider, passing the data returned from the parser to the front end
+    // add event listener listening for message from NexusProvider, passing the data returned from the parser to the front end
     window.addEventListener('message', event => {
       // store the children array as a property in order to update children property in state in handleClick
       this.childrenStore = event.data.children;

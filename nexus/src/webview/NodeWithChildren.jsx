@@ -8,6 +8,7 @@ import { faCirclePlus, faCircleInfo, faCircleMinus } from '@fortawesome/free-sol
 import Tippy from '@tippyjs/react';
 
 class NodeWithChildren extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -75,6 +76,7 @@ class NodeWithChildren extends Component {
 
     return (
       // inside the NodeWithChildren Components, render the Child Component, data fetching method, props...
+
       <div className="comp-with-children-container">
         {this.state.expanded ? (
           <a className="node_icon" onClick={this.handleClick}>
@@ -88,25 +90,21 @@ class NodeWithChildren extends Component {
         <h1 class="comp-with-children-name" onClick={this.handleClick}>
           {this.props.node.name}
         </h1>
-        <Tippy
-          placement="right"
-          flip="true"
-          content={
-            <>
-              <div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div>{' '}
-            </>
-          }
-          class="box"
-        >
-          <a className="info_icon">
-            <FontAwesomeIcon icon={faCircleInfo} />
-          </a>
+        {!propsArray.length ? 
+        <Tippy placement='bottom' content={<div id='tips'> <div><p className='data-key'>data-fetching: </p>{this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
         </Tippy>
+        :
+        <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>props:</p>{propsArray}</div> <div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
+        <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+      </Tippy>
+      }
 
         {childrenComp}
       </div>
     );
   }
+
 }
 
 export default NodeWithChildren;

@@ -4,24 +4,9 @@ import Leaf from './Leaf.jsx';
 import AddFile from './AddFile.jsx';
 import NavLeaf from './NavLeaf.jsx';
 
+// imports for icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faCircleMinus } from '@fortawesome/free-solid-svg-icons';
-// this is the parent component of the react webview app
-
-/*
-
-{ name: 'name',
-   props: { prop1: num,
-             prop2: string,
-              etc.       },
-   children: [node1, node2, etc],
-   dataFetching: 'ssg' or 'ssr',
-   gsPaths: true/false,
-   fetchDependency: 'apiurl'
- 
-}
-
-*/
 
 class SidebarContainer extends Component {
   constructor() {
@@ -46,9 +31,6 @@ class SidebarContainer extends Component {
     window.addEventListener('message', event => {
       // store the children array as a property in order to update children property in state in handleClick
       this.childrenStore = event.data.children;
-
-      console.log('Event from message listener', event);
-
       // update state with data from the parser
       this.setState(prevState => ({
         ...prevState,
@@ -59,8 +41,9 @@ class SidebarContainer extends Component {
     });
   }
 
-  // onclick, update state with children array from childrenStore
+  // onclick on the icon or the component name, update children property in state
   handleClick() {
+    // if the children are not unfurled, update children property in state with childrenStore property
     if (!this.state.expanded) {
       this.setState(prevState => {
         let newNode = { ...prevState.node };
@@ -72,6 +55,7 @@ class SidebarContainer extends Component {
           expanded: true,
         };
       });
+      // if the children are unfurled, updated children property in state with an empty array, effectively furling the children back into the parent
     } else {
       this.setState(prevState => {
         let newNode = { ...prevState.node };
@@ -87,7 +71,6 @@ class SidebarContainer extends Component {
   }
 
   render() {
-    console.log('sidebar container state: ', this.state);
     // initialize array into which we push children components when there are children nodes in state
     let childrenComp = [];
     // if there are children nodes in state
@@ -97,27 +80,20 @@ class SidebarContainer extends Component {
         // if the child node itself has children, render a NodeWithChildren component
         if (child.children.length) {
           return <NodeWithChildren node={child} />;
-          // if the child node itself has no children, render a Leaf component
+          // if the node to render is a Nav node, this is a special case for styling, so render a special case NavLeaf component
         } else if (child.name === 'Nav') {
           return <NavLeaf node={child} />;
+          // if the child node itself has no children, render a Leaf component
         } else {
           return <Leaf node={child} />;
         }
       });
     }
 
-    console.log('children Component Array: ', childrenComp);
-
     return (
       <div className="container-intro">
-        {/* <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
-         */}
-
-        {/* <img src="../../media/Nexus-logo-1.png" /> */}
-
-        {/* alex */}
         <AddFile />
-        {/* if there is a name property in state, render it, otherwise render an empty div */}
+        {/* if there is a name property in state, render it, otherwise render the generate tree message */}
         <div className="tree-container">
           {this.state.node.name ? (
             <div>

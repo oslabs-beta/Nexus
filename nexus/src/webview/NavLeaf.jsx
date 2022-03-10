@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
+import Prop from './Prop.jsx';
+
+// imports for icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 
-import Prop from './Prop.jsx';
-
-class Leaf extends Component {
+class NavLeaf extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     let propsArray = [];
+    // iterate through the node's props property, generating Prop components
     for (let prop in this.props.node.props) {
       propsArray.push(<Prop propKey={prop} value={this.props.node.props[prop]} />);
     }
-    console.log('leaf: ', this.props);
     return (
       <>
         <div className="leaf-comp-container nav-leaf-comp-container">
@@ -42,4 +43,4 @@ class Leaf extends Component {
   }
 }
 
-export default Leaf;
+export default NavLeaf;

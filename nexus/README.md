@@ -81,26 +81,37 @@ We at Team Nexus hope that you enjoy our extension, taking advantage of a time-t
 
 <!-- BUILT WITH -->
 ### Built With
+<ul>
+  <li>
+     <img height="14" src="nexus/media/next-js.png"><a href="Next.js](https://nextjs.org/"> NextJS</a> 
+  </li>
+  <li>
+     <img height="14" src="nexus/media/react-brands.png"><a href="https://reactjs.org/"> React</a>
+  </li>
+  <li>
+     <img height="14" src="nexus/media/vscode.png"><a href="https://code.visualstudio.com/api"> VSCode Extension API </a>
+  </li>
+  <li>
+     <img height="14" src="nexus/media/typescript.png"><a href="https://www.typescriptlang.org/"> Typescript </a>
+  </li>
+  <li>
+     <img height="14" src="nexus/media/webpack.png"><a href="https://webpack.js.org/"> Webpack </a>
+  </li>
+  <li>
+  <a href="https://www.npmjs.com/package/acorn"> Acorn-Parser </a>
+  </li>
+</ul>
 
-* <img style="height: 1em;" src="nexus/media/next-js.png"> [Next.js](https://nextjs.org/)
-* <img style="height: 1em;" src="nexus/media/react-brands.png"> [React.js](https://reactjs.org/)
-* <img style="height: 1em;" src="nexus/media/typescript.png"> [Typescript](https://www.typescriptlang.org/)
-* <img style="height: 1em;" src="nexus/media/vscode.png">  [VSCode Extension API](https://code.visualstudio.com/api)
-* <img style="height: 1em;" src="nexus/media/webpack.png">  [Webpack](https://webpack.js.org/)
-* [Acorn Parser](https://www.npmjs.com/package/acorn)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- INSTALLATION -->
 ## Installation
 
-1. Install the Nexus extension in the VSCode Marketplace
+1. Install Nexus
 
 2. A node tree icon should appear on your sidebar. You've now installed Nexus! Woot Woot! Now on to the "Getting Started" section below.
 
 Note: If contributing, see the "Installation for Contributors" section below! 
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -116,16 +127,24 @@ Nexus supports OSX, Windows, and WSL
 ## Usage
 
 1. Click the node tree icon on your sidebar. An "Input File Here" button should appear on your side panel!
+<br/>
+<p align="center">
   <img src="nexus/media/gif1.gif">
-
+</p>
+<br/>
 2. Click the button and your file explorer window will open. Select a file and press "Ok".
+<br/>
+<p align="center">
   <img src="nexus/media/gif2.gif">
+</p>
+<br/>
 
 3. Your side panel should now render a component tree that displays SSG or SSR status! Clicking on components will render child components if they exist and hovering over components will display their props objects. Enjoy!
+<br/>
+<p align="center">
   <img src="nexus/media/gif3.gif">
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+</p>
+<br/>
 
 
 <!-- ROADMAP -->
@@ -140,7 +159,6 @@ Nexus supports OSX, Windows, and WSL
 
 See the [open issues](https://github.com/oslabs-beta/Nexus/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- STEPS TO CONTRIBUTE -->
@@ -158,7 +176,6 @@ Don't forget to give the project a star! Thanks again!
 5. Push to the Branch (`git push origin <github_username>/<YourAmazingFeature>`)
 6. Open a Pull Request
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MAKING CHANGES -->
 ### Making Changes
@@ -169,14 +186,12 @@ Don't forget to give the project a star! Thanks again!
 4. Press F5. A new VSCode window should open. This is your debugging environment!
 5. Repeat step 3 and refresh your debugging environment to test further changes
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- THE NEXUS TEAM -->
@@ -196,4 +211,3 @@ Twitter: [@teamnexus_js](https://twitter.com/teamnexus_js)
 
 Website: [https://nexus-js.com/](https://nexus-js.com/)
 
-<p align="right">(<a href="#top">back to top</a>)</p>

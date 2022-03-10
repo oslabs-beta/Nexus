@@ -21,22 +21,15 @@ class NavLeaf extends Component {
       <>
         <div className="leaf-comp-container nav-leaf-comp-container">
           <h1 className="leaf-comp-name">{this.props.node.name}</h1>
-          <Tippy
-            placement="right"
-            id="Tips"
-            flip="true"
-            content={
-              <>
-                <div>props = {propsArray}</div>{' '}
-                <div>data-fetching = {this.props.node.dataFetching}</div>{' '}
-              </>
+          {!propsArray.length ? 
+        <Tippy placement='bottom' content={<div id='tips'> <div><p className='data-key'>data-fetching: </p>{this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+        </Tippy>
+          :
+        <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>props:</p>{propsArray}</div> <div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+        </Tippy>
             }
-            class="box"
-          >
-            <a class="info_icon">
-              <FontAwesomeIcon icon={faCircleInfo} />
-            </a>
-          </Tippy>
         </div>
       </>
     );

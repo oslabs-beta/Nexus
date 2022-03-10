@@ -22,15 +22,43 @@ class Leaf extends Component {
       <>
         <div className="leaf-comp-container">
           <h1 className="leaf-comp-name">{this.props.node.name}</h1>
-           {!propsArray.length ? 
-          <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
-          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
-        </Tippy>
-          :
-        <Tippy placement='bottom' content={<div id='tips'><div><p className='data-key'>props:</p><p>{propsArray}</p></div> <div><p className='data-key'> data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
-          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
-        </Tippy>
-        }
+          {!propsArray.length ? (
+            <Tippy
+              placement="bottom"
+              content={
+                <div id="tips">
+                  <div>
+                    <p className="data-key">data-fetching:</p> {this.props.node.dataFetching}
+                  </div>{' '}
+                </div>
+              }
+              class="box"
+            >
+              <a class="fav_icon info_icon">
+                <FontAwesomeIcon className="info_icon-inner" icon={faCircleInfo} />
+              </a>
+            </Tippy>
+          ) : (
+            <Tippy
+              placement="bottom"
+              content={
+                <div id="tips">
+                  <div>
+                    <p className="data-key">props:</p>
+                    <p>{propsArray}</p>
+                  </div>{' '}
+                  <div>
+                    <p className="data-key"> data-fetching:</p> {this.props.node.dataFetching}
+                  </div>{' '}
+                </div>
+              }
+              class="box"
+            >
+              <a class="fav_icon info_icon">
+                <FontAwesomeIcon className="info_icon-inner" icon={faCircleInfo} />
+              </a>
+            </Tippy>
+          )}
         </div>
       </>
     );

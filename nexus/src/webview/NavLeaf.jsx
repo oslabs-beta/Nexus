@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 
 import Prop from './Prop.jsx';
 
-class NavLeaf extends Component {
+class Leaf extends Component {
   constructor(props) {
     super(props);
   }
@@ -15,10 +15,10 @@ class NavLeaf extends Component {
     for (let prop in this.props.node.props) {
       propsArray.push(<Prop propKey={prop} value={this.props.node.props[prop]} />);
     }
-    console.log('navleaf: ', this.props);
+    console.log('leaf: ', this.props);
     return (
       <>
-        <div className="leaf-comp-container">
+        <div className="leaf-comp-container nav-leaf-comp-container">
           <h1 className="leaf-comp-name">{this.props.node.name}</h1>
           <Tippy
             placement="right"
@@ -42,4 +42,4 @@ class NavLeaf extends Component {
   }
 }
 
-export default NavLeaf;
+export default Leaf;

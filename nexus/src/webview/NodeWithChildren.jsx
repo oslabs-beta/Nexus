@@ -50,10 +50,6 @@ class NodeWithChildren extends Component {
     }
   }
 
-  // recursively rendering the data to each component (children components, props, data fetching method used by the component)
-  // use componentDidMount to render the top level component of the tree
-  // when a component at the top level is clicked, recursively render the data etc for
-
   render() {
     let propsArray = [];
     // iterate through the node's props property, generating Prop components

@@ -26,7 +26,6 @@ class NexusProvider {
     // grab data
     // send message to webviewAPI with data using webview.postMessage(data)
     parseCodeBaseAndSendMessage(filePath) {
-
         console.log('dirname: ', __dirname);
         console.log('passed-in filepath: ', filePath);
         console.log('path.resolve hardcoded: ', path.resolve(__dirname, './parser/App.jsx'));
@@ -38,6 +37,7 @@ class NexusProvider {
             if (/wsl\$/.test(filePath)) {
                 // filePath = // -> \\wsl$\Ubuntu-20.04\home\nicoflo\unit-6-react-tic-tac-toe\src\app.jsx
                 str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
+                console.log(str);
                 /*
                 str = path.resolve(filePath.replace(/\\/g, '/'));
                 console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
@@ -59,14 +59,17 @@ class NexusProvider {
         }
         console.log('initial string: ', str);
         // \\wsl$\
+        const resultObj = new parserv2_js_1.Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
+        // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
         console.log(path.win32.sep);
         console.log(path.posix.sep);
-        const resultObj = new parser_js_1.Parser(fs.readFileSync(str)); // --> works //path.resolve:
         // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works
         // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
         const data = resultObj.main();
         // debugger terminal - success notification
+        // debugger terminal - success notification
+        console.log('Congratulations, your extension "nexus" is now active!');
         // console.log('in parse and send message');
         this._view.webview.postMessage({ name: 'App', children: data });
     }
@@ -80,7 +83,6 @@ class NexusProvider {
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
             // OG File Path = './parser/newApp.jsx'
             switch (data.type) {
-
                 case 'addFile': {
                     console.log(data.value);
                     this.parseCodeBaseAndSendMessage(data.value);

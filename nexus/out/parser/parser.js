@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = void 0;
+exports.ReactParser = void 0;
 // const PARSER = require('acorn').Parser;
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;
@@ -23,7 +23,7 @@ class ComponentNode {
         this.dataFetching = dataFetching;
     }
 }
-class Parser {
+class ReactParser {
     constructor(sourceCode) {
         console.log('Source Code: ', sourceCode);
         console.log('dirname: ', __dirname);
@@ -260,5 +260,5 @@ class Parser {
         // return {name: "App", children: result};
     }
 }
-exports.Parser = Parser;
+exports.ReactParser = ReactParser;
 //# sourceMappingURL=parser.js.map

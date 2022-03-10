@@ -4,7 +4,7 @@ import Leaf from './Leaf.jsx';
 import AddFile from './AddFile.jsx';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faCircleMinus} from "@fortawesome/free-solid-svg-icons";
 // this is the parent component of the react webview app
 
 /*
@@ -16,7 +16,6 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
    children: [node1, node2, etc],
    dataFetching: 'ssg' or 'ssr',
    gsPaths: true/false,
-   
    fetchDependency: 'apiurl'
  
 }
@@ -36,6 +35,7 @@ class SidebarContainer extends Component {
         gsPaths: null,
         fetchDependecy: null,
       },
+      expanded: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -60,17 +60,30 @@ class SidebarContainer extends Component {
 
   // onclick, update state with children array from childrenStore
   handleClick() {
-    this.setState(prevState => 
-      {
+    if(!this.state.expanded) {
+      this.setState(prevState => {
         let newNode = {...prevState.node};
         return {
-      node: {
-        ...newNode,
-        children: this.childrenStore,
-      },
-    };
+          node: {
+            ...newNode,
+            children: this.childrenStore,
+          },
+          expanded : true,
+        };
+      });
+    } else {
+      this.setState(prevState => {
+      let newNode = {...prevState.node};
+      return {
+        node: {
+          ...newNode,
+          children: [],
+        },
+        expanded : false,
+      };
     });
-  }
+  };
+};
 
   render() {
     console.log('sidebar container state: ',this.state);
@@ -107,7 +120,7 @@ class SidebarContainer extends Component {
         {/* if there is a name property in state, render it, otherwise render an empty div */}
         {this.state.node.name ? (
           <div>
-          <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>
+          {this.state.expanded ? <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCircleMinus} className='fav_icon'/></a> : <a class='fav_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>}
             <h1 className="component-name" onClick={this.handleClick}>
             {this.state.node.name}
           </h1>

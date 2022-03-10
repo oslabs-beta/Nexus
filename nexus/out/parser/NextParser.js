@@ -237,4 +237,4 @@ class NextParser {
     }
 }
 exports.NextParser = NextParser;
-//# sourceMappingURL=parserv2.js.map
+//# sourceMappingURL=NextParser.js.map

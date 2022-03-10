@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReactParser = void 0;
+// @ts-nocheck
 // const PARSER = require('acorn').Parser;
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;

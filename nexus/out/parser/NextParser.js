@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NextParser = void 0;
+// @ts-nocheck
 const parserModule = require("acorn");
 const PARSER = parserModule.Parser;
 const jsx = require("acorn-jsx");

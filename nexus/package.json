@@ -1,8 +1,13 @@
 {
-  "name": "nexus",
+  "name": "nexus-extension",
   "displayName": "Nexus",
   "description": "VSCode Extension to visualize NextJS component tree hierarchy",
-  "version": "0.5.1",
+  "icon": "media/nexus-vscode-icon.png",
+  "publisher": "Nexus-tree",
+  "repository": {
+    "url": "https://github.com/oslabs-beta/Nexus"
+  },
+  "version": "0.5.2",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -79,6 +84,8 @@
     "@fortawesome/react-fontawesome": "^0.1.17",
     "@testing-library/react": "^12.1.4",
     "@tippyjs/react": "^4.2.6",
+    "acorn": "^8.7.0",
+    "acorn-jsx": "^5.3.2",
     "babel-plugin-macros": "^3.1.0",
     "path": "^0.12.7",
     "stream": "^0.0.2"

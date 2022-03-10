@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as parserModule from 'acorn';
 const PARSER = parserModule.Parser;
 import * as jsx from 'acorn-jsx';

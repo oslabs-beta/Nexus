@@ -1,3 +1,4 @@
+// @ts-nocheck
 // const PARSER = require('acorn').Parser;
 import * as parserModule from 'acorn';
 const PARSER = parserModule.Parser;

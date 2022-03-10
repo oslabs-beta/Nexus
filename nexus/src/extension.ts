@@ -12,8 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider(NexusProvider.viewType, provider)
   );
 
-
-
   // context.subscriptions.push(
   //   vscode.window.registerWebviewViewProvider('nexus.addFileButton', provider)
   // );

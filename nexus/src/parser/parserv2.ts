@@ -65,18 +65,13 @@ export interface Parserv2 {
 export class Parserv2 {
   constructor(sourceCode: any, str: any) {
     this.string = str;
-    // console.log('Source Code: ', sourceCode);
-    // console.log('dirname: ', __dirname);
     this.program = JSXPARSER.parse(sourceCode, {sourceType: "module", ecmaVersion: 6}); // Node Object -> take body property (Array)
-    // console.log('program: ', this.program);
     this.programBody = this.program.body;
-    // console.log('program body: ', this.programBody);
   }
 
    //methods
    getImportNodes(programBody: Array<Node>) {
     const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
-    // console.log(importNodes);
     return importNodes;
   }
 
@@ -106,7 +101,6 @@ export class Parserv2 {
   }
 
   getChildrenNodes(exportDefaultNodes: Array<Node>) {
-    // console.log('testing... ', variableNodes);
     // RETURN STATEMENT in functional component
     // TODO: refactor to look at all nodes, not just last varDeclaration node
     const nodes = exportDefaultNodes[exportDefaultNodes.length-1].declaration.body.body;
@@ -119,7 +113,6 @@ export class Parserv2 {
     const map = {};
     const importValues = importNodes.map((node) => node.source.value);
     // const componentPaths = importValues.filter((str) => str.slice(0, 14) === regex); 
-    // console.log('tesing Regex: ', importValues);
     // const map = {};
     for (let str of importValues) {
       const splitName = str.split('/');
@@ -131,9 +124,6 @@ export class Parserv2 {
   }
 
   getTree(filePath: string){
-    // console.log('filePath: ', filePath);
-    // console.log('path.resolve:', path.resolve(__dirname, filePath));
-    // console.log('original string passed in', this.string);
     const source = fs.readFileSync(path.resolve(filePath));
     const parsed = JSXPARSER.parse(source, {sourceType: "module"}); 
     const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
@@ -152,18 +142,13 @@ export class Parserv2 {
     // for each jsxelement, look at children and filter jsxelements again
     // iterate through jsxelements, find node with router.push() callExpression
     const nestedJsxElements = this.getJsxNodes(jsxElements[0].children);
-    // console.log('nestedJsxElements: ', nestedJsxElements);
     // then, for each jsxelement, look at JSXOpeningElement attributes property (array)
     for(let i = 0; i < nestedJsxElements.length; i++) {
       const nestedAttributes = nestedJsxElements[i].openingElement.attributes;
-      // console.log('attributes: ', innerNest);
       // for each JSXAttribute, find JSXIdentifier with name === onClick
       for (let j = 0; j < nestedAttributes.length; j++) {
-        // console.log('innernest[j]: ', innerNest[j]);
         if (nestedAttributes[j].value.expression !== undefined && nestedAttributes[j].value.expression.body !== undefined) {
-          // console.log('passed undefined conditional');
             if (nestedAttributes[j].value.expression.body.callee.object.name === "router") {
-              console.log('~~~~ENDPOINT~~~~~', nestedAttributes[j].value.expression.body.arguments[0].value); //"/cats"
               endpoints.push(nestedAttributes[j].value.expression.body.arguments[0].value); 
             }
         }
@@ -172,21 +157,18 @@ export class Parserv2 {
     return endpoints;
   }
 
+  
   getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>, nestedPath?: string) {
-    // console.log('more testing... ', jsxNodes, importNodes);
     const cache = this.mapComponentToFilepath(jsxNodes, importNodes);
-    console.log('cache: ', cache);
-    console.log(jsxNodes);
+    // console.log('cache: ', cache);
     const components = [];
     // TODO: handle cases where router variable is not named router 
     // boolean to determine if component is using getStaticProps, getServerSideProps
     // when getting props from export default  
     
     const cacheKeys = Object.keys(cache);
-    // console.log('before for loop');
     for (let i = 0; i < cacheKeys.length; i++) {
       console.log('Looping over: ', cacheKeys[i]);
-      // console.log('Cache: ', cache);
       const filePath = cache[cacheKeys[i]];
       if (filePath.slice(0, 4) !== 'next' && filePath.slice(filePath.length - cacheKeys[i].length) === cacheKeys[i]) {
         //TODO: instead of hardcoding react, maybe pass in fileToRecurse into getChildrenComponents to catch more ed
@@ -194,8 +176,6 @@ export class Parserv2 {
 
         // -> /home/nicoflo/cats-app/pages/index.js
         let str = this.string.split('/pages')[0] + filePath.slice(2);
-        // console.log('resultantStr: ', str);
-        // /home/nicoflo/cats-app + /components/Nav/Jumbotron/Jumbotron
         // get all file paths, match name without extension (.ts, .js, .jsx)
         const extensions = ['.ts', '.js', '.jsx', '.tsx'];
         for (let j = 0; j < extensions.length; j++) {
@@ -205,7 +185,6 @@ export class Parserv2 {
           const newPath = arr.filter((str) => str !== '..').join('/');
 
           if (fs.existsSync(newPath)) {
-            // console.log('in fsExistsSync: ', newPath);
             const tree = this.getTree(newPath);
             
             // check if current component imports useRouter from next/router
@@ -217,20 +196,14 @@ export class Parserv2 {
               }
             }
             
-            // console.log(`in j loop BEFORE ROUTER CHECK: ${cacheKeys[i]}`, newPath);
             // Check if component is importing from 'next/router'
             if (usesRouter) {
               const endpoints = this.getRouterEndpoints(tree); 
-              // console.log('after endpoints: ', endpoints);
-              // loop over endpoints 
               const endpointChildren = [];
               const props = this.getPropParameters(newPath, 'static');
               const component = new ComponentNode(cacheKeys[i], props, endpointChildren, 'ssg');
               for (let k = 0; k < endpoints.length; k++) {
-                // console.log('in k loop at 250');
                 let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[k]}/index.js`;
-                // console.log(this.getTree(fileToRecurse));
-                // console.log('fileToRecurse: ', fileToRecurse);
                 const children = [this.recurse(fileToRecurse)];
                 const componentNode = new ComponentNode(endpoints[k], {}, children, 'ssg');
                 component.children.push(componentNode);
@@ -239,7 +212,7 @@ export class Parserv2 {
               usesRouter = false;
               // TODO: get props
               } else { // if conditional usesRouter
-                console.log('usesRouter is falsy: line 255 else statement:-- ', cacheKeys[i]);
+                // console.log('usesRouter is falsy:', cacheKeys[i]);
                 const componentNode = new ComponentNode(cacheKeys[i], {}, [], 'ssg');
                 components.push(componentNode);              
               }
@@ -247,18 +220,12 @@ export class Parserv2 {
           } // end j loop 
         } else { // if react conditional
           const tree = this.getTree(nestedPath);
-          // console.log('parsing the super nested endpoints in pages/jams/index: ', tree);
-          const endpoints = this.getRouterEndpoints(tree); // '/cats'      console.log('endpoint: ', endpoint);
+          const endpoints = this.getRouterEndpoints(tree); // 
           // with endpoint, use this.string to find /pages/cats/index.js
-          // console.log('after endpoints: ', endpoints);
           // loop over endpoints 
-          // console.log('super nested endpoints: ', endpoints);
           if (endpoints.length) {
             for (let i = 0; i < endpoints.length; i++) {
-              console.log('in other loop at 255');
               let fileToRecurse = this.string.split('/pages')[0] + `/pages${endpoints[i]}/index.js`;
-              // console.log(this.getTree(fileToRecurse));
-              // console.log('fileToRecurse: ', fileToRecurse);
               const children = [];
               const props = {};
               children.push(this.recurse(fileToRecurse));
@@ -266,13 +233,11 @@ export class Parserv2 {
               components.push(componentNode);
             }
           } 
-          console.log('~!@~!@FINAL COMPONENTS~!@~@', components);
         }
       }
     } // end i loop
     return components;
   } // end getChildrenComponents
-
 
 
   getPropParameters(filePath: string, placeholder: string) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Milk extends React.component {
+class Child extends React.component {
   constructor() {
     super();
   }
@@ -10,4 +10,4 @@ class Milk extends React.component {
   }
 }
 
-export default Milk;
+export default Child;

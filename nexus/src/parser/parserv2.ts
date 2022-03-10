@@ -4,12 +4,12 @@ import * as jsx from 'acorn-jsx';
 const JSXPARSER = PARSER.extend(jsx());
 import * as fs from 'fs';
 import * as path from 'path';
-​
+
 // CONSTANTS 
 const JSXTEXT: string = 'JSXText';
 const JSXELEMENT: string = 'JSXElement';
 const JSXEXPRESSIONCONTAINER: string = 'JSXExpressionContainer';
-​
+
 // TS Interface 
 interface Node {
   type: string,
@@ -33,14 +33,14 @@ interface Node {
   source: Node,
   id: string
 }
-​
+
 interface ComponentNode {
   name: string,
   children: Array<any>,
   props: Object,
   dataFetching: string, // 'SSG', 'SSR'
 }
-​
+
 class ComponentNode {
   constructor(name: string, props: Object, children: Array<any>, dataFetching: string) {
     this.name = name;
@@ -49,20 +49,20 @@ class ComponentNode {
     this.dataFetching = dataFetching;
   }
 }
-​
+
 // Class Parser
 // constructor(sourceCode: Buffer) 
 // Methods: all below methods
-​
-export interface Parser {
+
+export interface Parserv2 {
   string: any,
   program: any,
   programBody: Array<Node>,
   fs: any,
   testFs: any,
 }
-​
-export class Parser {
+
+export class Parserv2 {
   constructor(sourceCode: any, str: any) {
     this.string = str;
     // console.log('Source Code: ', sourceCode);
@@ -72,19 +72,19 @@ export class Parser {
     this.programBody = this.program.body;
     // console.log('program body: ', this.programBody);
   }
-​
+
    //methods
    getImportNodes(programBody: Array<Node>) {
     const importNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ImportDeclaration');
     // console.log(importNodes);
     return importNodes;
   }
-​
+
    getVariableNodes(programBody: Array<Node>) {
     const variableNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'VariableDeclaration');
     return variableNodes;
   }
-​
+
   getExportDefaultNodes(programBody: Array<Node>) {
     const exportDefaultNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ExportDefaultDeclaration');
     return exportDefaultNodes;
@@ -94,17 +94,17 @@ export class Parser {
     const nonImportNodes: Array<Node> = programBody.filter((node: Node) => node.type !== 'ImportDeclaration');
     return nonImportNodes;
   }
-​
+
   getExportNamedNodes(programBody: Array<Node>) {
     const exportNamedNodes: Array<Node> = programBody.filter((node: Node) => node.type === 'ExportNamedDeclaration');
     return exportNamedNodes; 
   }
-​
+
   getJsxNodes(childrenNodes: Array<Node>) {
     const jsxNodes: Array<Node> = childrenNodes.filter((node: Node) => node.type === JSXELEMENT);
     return jsxNodes;
   }
-​
+
   getChildrenNodes(exportDefaultNodes: Array<Node>) {
     // console.log('testing... ', variableNodes);
     // RETURN STATEMENT in functional component
@@ -114,7 +114,7 @@ export class Parser {
     const childrenNodes = returnNode.argument.children;
     return childrenNodes;
   }
-​
+
   mapComponentToFilepath(jsxNodes: Array<Node>, importNodes: Array<Node>) {
     const map = {};
     const importValues = importNodes.map((node) => node.source.value);
@@ -129,7 +129,7 @@ export class Parser {
     }
     return map;
   }
-​
+
   getTree(filePath: string){
     // console.log('filePath: ', filePath);
     // console.log('path.resolve:', path.resolve(__dirname, filePath));
@@ -139,7 +139,7 @@ export class Parser {
     const programBody: Array<Node> = parsed.body; // get body of Program Node(i.e. source code entry)
     return programBody;
   }
-​
+
   getRouterEndpoints(tree: Array<Node>) {
     // console.log('entering getRouterEndpoint with: ', tree);
     // TODO: hardcoded for router variable, change to find label for useRouter() instead to match against
@@ -171,7 +171,7 @@ export class Parser {
     }
     return endpoints;
   }
-​
+
   getChildrenComponents(jsxNodes: Array<Node>, importNodes: Array<Node>, nestedPath?: string) {
     // console.log('more testing... ', jsxNodes, importNodes);
     const cache = this.mapComponentToFilepath(jsxNodes, importNodes);
@@ -191,7 +191,7 @@ export class Parser {
       if (filePath.slice(0, 4) !== 'next' && filePath.slice(filePath.length - cacheKeys[i].length) === cacheKeys[i]) {
         //TODO: instead of hardcoding react, maybe pass in fileToRecurse into getChildrenComponents to catch more ed
         if (filePath !== 'react') {
-​
+
         // -> /home/nicoflo/cats-app/pages/index.js
         let str = this.string.split('/pages')[0] + filePath.slice(2);
         // console.log('resultantStr: ', str);
@@ -203,7 +203,7 @@ export class Parser {
           // Strip all occurrences of '../' from path 
           const arr = path.split('/'); // ['..', '..', 'components', 'Cards' 'CardItem.js']
           const newPath = arr.filter((str) => str !== '..').join('/');
-​
+
           if (fs.existsSync(newPath)) {
             // console.log('in fsExistsSync: ', newPath);
             const tree = this.getTree(newPath);
@@ -316,7 +316,7 @@ export class Parser {
     const result = this.getChildrenComponents(jsxNodes, importNodes, filePath);
     return result;
   }
-​
+
   main () {
     const importNodes = this.getImportNodes(this.programBody);
     // TODO: consider other file structures

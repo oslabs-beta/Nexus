@@ -1,4 +1,5 @@
-import { Parser } from './parser/parserv2.js';
+import { Parser } from './parser/parser.js';
+import { Parserv2 } from './parser/parserv2.js';
 import * as vscode from 'vscode';
 const path = require('path');
 const fs = require('fs');
@@ -43,11 +44,18 @@ export class NexusProvider implements vscode.WebviewViewProvider {
         str = str.replace(/\\/g, '/');
       }
     }
+let resultObj;
+// if file is ending in '.js', send it into the Next.Js parser route
+    if (str.slice(-3) === '.js') {
+      console.log('here');
+      resultObj = new Parserv2(fs.readFileSync(str), str);
+    }
+// otherwise, send the file through the React parser route
+    else {
+      resultObj = new Parser(fs.readFileSync(str)); // --> works //path.resolve:   
 
-    console.log('initial string: ', str);
-
+    }
     // \\wsl$\
-    const resultObj = new Parser(fs.readFileSync(str), str); // --> works //path.resolve:   
     // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:   
     console.log(path.win32.sep);
     console.log(path.posix.sep);

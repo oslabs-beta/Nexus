@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.NextParser = void 0;
+// @ts-nocheck
 var parserModule = require("acorn");
 var PARSER = parserModule.Parser;
 var jsx = require("acorn-jsx");
@@ -168,12 +169,18 @@ var NextParser = /** @class */ (function () {
                     // with endpoint, use this.string to find /pages/cats/index.js
                     // loop over endpoints 
                     if (endpoints.length) {
+                        var styleEndpoints = [];
                         for (var i_2 = 0; i_2 < endpoints.length; i_2++) {
+                            styleEndpoints.push(endpoints[i_2].slice(1));
+                            styleEndpoints = styleEndpoints.map(function (el) {
+                                el = el.substring(el.indexOf("/"));
+                                return el;
+                            });
                             var fileToRecurse = this.string.split('/pages')[0] + "/pages".concat(endpoints[i_2], "/index.js");
                             var children = [];
                             var props = {};
                             children.push(this.recurse(fileToRecurse));
-                            var componentNode = new ComponentNode(endpoints[i_2], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
+                            var componentNode = new ComponentNode(styleEndpoints[i_2], this.getPropParameters(fileToRecurse, 'static'), children, 'ssg');
                             components.push(componentNode);
                         }
                     }

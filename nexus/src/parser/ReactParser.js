@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.ReactParser = void 0;
+// @ts-nocheck
 // const PARSER = require('acorn').Parser;
 var parserModule = require("acorn");
 var PARSER = parserModule.Parser;

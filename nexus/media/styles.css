@@ -84,9 +84,25 @@
   color : #191637
 }
 
+#tips{
+  background-color: #7e74fa;
+  padding: 10px;
+  border-radius: 5px;
+}
 
+.leaf-Node h3, .leaf-Node a {
+  display: inline;
+}
 
+/* .data-key p{
+  color: purple;
+  font-family: monospace;
+} */
 
+.data-key{
+  color: rgb(155, 18, 155);
+  font-family: monospace;
+}
 /* 
 #main-app-root {
   margin-left: 0 !important;

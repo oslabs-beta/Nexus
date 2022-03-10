@@ -36,19 +36,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
         str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
 
         console.log(str);
-        /*
-        str = path.resolve(filePath.replace(/\\/g, '/')); 
-        console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-
         
-
-        str = '/' + str.split('/').slice(3).join('/');
-        console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-*/
-        /*
-    
-      this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
-      */
       } else {
         str = '/mnt/c/' + filePath.slice(3);
 

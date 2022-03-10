@@ -15,8 +15,6 @@ class NodeWithChildren extends Component {
   //   props : {},
   //   data fetching : String,
   // }
-  
-
   constructor (props) {
   super (props);
   this.state = {
@@ -113,10 +111,15 @@ handleClick () {
     <div>
       {this.state.expanded ? <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCircleMinus} className='fav_icon'/></a> : <a className='node_icon' onClick={this.handleClick}><FontAwesomeIcon icon={faCirclePlus} className='fav_icon'/></a>}
       <h1 class='compWithChildren' onClick={this.handleClick}>{this.props.node.name}</h1>
-      <Tippy placement='right' flip='true' content={<><div>props:{propsArray}</div> <div>data-fetching: {this.props.node.dataFetching}</div> </>} class='box'>
+      {!propsArray.length ? 
+        <Tippy placement='bottom'  content={<div id='tips'> <div><p className='data-key'>data-fetching: </p>{this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+        </Tippy>
+        :
+        <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>props:</p>{propsArray}</div> <div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
         <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
       </Tippy>
-        
+      }
         <p class='compChildren'>{childrenComp}</p>
     </div>
 

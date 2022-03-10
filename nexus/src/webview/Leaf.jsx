@@ -15,27 +15,21 @@ class NavLeaf extends Component {
     for (let prop in this.props.node.props) {
       propsArray.push(<Prop propKey={prop} value={this.props.node.props[prop]} />);
     }
+
     console.log('navleaf: ', this.props);
     return (
       <>
         <div className="leaf-comp-container">
           <h1 className="leaf-comp-name">{this.props.node.name}</h1>
-          <Tippy
-            placement="right"
-            id="Tips"
-            flip="true"
-            content={
-              <>
-                <div>props = {propsArray}</div>{' '}
-                <div>data-fetching = {this.props.node.dataFetching}</div>{' '}
-              </>
-            }
-            class="box"
-          >
-            <a class="info_icon">
-              <FontAwesomeIcon icon={faCircleInfo} />
-            </a>
-          </Tippy>
+           {!propsArray.length ? 
+          <Tippy placement='bottom'  content={<div id='tips'><div><p className='data-key'>data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+        </Tippy>
+          :
+        <Tippy placement='bottom' content={<div id='tips'><div><p className='data-key'>props:</p><p>{propsArray}</p></div> <div><p className='data-key'> data-fetching:</p> {this.props.node.dataFetching}</div> </div>} class='box'>
+          <a class='fav_icon'><FontAwesomeIcon icon={faCircleInfo}/></a>
+        </Tippy>
+        }
         </div>
       </>
     );

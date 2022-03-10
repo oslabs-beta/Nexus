@@ -37,19 +37,7 @@ export class NexusProvider implements vscode.WebviewViewProvider {
         str = '/home' + filePath.split('home')[1].replace(/\\/g, '/');
 
         console.log(str);
-        /*
-        str = path.resolve(filePath.replace(/\\/g, '/')); 
-        console.log('wsl str 1: ', str); // ->  /wsl$/Ubuntu-20.04/home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-
         
-
-        str = '/' + str.split('/').slice(3).join('/');
-        console.log('wsl str 2: ', str); // -> /home/nicoflo/unit-6-react-tic-tac-toe/src/app.jsx
-*/
-        /*
-    
-      this.entryFile = '/' + this.entryFile.split('/').slice(3).join('/');
-      */
       } else {
         str = '/mnt/c/' + filePath.slice(3);
 
@@ -72,10 +60,7 @@ let resultObj;
     console.log(path.win32.sep);
     console.log(path.posix.sep);
 
-    // const resultObj = new Parser(fs.readFileSync('/mnt/c/Users/Nico/Desktop/nexus-copy/out/parser/App.jsx')); // --> works //path.resolve:
-
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, './parser/App.jsx'))); // -> works
-    // const resultObj = new Parser(fs.readFileSync(path.resolve(__dirname, '/Users/davidlee/Nexus/nexus/src/parser/newApp.jsx'))); // -> works
+  
     const data = resultObj.main();
 
 
@@ -115,15 +100,13 @@ let resultObj;
   }
 
   _getHtmlForWebview(webview: vscode.Webview) {
-
-    // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'sidebar.js')
     );
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css')
     );
-
+    
     // console.log(scriptUri);
     // console.log(styles);
 

@@ -85,7 +85,7 @@ describe('parser integration tests', () => {
   });
   
   
-  describe('parsing through class components with _ Nodes total, _ ComponentNodes', () => {
+  xdescribe('parsing through class components with _ Nodes total, _ ComponentNodes', () => {
     let parser;
     beforeAll(() => {
       // test component properties: 14 ESTree nodes; results in 7 ComponentNodes

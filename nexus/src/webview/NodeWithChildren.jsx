@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faCircleInfo, faCircleMinus } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 
+console.log('in node with children');
+
 class NodeWithChildren extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +24,7 @@ class NodeWithChildren extends Component {
   handleClick() {
     // if the component is not expanded (children are not rendered), updated state with children stored in props.node.children
     if (!this.state.expanded) {
+      console.log('expanding');
       this.setState(prevState => {
         // checking special case in which the children nodes are nested in a subarray within the children array. also short circuiting this conditional if array is empty.
         if (this.props.node.children.length === 0 || !Array.isArray(this.props.node.children[0])) {
@@ -41,6 +44,7 @@ class NodeWithChildren extends Component {
       // if the children are rendered, update children property in state to be an empty array, effectvely furling the parent back up
     } else {
       this.setState(prevState => {
+        console.log('shrinking');
         return {
           ...prevState,
           children: [],
@@ -51,6 +55,7 @@ class NodeWithChildren extends Component {
   }
 
   render() {
+    console.log('rendering node with children');
     let propsArray = [];
     // iterate through the node's props property, generating Prop components
     for (const prop in this.props.node.props) {

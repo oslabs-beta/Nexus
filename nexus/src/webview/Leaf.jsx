@@ -6,12 +6,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 
+console.log('in leaf');
 class Leaf extends Component {
   constructor(props) {
     super(props);
+    this.handleShowComponentViewClick = this.handleShowComponentViewClick.bind(this);
   }
 
+  handleShowComponentViewClick = function () {
+    console.log('Clicking Leaf');
+  };
+
   render() {
+    console.log('rendering leaf');
     let propsArray = [];
     // iterate through the node's props property, generating Prop components
     for (let prop in this.props.node.props) {
@@ -21,7 +28,9 @@ class Leaf extends Component {
     return (
       <>
         <div className="leaf-comp-container">
-          <h1 className="leaf-comp-name">{this.props.node.name}</h1>
+          <h1 className="leaf-comp-name" onClick={this.handleShowComponentViewClick}>
+            {this.props.node.name}
+          </h1>
           {!propsArray.length ? (
             <Tippy
               placement="bottom"
